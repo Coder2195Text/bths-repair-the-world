@@ -72,7 +72,7 @@ function ProfileMenu() {
             alt="candice wu"
             className="p-0.5 w-12 h-12 rounded-full border border-blue-500"
             src={
-              data.user?.image ||
+              data?.user?.image ||
               "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
             }
           />

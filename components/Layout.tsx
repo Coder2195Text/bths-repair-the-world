@@ -10,7 +10,7 @@ const Layout: FC<Props> = ({ children }) => {
   const { status } = useSession();
   return (
     <div className="flex flex-wrap justify-center py-24 text-xl font-tyros">
-      {status !== "loading" ? (
+      {status !== "loading" && children ? (
         <main className="block max-w-7xl text-center break-words bg-white bg-opacity-10 rounded-xl px-[6vw] py-[8vw] max-w-screen">
           {children}
         </main>

@@ -9,25 +9,25 @@ datasource db {
 }
 
 model User {
-  id       String          @id @default(cuid())
-  email    String          @unique
+  id       String            @id @default(cuid())
+  email    String            @unique
   name     String
   pronouns String
-  position String          @default("member")
+  position String            @default("member")
   gradYear Int
-  events   EventAttendee[]
+  events   EventAttendance[]
 }
 
 model Event {
-  id          String          @id @default(cuid())
+  id          String            @id @default(cuid())
   name        String
   description Bytes
   maxPoints   Float
-  attendees   EventAttendee[]
+  attendees   EventAttendance[]
   time        DateTime
 }
 
-model EventAttendee {
+model EventAttendance {
   id           String   @id @default(cuid())
   user         User     @relation(fields: [userId], references: [id])
   userId       String
@@ -39,4 +39,5 @@ model EventAttendee {
 
   @@index([userId])
   @@index([eventId])
+  @@map("EventAttendee")
 }
