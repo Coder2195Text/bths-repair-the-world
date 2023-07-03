@@ -7,3 +7,36 @@ datasource db {
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+model User {
+  id       String          @id @default(cuid())
+  email    String          @unique
+  name     String
+  pronouns String
+  position String          @default("member")
+  gradYear Int
+  events   EventAttendee[]
+}
+
+model Event {
+  id          String          @id @default(cuid())
+  name        String
+  description Bytes
+  maxPoints   Float
+  attendees   EventAttendee[]
+  time        DateTime
+}
+
+model EventAttendee {
+  id           String   @id @default(cuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  event        Event    @relation(fields: [eventId], references: [id])
+  eventId      String
+  earnedPoints Float
+  registeredAt DateTime
+  attended     Boolean
+
+  @@index([userId])
+  @@index([eventId])
+}

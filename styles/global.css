@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/fonts/Figtree.ttf");
+}
+
+@font-face {
+  font-family: "Tyros";
+  src: url("/fonts/TyrosPro.ttf");
+}
+
+@layer base {
+  html {
+    @apply z-20 overflow-hidden;
+  }
+  body {
+    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-figtree leading-none;
+  }
+
+  h1 {
+    @apply text-[9.6vw] lg:text-8xl font-[1000];
+  }
+
+  h2 {
+    @apply text-[7.2vw] lg:text-7xl font-[900];
+  }
+
+  h3 {
+    @apply text-[6vw] lg:text-6xl font-[800];
+  }
+
+  h4 {
+    @apply text-[4.8vw] lg:text-5xl font-[700];
+  }
+
+  h5 {
+    @apply text-[3.6vw] lg:text-4xl font-[600];
+  }
+
+  h6 {
+    @apply text-[2.4vw] lg:text-3xl font-[500];
+  }
+
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    @apply bg-blue-800 p-3 rounded-full;
+  }
+}

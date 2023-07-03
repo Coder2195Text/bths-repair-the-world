@@ -1,17 +1,14 @@
-import { signIn, useSession } from "next-auth/react";
+import { FC } from "react";
 
-export default function Home() {
-  const { data, status } = useSession();
+const Home: FC = () => {
   return (
-    <div>
-      {status === "authenticated" ? data?.user?.email : "Not logged in"}
-      <button
-        onClick={() => {
-          signIn("google");
-        }}
-      >
-        Login A
-      </button>
-    </div>
+    <>
+      <h1>
+        Inspiring and mobilizing BTHS youth to create change in an unjust
+        society
+      </h1>
+    </>
   );
-}
+};
+
+export default Home;
