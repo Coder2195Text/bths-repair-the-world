@@ -1,7 +1,7 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import Auth0Provider from "next-auth/providers/auth0";
 
-export default NextAuth({
+const AUTH_OPTIONS: AuthOptions = {
   providers: [
     Auth0Provider({
       authorization: {
@@ -17,4 +17,8 @@ export default NextAuth({
   session: {
     strategy: "jwt",
   },
-});
+};
+
+const handler = NextAuth(AUTH_OPTIONS);
+
+export { handler as GET, handler as POST, AUTH_OPTIONS };

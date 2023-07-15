@@ -1,8 +1,7 @@
-import React, { FC, ForwardRefExoticComponent, ReactNode } from "react";
+"use client";
+
+import React, { FC, ReactNode } from "react";
 import {
-  Navbar as NavBar,
-  MobileNav,
-  Typography,
   Button,
   Menu,
   MenuHandler,
@@ -16,11 +15,7 @@ import {
   UserCircleIcon,
   CodeBracketSquareIcon,
   ChevronDownIcon,
-  Cog6ToothIcon,
-  InboxArrowDownIcon,
-  LifebuoyIcon,
   PowerIcon,
-  Bars2Icon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
@@ -122,27 +117,32 @@ const navListItems = [
   {
     label: "Account",
     icon: UserCircleIcon,
+    url: "/test",
   },
   {
     label: "Blocks",
     icon: CubeTransparentIcon,
+    url: "",
   },
   {
     label: "Docs",
     icon: CodeBracketSquareIcon,
+    url: "",
   },
 ];
 
 const NavList: FC = () => {
   return (
     <ul className="flex flex-col gap-2 mt-2 mb-4 lg:flex-row lg:items-center lg:mt-0 lg:mb-0">
-      {navListItems.map(({ label, icon }, key) => (
-        <Button key={label} ripple className="flex items-center">
-          {React.createElement(icon, {
-            className: "h-[30px] w-[30px] inline mr-2",
-          })}
-          <h6>{label}</h6>
-        </Button>
+      {navListItems.map(({ label, icon, url }, key) => (
+        <Link href={url} key={label}>
+          <Button ripple className="flex items-center">
+            {React.createElement(icon, {
+              className: "h-[30px] w-[30px] inline mr-2",
+            })}
+            <h6>{label}</h6>
+          </Button>
+        </Link>
       ))}
     </ul>
   );

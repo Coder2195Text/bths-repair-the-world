@@ -1,6 +1,9 @@
+"use client";
+
 import { FC, ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { BarLoader } from "react-spinners";
+import Navbar from "./Navbar";
 
 interface Props {
   children: ReactNode;
@@ -8,10 +11,12 @@ interface Props {
 
 const Layout: FC<Props> = ({ children }) => {
   const { status } = useSession();
+
   return (
     <div className="flex flex-wrap justify-center py-24 text-xl font-tyros">
       {status !== "loading" && children ? (
         <main className="block max-w-7xl text-center break-words bg-white bg-opacity-10 rounded-xl px-[6vw] py-[8vw] max-w-screen">
+          <Navbar />
           {children}
         </main>
       ) : (
