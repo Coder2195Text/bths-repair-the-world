@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountProvider } from "@/components/AccountContext";
 import { SessionProvider } from "next-auth/react";
 
 type Props = {
@@ -7,5 +8,9 @@ type Props = {
 };
 
 export const NextAuthProvider = ({ children }: Props) => {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <AccountProvider>
+      <SessionProvider>{children}</SessionProvider>
+    </AccountProvider>
+  );
 };

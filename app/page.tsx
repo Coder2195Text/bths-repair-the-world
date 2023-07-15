@@ -6,7 +6,9 @@ import { FC } from "react";
 const HomePage: FC = () => {
   return (
     <Layout>
-      <h1>Inspiring BTHS youth to make change in a unjust society</h1>
+      <h1 className="vscale">
+        Inspiring BTHS youth to make change in a unjust society
+      </h1>
     </Layout>
   );
 };

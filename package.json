@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db": "prisma generate && prisma db push"
   },
   "dependencies": {
     "@material-tailwind/react": "^2.0.4",
-    "@prisma/client": "^4.16.2",
+    "@prisma/client": "^5.0.0",
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
@@ -20,7 +20,7 @@
     "next": "13.4.7",
     "next-auth": "^4.22.1",
     "postcss": "8.4.24",
-    "prisma": "^4.16.2",
+    "prisma": "^5.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-spinners": "^0.13.8",

@@ -5,10 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  req: NextRequest,
-  { params: { email } }: { params: { email: string } }
-) {
+type Params = { params: { email: string } };
+
+export async function GET(_req: NextRequest, { params: { email } }: Params) {
   if (!email) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
   }
@@ -27,4 +26,15 @@ export async function GET(
   });
 
   return NextResponse.json(user, { status: 200 });
+}
+
+export async function POST(req: NextRequest, { params: { email } }: Params) {
+  if (!email) {
+    return NextResponse.json({ error: "Email is required" }, { status: 400 });
+  }
+
+  const body = await req.body
+    ?.getReader()
+    .read()
+    .then((r) => r.value && new TextDecoder().decode(r.value));
 }

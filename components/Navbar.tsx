@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 
 // profile menu component
 
@@ -133,16 +134,27 @@ const navListItems = [
 
 const NavList: FC = () => {
   return (
-    <ul className="flex flex-col gap-2 mt-2 mb-4 lg:flex-row lg:items-center lg:mt-0 lg:mb-0">
-      {navListItems.map(({ label, icon, url }, key) => (
-        <Link href={url} key={label}>
-          <Button ripple className="flex items-center">
-            {React.createElement(icon, {
-              className: "h-[30px] w-[30px] inline mr-2",
-            })}
-            <h6>{label}</h6>
-          </Button>
-        </Link>
+    <ul className="flex flex-col gap-4 items-center mt-1 mb-1 lg:flex-row lg:gap-10 lg:mt-0 lg:mb-0">
+      {navListItems.map(({ label, icon, url }) => (
+        <motion.span
+          key={label}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          className="w-5/6 lg:w-auto"
+        >
+          <Link href={url} className="w-full">
+            <Button
+              ripple
+              className="flex z-50 justify-center items-center w-full"
+            >
+              {React.createElement(icon, {
+                className: "h-[30px] w-[30px] inline mr-2",
+              })}
+              <h6>{label}</h6>
+            </Button>
+          </Link>
+        </motion.span>
       ))}
     </ul>
   );
@@ -205,7 +217,7 @@ const Navbar: FC = () => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center mr-2 ml-auto text-2xl bg-lime-700 rounded-full font-tyros group"
+            className="flex flex-col justify-center items-center mr-2 ml-2 text-2xl bg-lime-700 rounded-full font-tyros group"
             onClick={() => {
               signIn("auth0");
             }}
