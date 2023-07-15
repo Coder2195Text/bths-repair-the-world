@@ -217,7 +217,7 @@ const Navbar: FC = () => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center mr-2 ml-2 text-2xl bg-lime-700 rounded-full font-tyros group"
+            className="flex flex-col justify-center items-center mr-2 ml-auto text-2xl bg-lime-700 rounded-full font-tyros group"
             onClick={() => {
               signIn("auth0");
             }}
