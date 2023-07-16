@@ -24,8 +24,8 @@ const Layout: FC<Props> = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center py-24 text-xl font-tyros">
-      <main className="block max-w-7xl text-center break-words bg-white bg-opacity-10 rounded-xl px-[6vw] py-[8vw] max-w-screen 2xl:px-[79px] 2xl:py-[106px]">
+    <div className="flex flex-wrap justify-center py-14 text-xl font-tyros">
+      <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[6vw] max-w-screen 2xl:px-[79px] 2xl:py-[79px]">
         <Navbar />
         {children}
       </main>

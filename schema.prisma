@@ -9,13 +9,23 @@ datasource db {
 }
 
 model User {
-  email        String            @id
-  name         String
-  pronouns     String
-  position     String            @default("member")
-  gradYear     Int
-  registeredAt DateTime
-  events       EventAttendance[]
+  email         String            @id
+  name          String
+  preferredName String?
+  osis          String            @unique
+  prefect       String
+  pronouns      String
+  position      String            @default("member")
+  gradYear      Int
+  registeredAt  DateTime          @default(now())
+  events        EventAttendance[] @relation("EventAttendee")
+  birthday      DateTime
+}
+
+model Referrals {
+  id            String @id @default(cuid())
+  referrerEmail String
+  referredEmail String
 }
 
 model Event {
@@ -29,7 +39,7 @@ model Event {
 
 model EventAttendance {
   id           String   @id @default(cuid())
-  user         User     @relation(fields: [userEmail], references: [email])
+  user         User     @relation("EventAttendee", fields: [userEmail], references: [email])
   userEmail    String
   event        Event    @relation(fields: [eventId], references: [id])
   eventId      String

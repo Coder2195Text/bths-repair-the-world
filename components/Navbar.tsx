@@ -10,28 +10,20 @@ import {
   Avatar,
   Collapse,
 } from "@material-tailwind/react";
-import {
-  CubeTransparentIcon,
-  UserCircleIcon,
-  CodeBracketSquareIcon,
-  ChevronDownIcon,
-  PowerIcon,
-} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
+import { FiLogOut } from "react-icons/fi";
+import { IconType } from "react-icons";
+import { RiAccountCircleLine } from "react-icons/ri";
+import { BiChevronDown, BiCode, BiCube } from "react-icons/bi";
 
 // profile menu component
 
 const profileMenuItems: {
   label: ReactNode;
-  icon: React.ForwardRefExoticComponent<
-    Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
-      title?: string | undefined;
-      titleId?: string | undefined;
-    } & React.RefAttributes<SVGSVGElement>
-  >;
+  icon: IconType;
   onClick?: (
     event:
       | React.MouseEvent<HTMLLIElement, MouseEvent>
@@ -40,7 +32,7 @@ const profileMenuItems: {
 }[] = [
     {
       label: "Sign Out",
-      icon: PowerIcon,
+      icon: FiLogOut,
       onClick: () => {
         signOut();
       },
@@ -72,7 +64,7 @@ function ProfileMenu() {
               "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
             }
           />
-          <ChevronDownIcon
+          <BiChevronDown
             strokeWidth={2.5}
             className={`h-6 w-6 transition-transform ${isMenuOpen ? "rotate-180" : ""
               }`}
@@ -117,17 +109,17 @@ function ProfileMenu() {
 const navListItems = [
   {
     label: "Account",
-    icon: UserCircleIcon,
+    icon: RiAccountCircleLine,
     url: "/test",
   },
   {
     label: "Blocks",
-    icon: CubeTransparentIcon,
+    icon: BiCube,
     url: "",
   },
   {
     label: "Docs",
-    icon: CodeBracketSquareIcon,
+    icon: BiCode,
     url: "",
   },
 ];
@@ -138,21 +130,16 @@ const NavList: FC = () => {
       {navListItems.map(({ label, icon, url }) => (
         <motion.span
           key={label}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          className="w-5/6 lg:w-auto"
+          className="w-5/6 text-white lg:w-auto"
         >
-          <Link href={url} className="w-full">
-            <Button
-              ripple
-              className="flex z-50 justify-center items-center w-full"
-            >
-              {React.createElement(icon, {
-                className: "h-[30px] w-[30px] inline mr-2",
-              })}
-              <h6>{label}</h6>
-            </Button>
+          <Link href={url} className="flex items-center w-full">
+            {React.createElement(icon, {
+              className: "h-[30px] w-[30px] inline mr-2",
+            })}
+            <h6>{label}</h6>
           </Link>
         </motion.span>
       ))}
@@ -176,7 +163,7 @@ const Navbar: FC = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 z-30 p-4 w-screen bg-gray-700 bg-opacity-70 border-none lg:pl-6">
+    <nav className="fixed top-0 left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-70 border-none lg:pl-6">
       <div className="flex relative items-center mx-auto text-blue-gray-900">
         <Link href="/" className="font-medium cursor-pointer">
           <Image
