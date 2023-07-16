@@ -5,6 +5,7 @@ import { Button } from "@material-tailwind/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { FC } from "react";
+import Typewriter from "typewriter-effect";
 
 const HomePage: FC = () => {
   const { status } = useSession();
@@ -14,26 +15,31 @@ const HomePage: FC = () => {
         BTHS Repair the World
       </h1>
       <h3 className="vscale">
-        Inspiring BTHS youth to make change in a unjust society.
+        <Typewriter
+          options={{
+            strings: [
+              "While key club scams you, we provide the keys to change.",
+              "Inspiring BTHS youth to make change in a unjust society.",
+              "Empowering everyone to make a difference.",
+              "Mobilizing productivity for a better tomorrow.",
+              "Setting the stage for change.",
+              "Repairing the world, one step at a time.",
+            ],
+            autoStart: true,
+            loop: true,
+          }}
+        />
       </h3>
       <div className="relative my-3 w-full h-[50vw] lg:h-[600px]">
-        <Image src="/images/home-1.png" fill className="object-cover" alt="" />
+        <Image
+          src="/images/home-banner.jpg"
+          fill
+          className="object-cover"
+          alt=""
+        />
       </div>
-      <h3 className="vscale">Mobilizing them for productivity.</h3>
-      <div className="relative my-3 w-full h-[50vw] lg:h-[600px]">
-        <Image src="/images/home-2.jpg" fill className="object-cover" alt="" />
-      </div>
-      <h3 className="vscale">
-        BTHS Repair the World will set the stage for change.
-      </h3>
-
       {status === "unauthenticated" && (
-        <Button
-          ripple
-          onClick={() => signIn("auth0")}
-          color="amber"
-          className="mt-3"
-        >
+        <Button ripple onClick={() => signIn("auth0")} color="amber">
           <h4 className="vscale">Join us now!</h4>
         </Button>
       )}
