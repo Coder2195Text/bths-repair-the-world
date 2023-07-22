@@ -21,11 +21,21 @@ export async function GET(_req: NextRequest, { params: { email } }: Params) {
     email = session.user.email;
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  const [user, referrals] = await Promise.all([
+    prisma.user.findUnique({
+      where: { email },
+    }),
+    await prisma.user
+      .findMany({
+        where: { referredBy: email },
+        select: {
+          email: true,
+        },
+      })
+      .then((u) => u.map((u) => u.email)),
+  ]);
 
-  return NextResponse.json(user, { status: 200 });
+  return NextResponse.json({ ...user, referrals }, { status: 200 });
 }
 
 const schema = Joi.object({
@@ -36,8 +46,10 @@ const schema = Joi.object({
   preferredName: Joi.string().optional().max(190),
   prefect: Joi.string()
     .required()
-    .regex(/^[A-Za-z]\d[A-Za-z]$/),
-  birthday: Joi.date().required(),
+    .regex(/^[A-Za-z]\d[A-Za-z]$/g),
+  birthday: Joi.string().regex(
+    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/g
+  ),
   referredBy: Joi.string().optional().email(),
 });
 
@@ -64,9 +76,11 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       .then((u) => ["admin", "exec"].includes(u?.position!));
   });
 
-  if (!req.body) return NextResponse.json({ error: "Missing body" }, { status: 400 });
+  if (!req.body)
+    return NextResponse.json({ error: "Missing body" }, { status: 400 });
 
-  const body = req.body.getReader()
+  const body = req.body
+    .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
     .then(function(val): [boolean, any] {
@@ -77,7 +91,7 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       } catch (e) {
         return [false, "Bad JSON"];
       }
-      let errors = schema.validate(parsed).error
+      let errors = schema.validate(parsed).error;
       return errors ? [false, errors] : [true, parsed];
     });
 
@@ -85,29 +99,38 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   if ((await body)[0]) {
-    const data = (await body)[1];
-    console.log(data);
+    const data: UserPOSTBody = (await body)[1];
     let referral;
     if (data.hasOwnProperty("referredBy")) {
       referral = data.referredBy as string | undefined;
       delete data.referredBy;
     }
 
-    const promises: Promise<any>[] = [prisma.user.create({
-      data: { ...data, email, preferredName: data.preferredName || data.name }
-    })]
-    if (referral) {
-      promises.push(prisma.referrals.create({
+    const promises: Promise<any>[] = [
+      prisma.user.create({
         data: {
-          referrerEmail: referral,
-          referredEmail: email,
+          ...data,
+          email,
+          preferredName: data.preferredName || data.name,
         },
-      }))
+      }),
+    ];
+    if (referral) {
+      promises.push(
+        prisma.referrals.create({
+          data: {
+            referrerEmail: referral,
+            referredEmail: email,
+          },
+        })
+      );
     }
 
-    try { return (await Promise.all(promises))[0] }
-    catch (e) {
-      console.log(e)
+    try {
+      return NextResponse.json((await Promise.all(promises))[0], {
+        status: 200,
+      });
+    } catch (e) {
       return NextResponse.json({ error: e }, { status: 500 });
     }
   } else {

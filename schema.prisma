@@ -19,13 +19,8 @@ model User {
   gradYear      Int
   registeredAt  DateTime          @default(now())
   events        EventAttendance[] @relation("EventAttendee")
-  birthday      DateTime
-}
-
-model Referrals {
-  id            String @id @default(cuid())
-  referrerEmail String
-  referredEmail String
+  birthday      String
+  referredBy    String?
 }
 
 model Event {
