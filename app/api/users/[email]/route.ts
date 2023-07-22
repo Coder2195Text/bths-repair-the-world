@@ -47,9 +47,9 @@ const schema = Joi.object({
   preferredName: Joi.string().optional().max(190),
   prefect: Joi.string()
     .required()
-    .regex(/^[A-Za-z]\d[A-Za-z]$/g),
+    .regex(/^[A-Za-z]\d[A-Za-z]$/),
   birthday: Joi.string().regex(
-    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/g
+    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/
   ),
   referredBy: Joi.string().optional().email(),
 });

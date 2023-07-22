@@ -17,7 +17,7 @@
     @apply z-20 overflow-hidden;
   }
   body {
-    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed;
+    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed text-xl;
   }
 
   h1,
@@ -53,6 +53,10 @@
     @apply text-3xl font-[500] leading-[1.04];
   }
 
+  .vscale {
+    @apply text-[2vw] lg:text-xl leading-none;
+  }
+
   h1.vscale {
     @apply text-[9.6vw] lg:text-8xl lg:leading-[1.24];
   }
@@ -74,7 +78,7 @@
   }
 
   h6.vscale {
-    @apply text-[2.4vw] lg:text-3xl font-[500] lg:leading-[1.04];
+    @apply text-[3vw] lg:text-3xl font-[500] lg:leading-[1.04];
   }
 
   button,
@@ -82,5 +86,19 @@
   [type="reset"],
   [type="submit"] {
     @apply bg-blue-800 p-3 rounded-full;
+  }
+}
+
+@layer components {
+  .birthday {
+    background-color: #9e99ff;
+    background-image: radial-gradient(
+        at 30% 61%,
+        hsla(172, 100%, 50%, 1) 0px,
+        transparent 50%
+      ),
+      radial-gradient(at 37% 11%, hsla(330, 100%, 50%, 1) 0px, transparent 50%),
+      radial-gradient(at 24% 33%, hsla(156, 100%, 50%, 1) 0px, transparent 50%),
+      radial-gradient(at 55% 93%, hsla(278, 100%, 50%, 1) 0px, transparent 50%);
   }
 }
