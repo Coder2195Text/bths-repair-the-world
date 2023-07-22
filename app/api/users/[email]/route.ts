@@ -1,8 +1,9 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
+import { UserPOSTBody } from "@/types/user";
 
 const prisma = new PrismaClient();
 
@@ -106,34 +107,22 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       delete data.referredBy;
     }
 
-    const promises: Promise<any>[] = [
-      prisma.user.create({
-        data: {
-          ...data,
-          email,
-          preferredName: data.preferredName || data.name,
-        },
-      }),
-    ];
-    if (referral) {
-      promises.push(
-        prisma.referrals.create({
-          data: {
-            referrerEmail: referral,
-            referredEmail: email,
-          },
-        })
-      );
-    }
-
     try {
-      return NextResponse.json((await Promise.all(promises))[0], {
-        status: 200,
-      });
+      return NextResponse.json(
+        await prisma.user.create({
+          data: {
+            ...data,
+            email,
+            preferredName: data.preferredName || data.name,
+          },
+        }),
+        {
+          status: 200,
+        }
+      );
     } catch (e) {
       return NextResponse.json({ error: e }, { status: 500 });
     }
-  } else {
-    return NextResponse.json({ error: (await body)[1] }, { status: 400 });
   }
+  return NextResponse.json({ error: (await body)[1] }, { status: 400 });
 }

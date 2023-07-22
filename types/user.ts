@@ -11,6 +11,8 @@ export interface UserPOSTBody {
   referredBy?: string;
 }
 
+type UserPatchBody = Partial<UserPOSTBody>;
+
 export interface UserFull extends User {
   referrals: string[];
 }
