@@ -6,6 +6,7 @@ import { BarLoader } from "react-spinners";
 import Navbar from "./Navbar";
 import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
+import RegisterForm from "./RegisterForm";
 
 interface Props {
   children: ReactNode;
@@ -16,9 +17,11 @@ const Layout: FC<Props> = ({ children }) => {
   const { status: accountStatus, data } = useAccount();
   const today = new Date();
   const birthday = data?.birthday ? new Date(data.birthday) : undefined;
+  birthday?.setFullYear(today.getFullYear());
   const isBirthday =
     birthday?.getDate() === today.getDate() &&
-    birthday.getMonth() === today.getMonth();
+    birthday?.getMonth() === today.getMonth();
+  console.log(accountStatus);
 
   if (status === "loading" || accountStatus === "pending" || !children) {
     return (
@@ -30,8 +33,9 @@ const Layout: FC<Props> = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center py-14 text-xl font-tyros">
-      <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[6vw] max-w-screen 2xl:px-[79px] 2xl:py-[79px]">
+    <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
+      <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
+        {accountStatus === "unregistered" && <RegisterForm />}
         {isBirthday && <BirthdayPopup />}
         <Navbar />
         {children}

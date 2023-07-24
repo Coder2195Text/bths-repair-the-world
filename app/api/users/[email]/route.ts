@@ -36,7 +36,7 @@ export async function GET(_req: NextRequest, { params: { email } }: Params) {
       .then((u) => u.map((u) => u.email)),
   ]);
 
-  return NextResponse.json({ ...user, referrals }, { status: 200 });
+  return NextResponse.json(user && { ...user, referrals }, { status: 200 });
 }
 
 const schema = Joi.object({
