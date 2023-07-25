@@ -153,7 +153,6 @@ const Navbar: FC = () => {
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
   const { data, status } = useSession();
-  console.log(data);
 
   React.useEffect(() => {
     window.addEventListener(

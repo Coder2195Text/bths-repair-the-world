@@ -106,6 +106,16 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       referral = data.referredBy as string | undefined;
       delete data.referredBy;
     }
+    const existingOSIS = await prisma.user.findUnique({
+      where: { osis: data.osis },
+      select: { osis: true },
+    });
+
+    if (existingOSIS)
+      return NextResponse.json(
+        { error: "OSIS already exists" },
+        { status: 409 }
+      );
 
     try {
       return NextResponse.json(

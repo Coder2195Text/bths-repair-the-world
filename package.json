@@ -16,6 +16,7 @@
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
+    "formik": "^2.4.2",
     "framer-motion": "^10.12.18",
     "joi": "^17.9.2",
     "next": "13.4.7",

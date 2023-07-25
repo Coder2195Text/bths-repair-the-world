@@ -87,6 +87,10 @@
   [type="submit"] {
     @apply bg-blue-800 p-3 rounded-full;
   }
+
+  input {
+    @apply m-1 p-1 rounded-lg w-full md:w-[40vw];
+  }
 }
 
 @layer components {
