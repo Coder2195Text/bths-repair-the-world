@@ -91,6 +91,10 @@
   input {
     @apply m-1 p-1 rounded-lg w-full md:w-[40vw];
   }
+
+  a {
+    @apply text-blue-500 hover:cursor-pointer hover:text-blue-900 transition-all;
+  }
 }
 
 @layer components {

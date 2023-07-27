@@ -1,16 +1,19 @@
 "use client";
 
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { BarLoader } from "react-spinners";
 import Navbar from "./Navbar";
 import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
 import RegisterForm from "./RegisterForm";
+import io from "socket.io-client";
 
 interface Props {
   children: ReactNode;
 }
+
+let socket;
 
 const Layout: FC<Props> = ({ children }) => {
   const { status } = useSession();
@@ -35,7 +38,9 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
-        {accountStatus === "unregistered" && <RegisterForm />}
+        {accountStatus === "unregistered" && status === "authenticated" && (
+          <RegisterForm />
+        )}
         {isBirthday && <BirthdayPopup />}
         <Navbar />
         {children}

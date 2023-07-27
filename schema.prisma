@@ -20,7 +20,7 @@ model User {
   registeredAt  DateTime          @default(now())
   events        EventAttendance[] @relation("EventAttendee")
   birthday      String
-  referredBy    String?
+  referredBy    String
 }
 
 model Event {
@@ -38,9 +38,9 @@ model EventAttendance {
   userEmail    String
   event        Event    @relation(fields: [eventId], references: [id])
   eventId      String
-  earnedPoints Float
-  registeredAt DateTime
-  attended     Boolean
+  earnedPoints Float    @default(0)
+  registeredAt DateTime @default(now())
+  attended     Boolean  @default(false)
 
   @@index([userEmail])
   @@index([eventId])
