@@ -111,20 +111,35 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
     }
 
     try {
-      return NextResponse.json(
-        await prisma.user.create({
+      const [body, referredBy] = await Promise.all([
+        prisma.user.create({
           data: {
             ...data,
             email,
             preferredName: data.preferredName || data.name,
           },
         }),
+        prisma.user
+          .findMany({
+            where: { referredBy: email },
+            select: {
+              email: true,
+            },
+          })
+          .then((u) => u.map((u) => u.email)),
+      ]);
+
+      return NextResponse.json(
+        {
+          ...body,
+          referredBy,
+        },
         {
           status: 200,
         }
       );
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return NextResponse.json({ error: e }, { status: 500 });
     }
   }
