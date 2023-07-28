@@ -104,14 +104,9 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
 
   if ((await body)[0]) {
     const data: UserPOSTBody = (await body)[1];
-    let referral;
-    if (data.hasOwnProperty("referredBy")) {
-      referral = data.referredBy as string;
-      delete data.referredBy;
-    }
 
     try {
-      const [body, referredBy] = await Promise.all([
+      const [body, referrals] = await Promise.all([
         prisma.user.create({
           data: {
             ...data,
@@ -132,7 +127,7 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       return NextResponse.json(
         {
           ...body,
-          referredBy,
+          referrals,
         },
         {
           status: 200,
