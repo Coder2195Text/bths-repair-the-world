@@ -106,7 +106,7 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
     const data: UserPOSTBody = (await body)[1];
     let referral;
     if (data.hasOwnProperty("referredBy")) {
-      referral = data.referredBy as string | undefined;
+      referral = data.referredBy as string;
       delete data.referredBy;
     }
 
@@ -124,6 +124,7 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
         }
       );
     } catch (e) {
+      console.log(e)
       return NextResponse.json({ error: e }, { status: 500 });
     }
   }

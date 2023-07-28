@@ -4,6 +4,7 @@ import Joi from "joi";
 import { signOut } from "next-auth/react";
 import { FC, MouseEvent, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
+import { useAccount } from "./AccountContext";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -22,6 +23,7 @@ const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
 
 const RegisterForm: FC = () => {
   const [prefectDetails, setPrefectDetails] = useState(false);
+  const { setData, setStatus } = useAccount();
   return (
     <div className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
       <div className="overflow-auto max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
@@ -36,16 +38,30 @@ const RegisterForm: FC = () => {
         <Formik
           initialValues={{
             name: "",
-            preferredName: "",
+            preferredName: "" as string | undefined,
             prefect: "",
             pronouns: "",
-            gradYear: "",
+            gradYear: "" as number | string,
             birthday: undefined as string | undefined,
             sgoSticker: false,
-            referredBy: "",
+            referredBy: "" as string | undefined,
           }}
           onSubmit={async (values) => {
-            console.log(values);
+            if (!values.referredBy) delete values.referredBy;
+            if (!values.preferredName) delete values.preferredName;
+            values.gradYear = parseInt(values.gradYear as string);
+            const [status, res] = await fetch("/api/users/@me", {
+              method: "POST",
+              body: JSON.stringify(values),
+            }).then((req) => [req.status, req.json()]);
+            if (status === 200) {
+              setData(res);
+              setStatus("registered");
+            } else {
+              alert(
+                `Report the error to the developer. Error: ${status} ${body}`
+              );
+            }
           }}
           validate={(values) => {
             const errors: any = {};
@@ -118,7 +134,7 @@ const RegisterForm: FC = () => {
             return errors;
           }}
         >
-          {({ isSubmitting, values, setFieldValue }) => (
+          {({ isSubmitting, values, setFieldValue, errors }) => (
             <Form>
               <label htmlFor="name">Full Legal Name: </label>
               <Field
@@ -175,14 +191,20 @@ const RegisterForm: FC = () => {
               <div>
                 <span className="text-lg">Quick Suggestions:</span>
                 {PRONOUNS.map((suggestion) => (
-                  <button
+                  <Button
                     type="button"
-                    className="p-1 mx-1 text-base"
+                    className="p-1 mx-1 text-base normal-case font-figtree"
                     key={suggestion}
-                    onClick={() => setFieldValue("pronouns", suggestion, false)}
+                    onClick={() =>
+                      setFieldValue(
+                        "pronouns",
+                        suggestion,
+                        Boolean(errors.pronouns || false)
+                      )
+                    }
                   >
                     {suggestion}
-                  </button>
+                  </Button>
                 ))}
               </div>
               <Error name="pronouns" />
@@ -221,6 +243,15 @@ const RegisterForm: FC = () => {
               />
               <br />
               <Error name="referredBy" />
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                ripple
+                className="text-xl font-tyros"
+                color="light-blue"
+              >
+                Submit
+              </Button>
             </Form>
           )}
         </Formik>
