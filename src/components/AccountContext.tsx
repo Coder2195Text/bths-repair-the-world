@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { UserFull } from "@/types/user";
 import {
   FC,
   ReactNode,
@@ -10,8 +10,8 @@ import {
 
 interface ContextType {
   status: "pending" | "registered" | "unregistered";
-  data: User | null;
-  setData: (data: User | null) => void;
+  data: UserFull | null;
+  setData: (data: UserFull | null) => void;
   setStatus: (status: "pending" | "registered" | "unregistered") => void;
 }
 const AccountContext = createContext<ContextType>({

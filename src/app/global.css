@@ -88,21 +88,24 @@
     @apply bg-blue-800 p-3 rounded-full;
   }
 
-  input:not([type='checkbox']) {
+  input:not([type="checkbox"]) {
     @apply m-1 p-1 w-full md:w-[40vw] bg-transparent border-b-2 border-black  focus:outline-none;
   }
 
-  input:not([type='checkbox']):focus {
-    box-shadow: 0 0 8pt 4pt #D3D3D3;
+  input:not([type="checkbox"]):focus {
+    box-shadow: 0 0 8pt 4pt #d3d3d3;
   }
 
-  input[type='checkbox'] {
-    width:20px;
+  input[type="checkbox"] {
+    width: 20px;
     height: 20px;
   }
 
   a {
     @apply text-blue-500 hover:cursor-pointer hover:text-blue-900 transition-all;
+  }
+  hr {
+    @apply mt-3 w-full border-2 border-black;
   }
 }
 

@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import { FC, MouseEvent, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
 import { useAccount } from "./AccountContext";
+import { UserFull } from "@/types/user";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -34,7 +35,7 @@ const RegisterForm: FC = () => {
             Sign Out
           </a>
         </h6>
-        <hr className="mt-3 w-full border-2 border-black" />
+        <hr />
         <Formik
           initialValues={{
             name: "",
@@ -45,76 +46,76 @@ const RegisterForm: FC = () => {
             birthday: undefined as string | undefined,
             sgoSticker: false,
             referredBy: "" as string | undefined,
+            tos: false as boolean | undefined,
           }}
           onSubmit={async (values) => {
+            delete values.tos;
             if (!values.referredBy) delete values.referredBy;
             if (!values.preferredName) delete values.preferredName;
             values.gradYear = parseInt(values.gradYear as string);
-            const [status, res] = await fetch("/api/users/@me", {
-              method: "POST",
-              body: JSON.stringify(values),
-            }).then((req) => [req.status, req.json()]);
+            const [status, res]: [number, UserFull] = await fetch(
+              "/api/users/@me",
+              {
+                method: "POST",
+                body: JSON.stringify(values),
+              }
+            ).then(async (req) => [req.status, await req.json()]);
             if (status === 200) {
               setData(res);
               setStatus("registered");
             } else {
               alert(
-                `Report the error to the developer. Error: ${status} ${body}`
+                `Report the error to the developer. Error: ${status} ${res}`
               );
             }
           }}
           validate={(values) => {
             const errors: any = {};
             if (!values.name) {
-              errors.name = "Name is required";
+              errors.name = "Name is required.";
             }
             if (values.name?.length > 180) {
-              errors.name = "Name is too long";
+              errors.name = "Name is too long.";
             }
-            if (values.preferredName?.length > 180) {
-              errors.preferredName = "Preferred name is too long";
+
+            if (values.preferredName && values.preferredName?.length > 180) {
+              errors.preferredName = "Preferred name is too long.";
             }
             if (!values.prefect) {
-              errors.prefect = "Prefect is required";
+              errors.prefect = "Prefect is required.";
             } else {
               if (values.prefect.length !== 3) {
                 errors.prefect = "Prefect must be 3 characters";
               }
               if (!values.prefect.match(/^[A-Za-z]\d[A-Za-z]$/)) {
                 if (!errors.prefect) {
-                  errors.prefect = "Prefect must be in the format A1B";
+                  errors.prefect = "Prefect must be in the format A1B.";
                 } else {
-                  errors.prefect += " and in the format A1B";
+                  errors.prefect += " and in the format A1B.";
                 }
               }
             }
             if (!values.pronouns) {
-              errors.pronouns = "Pronouns are required";
+              errors.pronouns = "Pronouns are required.";
             }
 
             if (values.pronouns?.length > 180) {
-              errors.pronouns = "Pronouns are absurdly long";
+              errors.pronouns = "Pronouns are absurdly long.";
             }
 
             if (!values.gradYear) {
-              errors.gradYear = "Graduation year is required";
+              errors.gradYear = "Graduation year is required.";
             }
 
             if (!values.birthday) {
-              errors.birthday = "Birthday is required";
+              errors.birthday = "Birthday is required.";
             } else {
               const birthDate = new Date(values.birthday);
-              console.log(birthDate);
               if (birthDate.valueOf() >= new Date().valueOf()) {
-                errors.birthday = "Birthday must be in the past";
+                errors.birthday = "Birthday must be in the past.";
               }
               if (birthDate.getFullYear() > 2012) {
-                if (errors.birthday) {
-                  errors.birthday +=
-                    " and you seem to young to be in high school.";
-                } else {
-                  errors.birthday = "You seem to young to be in high school.";
-                }
+                errors.birthday = "You seem to young to be in high school.";
               }
             }
 
@@ -128,14 +129,18 @@ const RegisterForm: FC = () => {
 
                 .validate(values.referredBy).error
             ) {
-              errors.referredBy = "Email must be a valid nycstudents.net email";
+              errors.referredBy =
+                "Email must be a valid nycstudents.net email.";
+            }
+            if (!values.tos) {
+              errors.tos = "You must agree to the terms of service.";
             }
 
             return errors;
           }}
         >
           {({ isSubmitting, values, setFieldValue, errors }) => (
-            <Form>
+            <Form autoComplete="off">
               <label htmlFor="name">Full Legal Name: </label>
               <Field
                 id="name"
@@ -241,8 +246,20 @@ const RegisterForm: FC = () => {
                 maxLength={180}
                 placeholder="Referrer will get 5 points!"
               />
-              <br />
+              <hr />
               <Error name="referredBy" />
+              <label className="flex justify-center items-center">
+                <Field id="tos" name="tos" type="checkbox" className="mr-2" />
+                <span className="max-w-xl text-base">
+                  By submitting this form, you agree that this information is
+                  accurate, as well as abiding to the club rules. Failure to
+                  comply will result in termination of your account, as well as
+                  seizure of credits.
+                </span>
+              </label>
+
+              <Error name="tos" />
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
