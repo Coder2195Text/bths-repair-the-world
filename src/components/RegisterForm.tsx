@@ -141,7 +141,7 @@ const RegisterForm: FC = () => {
         >
           {({ isSubmitting, values, setFieldValue, errors }) => (
             <Form autoComplete="off">
-              <label htmlFor="name">Full Legal Name: </label>
+              <label htmlFor="name">Full Name: </label>
               <Field
                 id="name"
                 name="name"
@@ -214,7 +214,12 @@ const RegisterForm: FC = () => {
               </div>
               <Error name="pronouns" />
               <label htmlFor="gradYear">Graduation Year: </label>
-              <Field id="gradYear" name="gradYear" as="select">
+              <Field
+                id="gradYear"
+                name="gradYear"
+                as="select"
+                className="w-full md:w-[40vw]"
+              >
                 {GRAD_YEARS.map((year) => (
                   <option value={year || ""} key={year}>
                     {year || "Not Selected"}
