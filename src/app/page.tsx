@@ -38,7 +38,7 @@ const HomePage: FC = () => {
           alt=""
         />
       </div>
-      {status === "authenticated" && (
+      {status === "unauthenticated" && (
         <Button
           ripple
           onClick={() => signIn("auth0")}

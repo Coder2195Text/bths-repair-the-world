@@ -135,7 +135,7 @@ const NavList: FC = () => {
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="w-5/6 text-white lg:w-auto"
         >
-          <Link href={url} className="flex items-center w-full">
+          <Link href={url} className="flex justify-center items-center w-full">
             {React.createElement(icon, {
               className: "h-[30px] w-[30px] inline mr-2",
             })}
@@ -148,7 +148,7 @@ const NavList: FC = () => {
 };
 
 const Navbar: FC = () => {
-  const genericHamburgerLine = `border-2 w-6 my-0.5 rounded-full border-white transition ease transform duration-300`;
+  const genericHamburgerLine = `border-2 w-[24px] my-0.5 rounded-full border-white transition ease transform duration-300`;
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
@@ -162,7 +162,7 @@ const Navbar: FC = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-70 border-none lg:pl-6">
+    <nav className="fixed top-0 left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6">
       <div className="flex relative items-center mx-auto text-blue-gray-900">
         <Link href="/" className="font-medium cursor-pointer">
           <Image
@@ -184,7 +184,7 @@ const Navbar: FC = () => {
         >
           <div
             className={`${genericHamburgerLine} ${isNavOpen
-                ? "rotate-45 translate-y-[.43rem] opacity-50 group-hover:opacity-100"
+                ? "rotate-45 translate-y-[6px] opacity-50 group-hover:opacity-100"
                 : "opacity-50 group-hover:opacity-100"
               }`}
           />
@@ -194,7 +194,7 @@ const Navbar: FC = () => {
           />
           <div
             className={`${genericHamburgerLine} ${isNavOpen
-                ? "-rotate-45 -translate-y-[.43rem] opacity-50 group-hover:opacity-100"
+                ? "-rotate-45 -translate-y-[6px] opacity-50 group-hover:opacity-100"
                 : "opacity-50 group-hover:opacity-100"
               }`}
           />
