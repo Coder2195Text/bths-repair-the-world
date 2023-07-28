@@ -23,8 +23,8 @@ const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
 const RegisterForm: FC = () => {
   const [prefectDetails, setPrefectDetails] = useState(false);
   return (
-    <div className="flex overflow-auto fixed inset-0 z-40 justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
-      <div className="overflow-y-auto overflow-x-visible text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw] max-h-[90vh]">
+    <div className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
+      <div className="overflow-auto max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
         <h5 className="font-bold">Wait! You have to register!!!</h5>
         <h6>
           Not expecting this?
