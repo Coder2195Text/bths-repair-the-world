@@ -88,7 +88,8 @@
     @apply bg-blue-800 p-3 rounded-full;
   }
 
-  input:not([type="checkbox"]) {
+  input:not([type="checkbox"]),
+  select {
     @apply m-1 p-1 w-full md:w-[40vw] bg-transparent border-b-2 border-black  focus:outline-none;
   }
 

@@ -214,12 +214,7 @@ const RegisterForm: FC = () => {
               </div>
               <Error name="pronouns" />
               <label htmlFor="gradYear">Graduation Year: </label>
-              <Field
-                id="gradYear"
-                name="gradYear"
-                as="select"
-                className="w-full md:w-[40vw]"
-              >
+              <Field id="gradYear" name="gradYear" as="select">
                 {GRAD_YEARS.map((year) => (
                   <option value={year || ""} key={year}>
                     {year || "Not Selected"}
