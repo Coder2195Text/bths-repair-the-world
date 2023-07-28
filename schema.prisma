@@ -12,7 +12,6 @@ model User {
   email         String            @id
   name          String
   preferredName String?
-  osis          String            @unique
   prefect       String
   pronouns      String
   position      String            @default("member")
@@ -21,6 +20,7 @@ model User {
   events        EventAttendance[] @relation("EventAttendee")
   birthday      String
   referredBy    String?
+  sgoSticker    Boolean
 }
 
 model Event {

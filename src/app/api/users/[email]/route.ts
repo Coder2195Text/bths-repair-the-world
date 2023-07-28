@@ -43,7 +43,6 @@ const schema = Joi.object({
   name: Joi.string().required().max(190),
   pronouns: Joi.string().required().max(190),
   gradYear: Joi.number().required().min(2024).max(2027),
-  osis: Joi.string().required().max(9),
   preferredName: Joi.string().optional().max(190),
   prefect: Joi.string()
     .required()
@@ -51,7 +50,11 @@ const schema = Joi.object({
   birthday: Joi.string().regex(
     /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/
   ),
-  referredBy: Joi.string().optional().email(),
+  referredBy: Joi.string()
+    .optional()
+    .email()
+    .regex(/@nycstudents.net$/),
+  sgoSticker: Joi.boolean().required(),
 });
 
 export async function POST(req: NextRequest, { params: { email } }: Params) {
@@ -106,16 +109,6 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       referral = data.referredBy as string | undefined;
       delete data.referredBy;
     }
-    const existingOSIS = await prisma.user.findUnique({
-      where: { osis: data.osis },
-      select: { osis: true },
-    });
-
-    if (existingOSIS)
-      return NextResponse.json(
-        { error: "OSIS already exists" },
-        { status: 409 }
-      );
 
     try {
       return NextResponse.json(

@@ -1,5 +1,6 @@
 import { Button, Collapse } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import Joi from "joi";
 import { signOut } from "next-auth/react";
 import { FC, MouseEvent, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
@@ -17,6 +18,7 @@ const Error: FC<{ name: string }> = (props) => {
 };
 
 const GRAD_YEARS = [0, 2024, 2025, 2026, 2027];
+const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
 
 const RegisterForm: FC = () => {
   const [prefectDetails, setPrefectDetails] = useState(false);
@@ -35,11 +37,11 @@ const RegisterForm: FC = () => {
           initialValues={{
             name: "",
             preferredName: "",
-            osis: "",
             prefect: "",
             pronouns: "",
             gradYear: "",
             birthday: undefined as string | undefined,
+            sgoSticker: false,
             referredBy: "",
           }}
           onSubmit={async (values) => {
@@ -55,20 +57,6 @@ const RegisterForm: FC = () => {
             }
             if (values.preferredName?.length > 180) {
               errors.preferredName = "Preferred name is too long";
-            }
-            if (!values.osis) {
-              errors.osis = "OSIS is required";
-            } else {
-              if (values.osis?.toString().length !== 9) {
-                errors.osis = "OSIS must be 9 digits";
-              }
-              if (values.osis?.toString().match(/[^0-9]/g)) {
-                if (!errors.osis) {
-                  errors.osis = "OSIS must be only numbers";
-                } else {
-                  errors.osis += " and only numbers";
-                }
-              }
             }
             if (!values.prefect) {
               errors.prefect = "Prefect is required";
@@ -114,6 +102,19 @@ const RegisterForm: FC = () => {
               }
             }
 
+            if (
+              values.referredBy &&
+              Joi.string()
+                .email({
+                  tlds: false,
+                })
+                .regex(/@nycstudents.net$/)
+
+                .validate(values.referredBy).error
+            ) {
+              errors.referredBy = "Email must be a valid nycstudents.net email";
+            }
+
             return errors;
           }}
         >
@@ -139,16 +140,6 @@ const RegisterForm: FC = () => {
               />
               <br />
               <Error name="preferredName" />
-              <label htmlFor="osis">OSIS #: </label>
-              <Field
-                id="osis"
-                name="osis"
-                type="text"
-                maxLength={9}
-                placeholder="Your 9 digit OSIS"
-              />
-              <br />
-              <Error name="osis" />
               <label htmlFor="prefect">Prefect: </label>
               <Field
                 className="w-16"
@@ -178,14 +169,29 @@ const RegisterForm: FC = () => {
                 name="pronouns"
                 type="text"
                 maxLength={180}
-                placeholder="he/him, she/her, they/them, etc."
+                placeholder="Your pronouns"
               />
               <br />
+              <div>
+                <span className="text-lg">Quick Suggestions:</span>
+                {PRONOUNS.map((suggestion) => (
+                  <button
+                    type="button"
+                    className="p-1 mx-1 text-base"
+                    key={suggestion}
+                    onClick={() => setFieldValue("pronouns", suggestion, false)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
               <Error name="pronouns" />
               <label htmlFor="gradYear">Graduation Year: </label>
               <Field id="gradYear" name="gradYear" as="select">
                 {GRAD_YEARS.map((year) => (
-                  <option value={year || ""}>{year || "Not Selected"}</option>
+                  <option value={year || ""} key={year}>
+                    {year || "Not Selected"}
+                  </option>
                 ))}
               </Field>
               <br />
@@ -194,13 +200,24 @@ const RegisterForm: FC = () => {
               <Field id="birthday" name="birthday" type="date" />
               <br />
               <Error name="birthday" />
-              <label htmlFor="referredBy">Referred By: </label>
+              <label className="flex justify-center items-center w-full">
+                <Field
+                  id="sgoSticker"
+                  name="sgoSticker"
+                  type="checkbox"
+                  className="mr-2"
+                />
+                Check the box if you have a SGO sticker.
+              </label>
+              <label htmlFor="referredBy">
+                Email of your referrer (Optional):
+              </label>
               <Field
                 id="referredBy"
                 name="referredBy"
                 type="text"
                 maxLength={180}
-                placeholder="Who referred you?"
+                placeholder="Referrer will get 5 points!"
               />
               <br />
               <Error name="referredBy" />
