@@ -66,7 +66,7 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
   }
 
   const allowed = getServerSession({ ...AUTH_OPTIONS }).then(async (s) => {
-    if (!s?.user?.email) return false;
+    if (!s?.user?.email || !s.user.email_verified) return false;
     if (email == "@me" && s.user.email) {
       email = s.user.email;
       return true;

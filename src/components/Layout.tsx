@@ -8,6 +8,7 @@ import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
 import RegisterForm from "./RegisterForm";
 import io from "socket.io-client";
+import VerifyEmail from "./VerifyEmail";
 
 interface Props {
   children: ReactNode;
@@ -16,10 +17,12 @@ interface Props {
 let socket;
 
 const Layout: FC<Props> = ({ children }) => {
-  const { status } = useSession();
-  const { status: accountStatus, data } = useAccount();
+  const { status, data } = useSession();
+  const { status: accountStatus, data: accountData } = useAccount();
   const today = new Date();
-  const birthday = data?.birthday ? new Date(data.birthday) : undefined;
+  const birthday = accountData?.birthday
+    ? new Date(accountData.birthday)
+    : undefined;
   birthday?.setFullYear(today.getFullYear());
   const isBirthday =
     birthday?.getDate() === today.getDate() &&
@@ -34,6 +37,8 @@ const Layout: FC<Props> = ({ children }) => {
       </div>
     );
   }
+
+  if (data?.user && !data.user.email_verified) return <VerifyEmail />;
 
   return (
     <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
