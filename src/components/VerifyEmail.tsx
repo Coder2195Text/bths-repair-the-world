@@ -35,9 +35,10 @@ const VerifyEmail: FC = () => {
         <span className="p-2 w-full text-center md:w-1/2">
           <h3 className="vscale">Method 1.</h3>
           <p className="vscale">
-            Due to a new club, messages may be sent to spam. Please check that.
-            An email should have been sent the moment you registered. Then just
-            relogin to confirm verification.
+            Check your inbox for a verifcation email. <br /> Due to a new club,
+            if you cannot find it, messages may be sent to spam. Please check
+            that. An email should have been sent the moment you registered. Then
+            just relogin to confirm verification.
           </p>
           <Button
             color="blue"
