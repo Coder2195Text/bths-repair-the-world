@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 
 import "./global.css";
 import { NextAuthProvider } from "./providers";
+import "keen-slider/keen-slider.min.css";
 
 interface Props {
   children: ReactNode;
