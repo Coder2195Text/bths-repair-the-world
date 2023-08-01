@@ -21,10 +21,11 @@ const VerifyEmail: FC = () => {
           </a>
         </h4>
         <h4 className="w-full md:w-1/2 vscale">
-          Verified through one of the following methods?
+          If you verified your email, but still see this page, please
           <a onClick={() => signIn("auth0")} className="ml-2">
-            Relogin to Confirm Verification
+            Relogin{" "}
           </a>
+          so that the system can update your account.
         </h4>
       </div>
       <h5 className="vscale">
