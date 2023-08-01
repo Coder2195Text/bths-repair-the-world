@@ -14,21 +14,19 @@ const VerifyEmail: FC = () => {
     <div className="overflow-auto fixed top-0 left-0 flex-col p-10 w-screen h-screen text-center">
       <h1 className="vscale">Verify Your Email</h1>
       <div className="flex flex-row flex-wrap items-center w-full">
-        <h4 className="w-full md:w-1/2 vscale">
+        <h4 className="my-2 w-full md:w-1/2 vscale">
           Not your account?
           <a onClick={() => signOut()} className="ml-2">
             Sign Out
           </a>
         </h4>
-        <h4 className="w-full md:w-1/2 vscale">
-          If you verified your email, but still see this page, please
-          <a onClick={() => signIn("auth0")} className="ml-2">
-            Relogin{" "}
-          </a>
+        <h4 className="my-2 w-full md:w-1/2 vscale">
+          If you verified your email, but still see this page, please{" "}
+          <a onClick={() => signIn("auth0")}>Relogin </a>
           so that the system can update your account.
         </h4>
       </div>
-      <h5 className="vscale">
+      <h5 className="my-2 vscale">
         Due to increased spam, this is now being enforced to alleviate it.
         Please follow the procedures below.
       </h5>
