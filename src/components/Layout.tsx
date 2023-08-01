@@ -23,10 +23,10 @@ const Layout: FC<Props> = ({ children }) => {
   const birthday = accountData?.birthday
     ? new Date(accountData.birthday)
     : undefined;
-  birthday?.setFullYear(today.getFullYear());
+
   const isBirthday =
-    birthday?.getDate() === today.getDate() &&
-    birthday?.getMonth() === today.getMonth();
+    birthday?.getUTCDate() === today.getDate() &&
+    birthday?.getUTCMonth() === today.getMonth();
   console.log(accountStatus);
 
   if (status === "loading" || accountStatus === "pending" || !children) {
