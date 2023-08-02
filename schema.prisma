@@ -30,6 +30,7 @@ model Event {
   maxPoints   Float
   attendees   EventAttendance[]
   eventTime   DateTime
+  createdAt   DateTime          @default(now())
 }
 
 model EventAttendance {

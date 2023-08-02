@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
 import { UserPOSTBody } from "@/types/user";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/utils/prisma";
 
 type Params = { params: { email: string } };
 
@@ -80,10 +78,13 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       .then((u) => ["admin", "exec"].includes(u?.position!));
   });
 
+  if (!(await allowed))
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
   if (!req.body)
     return NextResponse.json({ error: "Missing body" }, { status: 400 });
 
-  const body = req.body
+  const result = req.body
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
@@ -99,11 +100,8 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       return errors ? [false, errors] : [true, parsed];
     });
 
-  if (!(await allowed))
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-
-  if ((await body)[0]) {
-    const data: UserPOSTBody = (await body)[1];
+  if ((await result)[0]) {
+    const data: UserPOSTBody = (await result)[1];
 
     try {
       const [body, referrals] = await Promise.all([
@@ -138,5 +136,5 @@ export async function POST(req: NextRequest, { params: { email } }: Params) {
       return NextResponse.json({ error: e }, { status: 500 });
     }
   }
-  return NextResponse.json({ error: (await body)[1] }, { status: 400 });
+  return NextResponse.json({ error: (await result)[1] }, { status: 400 });
 }
