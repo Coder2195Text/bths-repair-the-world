@@ -21,6 +21,9 @@ model User {
   birthday      String
   referredBy    String?
   sgoSticker    Boolean
+
+  eventAlerts Boolean
+  lastUpdated DateTime
 }
 
 model Event {

@@ -14,7 +14,7 @@
 
 @layer base {
   html {
-    @apply z-20 overflow-hidden text-[16px] sm:text-[19px] md:text-[22px] lg:text-[25px] font-tyros;
+    @apply z-20 overflow-hidden text-[20px]  font-tyros;
   }
   body {
     @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed;
@@ -30,27 +30,27 @@
   }
 
   h1 {
-    @apply text-[45px] sm:text-[60px] md:text-[75px]  lg:text-[90px] font-[1000];
+    @apply text-[60px] font-[1000];
   }
 
   h2 {
-    @apply text-[42px] sm:text-[55px] md:text-[70px] lg:text-[85px] font-[900];
+    @apply text-[45px] font-[900];
   }
 
   h3 {
-    @apply text-[28px] sm:text-[47px] md:text-[60px] lg:text-[71px] font-[800];
+    @apply text-[40px] font-[800];
   }
 
   h4 {
-    @apply text-[23px] sm:text-[38px] md:text-[48px] lg:text-[58px] font-[700];
+    @apply text-[35px] font-[700];
   }
 
   h5 {
-    @apply text-[19px] sm:text-[30px] md:text-[38px] lg:text-[46px] font-[600];
+    @apply text-[30px]  font-[600];
   }
 
   h6 {
-    @apply text-[17px] sm:text-[23px] md:text-[39px] lg:text-[35px] font-[500];
+    @apply text-[25px] font-[500];
   }
 
   button,

@@ -30,14 +30,14 @@ const profileMenuItems: {
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => any;
 }[] = [
-    {
-      label: "Sign Out",
-      icon: FiLogOut,
-      onClick: () => {
-        signOut();
-      },
+  {
+    label: "Sign Out",
+    icon: FiLogOut,
+    onClick: () => {
+      signOut();
     },
-  ];
+  },
+];
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -66,8 +66,9 @@ function ProfileMenu() {
           />
           <BiChevronDown
             strokeWidth={2.5}
-            className={`h-4 w-4 transition-transform ${isMenuOpen ? "rotate-180" : ""
-              }`}
+            className={`h-4 w-4 transition-transform ${
+              isMenuOpen ? "rotate-180" : ""
+            }`}
           />
         </Button>
       </MenuHandler>
@@ -81,10 +82,11 @@ function ProfileMenu() {
                 closeMenu();
                 onClick?.(event);
               }}
-              className={`flex transition-all text-white items-center gap-2 ${isLastItem
+              className={`flex transition-all text-white items-center gap-2 ${
+                isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
-                }`}
+              }`}
             >
               {React.createElement(icon, {
                 className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
@@ -164,8 +166,8 @@ const Navbar: FC = () => {
         <Link href="/" className="font-medium cursor-pointer">
           <Image
             src="/favicon.ico"
-            width={64}
-            height={64}
+            width={48}
+            height={48}
             alt="logo"
             className="rounded-full"
           />
@@ -180,16 +182,19 @@ const Navbar: FC = () => {
           ripple
         >
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
-              }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${
+              isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
+            }`}
           />
           <div
-            className={`${genericHamburgerLine}  ${isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
-              }`}
+            className={`${genericHamburgerLine}  ${
+              isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
+            }`}
           />
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
-              }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${
+              isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
+            }`}
           />
         </Button>
         {status === "authenticated" ? (
