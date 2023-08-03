@@ -58,7 +58,7 @@ function ProfileMenu() {
             variant="circular"
             size="sm"
             alt="candice wu"
-            className="p-0.5 w-12 h-12 rounded-full border border-blue-500"
+            className="p-0.5 w-8 h-8 rounded-full border border-blue-500"
             src={
               data?.user?.image ||
               "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
@@ -145,7 +145,7 @@ const NavList: FC = () => {
 };
 
 const Navbar: FC = () => {
-  const genericHamburgerLine = `absolute h-1 rounded-full bg-gray-300 w-8 rounded-full border-white transition ease transform duration-300 -translate-x-1/2 left-1/2`;
+  const genericHamburgerLine = `absolute h-0.5 rounded-full bg-gray-300 w-6 rounded-full border-white transition ease transform duration-300 -translate-x-1/2 left-1/2`;
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
@@ -176,25 +176,19 @@ const Navbar: FC = () => {
         <Button
           color="blue-gray"
           onClick={toggleIsNavOpen}
-          className="relative p-0 mr-2 ml-auto w-14 h-14 rounded-full lg:hidden"
+          className="relative p-0 mr-2 ml-auto w-10 h-10 rounded-full lg:hidden"
           ripple
         >
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen
-                ? "rotate-45  opacity-50 group-hover:opacity-100"
-                : "opacity-50 top-1/3 group-hover:opacity-100"
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
               }`}
           />
           <div
-            className={`${genericHamburgerLine}  ${isNavOpen
-                ? "opacity-0"
-                : "-translate-y-1/2 top-1/2 opacity-50 group-hover:opacity-100"
+            className={`${genericHamburgerLine}  ${isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
               }`}
           />
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen
-                ? "-rotate-45 opacity-50 group-hover:opacity-100"
-                : "opacity-50 top-2/3  group-hover:opacity-100"
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
               }`}
           />
         </Button>
