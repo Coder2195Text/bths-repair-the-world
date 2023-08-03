@@ -14,10 +14,10 @@
 
 @layer base {
   html {
-    @apply z-20 overflow-hidden;
+    @apply z-20 overflow-hidden text-[16px] sm:text-[19px] md:text-[22px] lg:text-[25px] font-tyros;
   }
   body {
-    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed text-xl font-tyros;
+    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed;
   }
 
   h1,
@@ -30,55 +30,27 @@
   }
 
   h1 {
-    @apply text-8xl font-[1000] leading-[1.24];
+    @apply text-[45px] sm:text-[60px] md:text-[75px]  lg:text-[90px] font-[1000];
   }
 
   h2 {
-    @apply text-7xl font-[900] leading-[1.2];
+    @apply text-[42px] sm:text-[55px] md:text-[70px] lg:text-[85px] font-[900];
   }
 
   h3 {
-    @apply text-6xl font-[800] leading-[1.16];
+    @apply text-[28px] sm:text-[47px] md:text-[60px] lg:text-[71px] font-[800];
   }
 
   h4 {
-    @apply text-5xl font-[700] leading-[1.12];
+    @apply text-[23px] sm:text-[38px] md:text-[48px] lg:text-[58px] font-[700];
   }
 
   h5 {
-    @apply text-4xl font-[600] leading-[1.08];
+    @apply text-[19px] sm:text-[30px] md:text-[38px] lg:text-[46px] font-[600];
   }
 
   h6 {
-    @apply text-3xl font-[500] leading-[1.04];
-  }
-
-  .vscale {
-    @apply text-[4vw] lg:text-xl leading-none;
-  }
-
-  h1.vscale {
-    @apply text-[10vw] lg:text-8xl lg:leading-[1.24];
-  }
-
-  h2.vscale {
-    @apply text-[7.5vw] lg:text-7xl font-[900] lg:leading-[1.2];
-  }
-
-  h3.vscale {
-    @apply text-[6.75vw] lg:text-6xl font-[800] lg:leading-[1.16];
-  }
-
-  h4.vscale {
-    @apply text-[5vw] lg:text-5xl font-[700] lg:leading-[1.12];
-  }
-
-  h5.vscale {
-    @apply text-[4.5vw] lg:text-4xl font-[600] lg:leading-[1.08];
-  }
-
-  h6.vscale {
-    @apply text-[4vw] lg:text-3xl font-[500] lg:leading-[1.04];
+    @apply text-[17px] sm:text-[23px] md:text-[39px] lg:text-[35px] font-[500];
   }
 
   button,

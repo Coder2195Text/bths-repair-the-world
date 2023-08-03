@@ -32,7 +32,7 @@ const Layout: FC<Props> = ({ children }) => {
   if (status === "loading" || accountStatus === "pending" || !children) {
     return (
       <div className="flex fixed top-0 left-0 flex-col justify-center items-center p-10 w-screen h-screen">
-        <h1 className="vscale">Loading...</h1>
+        <h1>Loading...</h1>
         <BarLoader color="#ffffff" width={600} className="mt-12" />
       </div>
     );

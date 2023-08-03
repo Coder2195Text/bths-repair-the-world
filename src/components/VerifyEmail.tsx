@@ -5,35 +5,34 @@ import useCountDown from "react-countdown-hook";
 import { BiLinkExternal } from "react-icons/bi";
 
 const VerifyEmail: FC = () => {
-  const [timeLeft, { start, pause, resume, reset }] = useCountDown(25000, 1000);
-  const { update } = useSession();
+  const [timeLeft, { start }] = useCountDown(25000, 1000);
   useEffect(() => {
     start(-1);
   }, []);
   return (
     <div className="overflow-auto fixed top-0 left-0 flex-col p-10 w-screen h-screen text-center">
-      <h1 className="vscale">Verify Your Email</h1>
+      <h1>Verify Your Email</h1>
       <div className="flex flex-row flex-wrap items-center w-full">
-        <h4 className="my-2 w-full md:w-1/2 vscale">
+        <h4 className="my-2 w-full md:w-1/2">
           Not your account?
           <a onClick={() => signOut()} className="ml-2">
             Sign Out
           </a>
         </h4>
-        <h4 className="my-2 w-full md:w-1/2 vscale">
+        <h4 className="my-2 w-full md:w-1/2">
           If you verified your email, but still see this page, please{" "}
           <a onClick={() => signIn("auth0")}>Relogin </a>
           so that the system can update your account.
         </h4>
       </div>
-      <h5 className="my-2 vscale">
+      <h5 className="my-2">
         Due to increased spam, this is now being enforced to alleviate it.
         Please follow the procedures below.
       </h5>
       <div className="flex flex-row flex-wrap w-full">
         <span className="p-2 w-full text-center md:w-1/2">
-          <h3 className="vscale">Method 1.</h3>
-          <p className="vscale">
+          <h3>Method 1.</h3>
+          <p>
             Check your inbox for a verifcation email. <br /> Due to a new club,
             if you cannot find it, messages may be sent to spam. Please check
             that. An email should have been sent the moment you registered. Then
@@ -41,7 +40,7 @@ const VerifyEmail: FC = () => {
           </p>
           <Button
             color="blue"
-            className="my-2 bg-blue-700 lg:p-4 p-[1.6vw] font-tyros vscale"
+            className="my-2 bg-blue-700 lg:p-4 p-[1.6vw] font-tyros"
             ripple
             disabled={timeLeft > 0}
             onClick={() => {
@@ -55,8 +54,8 @@ const VerifyEmail: FC = () => {
           </Button>
         </span>
         <span className="w-full text-center md:w-1/2">
-          <h3 className="vscale">Method 2.</h3>
-          <p className="vscale">
+          <h3>Method 2.</h3>
+          <p>
             Head to our{" "}
             <a href={process.env.NEXT_PUBLIC_DISCORD_INVITE} target="_blank">
               Discord Server <BiLinkExternal className="inline" />

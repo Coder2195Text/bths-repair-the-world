@@ -25,10 +25,10 @@ const HomePage: FC = () => {
   const rangeList = [...Array(2).keys()];
   return (
     <Layout>
-      <h1 className="mb-6 underline vscale decoration-blue-700 decoration-[2vw] 2xl:decoration-[26px]">
+      <h1 className="mb-6 underline decoration-blue-700 decoration-[1vw]">
         BTHS Repair the World
       </h1>
-      <h3 className="vscale">
+      <h4>
         <Typewriter
           options={{
             strings: [
@@ -42,7 +42,7 @@ const HomePage: FC = () => {
             loop: true,
           }}
         />
-      </h3>
+      </h4>
       <div className="relative">
         <div
           className="inline-block relative my-3 w-full rounded-2xl h-[50vw] keen-slider lg:h-[600px]"
@@ -66,7 +66,7 @@ const HomePage: FC = () => {
             instanceRef.current?.prev();
           }}
         >
-          <FaChevronLeft className="w-10 h-10" />
+          <FaChevronLeft className="lg:w-10 lg:h-10 w-[4vw] h-[4vw]" />
         </button>
         <button
           className="absolute right-0 top-1/2 bg-transparent -translate-y-1/2"
@@ -75,7 +75,7 @@ const HomePage: FC = () => {
             instanceRef.current?.next();
           }}
         >
-          <FaChevronRight className="w-10 h-10" />
+          <FaChevronRight className="lg:w-10 lg:h-10 w-[4vw] h-[4vw]" />
         </button>
       </div>
 
@@ -85,7 +85,7 @@ const HomePage: FC = () => {
           onClick={() => signIn("auth0")}
           className="bg-blue-700 lg:p-4 p-[1.6vw]"
         >
-          <h5 className="vscale">
+          <h5>
             <BsPencilSquare className="inline-block mr-2 lg:w-9 w-[3.6vw]" />
             Join us now!
           </h5>

@@ -66,7 +66,7 @@ function ProfileMenu() {
           />
           <BiChevronDown
             strokeWidth={2.5}
-            className={`h-6 w-6 transition-transform ${isMenuOpen ? "rotate-180" : ""
+            className={`h-4 w-4 transition-transform ${isMenuOpen ? "rotate-180" : ""
               }`}
           />
         </Button>
@@ -87,13 +87,10 @@ function ProfileMenu() {
                 }`}
             >
               {React.createElement(icon, {
-                className: `h-10 w-10 ${isLastItem ? "text-red-500" : ""}`,
+                className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
                 strokeWidth: 2,
               })}
-              <span
-                className={`text-2xl font-figtree ${isLastItem ? "text-red-500" : ""
-                  }`}
-              >
+              <span className={`${isLastItem ? "text-red-500" : ""}`}>
                 {label}
               </span>
             </MenuItem>
@@ -137,7 +134,7 @@ const NavList: FC = () => {
         >
           <Link href={url} className="flex justify-center items-center w-full">
             {React.createElement(icon, {
-              className: "h-[30px] w-[30px] inline mr-2",
+              className: "w-4 h-4 md:w-8 md:h-8 inline mr-2",
             })}
             <h6>{label}</h6>
           </Link>
@@ -148,7 +145,7 @@ const NavList: FC = () => {
 };
 
 const Navbar: FC = () => {
-  const genericHamburgerLine = `border-2 w-[24px] my-0.5 rounded-full border-white transition ease transform duration-300`;
+  const genericHamburgerLine = `absolute h-1 rounded-full bg-gray-300 w-8 rounded-full border-white transition ease transform duration-300 -translate-x-1/2 left-1/2`;
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
@@ -167,8 +164,8 @@ const Navbar: FC = () => {
         <Link href="/" className="font-medium cursor-pointer">
           <Image
             src="/favicon.ico"
-            width={60}
-            height={60}
+            width={64}
+            height={64}
             alt="logo"
             className="rounded-full"
           />
@@ -179,23 +176,25 @@ const Navbar: FC = () => {
         <Button
           color="blue-gray"
           onClick={toggleIsNavOpen}
-          className="flex flex-col justify-center items-center mr-2 ml-auto w-12 h-12 rounded-full lg:hidden group"
+          className="relative p-0 mr-2 ml-auto w-14 h-14 rounded-full lg:hidden"
           ripple
         >
           <div
-            className={`${genericHamburgerLine} ${isNavOpen
-                ? "rotate-45 translate-y-[6px] opacity-50 group-hover:opacity-100"
-                : "opacity-50 group-hover:opacity-100"
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen
+                ? "rotate-45  opacity-50 group-hover:opacity-100"
+                : "opacity-50 top-1/3 group-hover:opacity-100"
               }`}
           />
           <div
-            className={`${genericHamburgerLine} ${isNavOpen ? "opacity-0" : "opacity-50 group-hover:opacity-100"
+            className={`${genericHamburgerLine}  ${isNavOpen
+                ? "opacity-0"
+                : "-translate-y-1/2 top-1/2 opacity-50 group-hover:opacity-100"
               }`}
           />
           <div
-            className={`${genericHamburgerLine} ${isNavOpen
-                ? "-rotate-45 -translate-y-[6px] opacity-50 group-hover:opacity-100"
-                : "opacity-50 group-hover:opacity-100"
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen
+                ? "-rotate-45 opacity-50 group-hover:opacity-100"
+                : "opacity-50 top-2/3  group-hover:opacity-100"
               }`}
           />
         </Button>
