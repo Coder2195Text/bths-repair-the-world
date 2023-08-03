@@ -43,7 +43,7 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
-        {accountStatus === "unregistered" && status === "authenticated" && (
+        {accountStatus !== "unregistered" && status === "authenticated" && (
           <RegisterForm />
         )}
         {isBirthday && <BirthdayPopup />}

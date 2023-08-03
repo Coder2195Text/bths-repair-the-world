@@ -27,7 +27,7 @@ const RegisterForm: FC = () => {
   const { setData, setStatus } = useAccount();
   return (
     <div className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
-      <div className="overflow-auto max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
+      <div className="overflow-auto max-w-4xl max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
         <h5 className="font-bold">Wait! You have to register!!!</h5>
         <h6>
           Not expecting this?
