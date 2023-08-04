@@ -2,7 +2,7 @@ import { Button, Collapse } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Joi from "joi";
 import { signOut } from "next-auth/react";
-import { FC, MouseEvent, useState } from "react";
+import { Dispatch, FC, MouseEvent, SetStateAction, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
 import { useAccount } from "./AccountContext";
 import { UserFull } from "@/types/user";
@@ -19,50 +19,88 @@ const Error: FC<{ name: string }> = (props) => {
   );
 };
 
+type Props =
+  | {
+      mode: "register";
+      setOpen?: undefined;
+    }
+  | {
+      mode: "edit";
+      setOpen: Dispatch<SetStateAction<boolean>>;
+    };
+
 const GRAD_YEARS = [0, 2024, 2025, 2026, 2027];
 const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
 
-const RegisterForm: FC = () => {
+const UserForm: FC<Props> = ({ mode, setOpen }) => {
   const [prefectDetails, setPrefectDetails] = useState(false);
-  const { setData, setStatus } = useAccount();
+  const { data, setData, setStatus } = useAccount();
+  if (mode === "edit" && !data) return;
   return (
     <div className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
-      <div className="overflow-auto max-w-4xl max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
-        <h5 className="font-bold">Wait! You have to register!!!</h5>
+      <div className="overflow-auto max-w-5xl max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
+        <h5 className="font-bold">
+          {mode === "register"
+            ? "Wait! You have to register!!!"
+            : "Editing info"}
+        </h5>
         <h6>
-          Not expecting this?
-          <a onClick={() => signOut()} className="ml-2">
-            Sign Out
+          {mode === "register" && "Not expecting this?"}
+          <a
+            onClick={() => {
+              if (mode === "register") signOut();
+              else setOpen(false);
+            }}
+            className="ml-2"
+          >
+            {mode === "register" ? "Sign Out" : "Discard Changes And Exit"}
           </a>
         </h6>
         <hr />
         <Formik
-          initialValues={{
-            name: "",
-            preferredName: "" as string | undefined,
-            prefect: "",
-            pronouns: "",
-            gradYear: "" as number | string,
-            birthday: undefined as string | undefined,
-            sgoSticker: false,
-            referredBy: "" as string | undefined,
-            tos: false as boolean | undefined,
-          }}
+          initialValues={
+            mode === "register"
+              ? {
+                  referrals: undefined as string | undefined,
+                  email: undefined as string | undefined,
+                  position: undefined as string | undefined,
+                  registeredAt: undefined as string | undefined,
+                  lastUpdated: undefined as string | undefined,
+
+                  name: "",
+                  preferredName: "" as string | undefined,
+                  prefect: "",
+                  pronouns: "",
+                  gradYear: "" as number | string,
+                  birthday: undefined as string | undefined,
+                  sgoSticker: false,
+                  referredBy: "" as string | undefined,
+                  tos: false as boolean | undefined,
+                  eventAlerts: true,
+                }
+              : { ...data!, tos: false as boolean | undefined }
+          }
           onSubmit={async (values) => {
+            delete values.email;
+            delete values.position;
             delete values.tos;
+            delete values.registeredAt;
+            delete values.lastUpdated;
+            delete values.referrals;
             if (!values.referredBy) delete values.referredBy;
             if (!values.preferredName) delete values.preferredName;
             values.gradYear = parseInt(values.gradYear as string);
             const [status, res]: [number, UserFull] = await fetch(
               "/api/users/@me",
               {
-                method: "POST",
+                method: mode === "register" ? "POST" : "PUT",
                 body: JSON.stringify(values),
               }
             ).then(async (req) => [req.status, await req.json()]);
             if (status === 200) {
               setData(res);
               setStatus("registered");
+              if (mode === "edit") setOpen(false);
             } else {
               alert(
                 `Report the error to the developer. Error: ${status} ${res}`
@@ -237,7 +275,7 @@ const RegisterForm: FC = () => {
                 Check the box if you have a SGO sticker.
               </label>
               <label htmlFor="referredBy">
-                Email of your referrer (Optional):
+                Your referrer's email (Optional):
               </label>
               <Field
                 id="referredBy"
@@ -246,15 +284,28 @@ const RegisterForm: FC = () => {
                 maxLength={180}
                 placeholder="Referrer will get 5 points!"
               />
-              <hr />
               <Error name="referredBy" />
+              <label className="flex justify-center items-center w-full">
+                <Field
+                  id="eventAlerts"
+                  name="eventAlerts"
+                  type="checkbox"
+                  className="mr-2"
+                />
+                Uncheck the box if you do not want to receive event alerts.
+              </label>
+
+              <hr />
               <label className="flex justify-center items-center">
                 <Field id="tos" name="tos" type="checkbox" className="mr-2" />
                 <span className="max-w-xl text-base">
-                  By submitting this form, you agree that this information is
-                  accurate, as well as abiding to the club rules. Failure to
-                  comply will result in termination of your account, as well as
-                  seizure of credits.
+                  By{" "}
+                  {mode === "register"
+                    ? "submitting this form"
+                    : "editing your information"}
+                  , you agree that this information is accurate, as well as
+                  abiding to the club rules. Failure to comply will result in
+                  termination of your account, as well as seizure of credits.
                 </span>
               </label>
 
@@ -277,4 +328,4 @@ const RegisterForm: FC = () => {
   );
 };
 
-export default RegisterForm;
+export default UserForm;

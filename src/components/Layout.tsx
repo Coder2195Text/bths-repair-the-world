@@ -6,7 +6,7 @@ import { BarLoader } from "react-spinners";
 import Navbar from "./Navbar";
 import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
-import RegisterForm from "./RegisterForm";
+import UserForm from "./UserForm";
 import io from "socket.io-client";
 import VerifyEmail from "./VerifyEmail";
 
@@ -44,7 +44,7 @@ const Layout: FC<Props> = ({ children }) => {
     <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
         {accountStatus === "unregistered" && status === "authenticated" && (
-          <RegisterForm />
+          <UserForm mode="register" />
         )}
         {isBirthday && <BirthdayPopup />}
         <Navbar />

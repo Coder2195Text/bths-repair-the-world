@@ -18,18 +18,27 @@ import { FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { RiAccountCircleLine } from "react-icons/ri";
 import { BiChevronDown, BiCode, BiCube } from "react-icons/bi";
+import { FaDiscord } from "react-icons/fa";
+import UserForm from "./UserForm";
 
 // profile menu component
 
 const profileMenuItems: {
   label: ReactNode;
   icon: IconType;
-  onClick?: (
-    event:
-      | React.MouseEvent<HTMLLIElement, MouseEvent>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => any;
+  onClick?:
+    | ((
+        event:
+          | React.MouseEvent<HTMLLIElement, MouseEvent>
+          | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      ) => any)
+    | "openProfile";
 }[] = [
+  {
+    label: "Edit Profile",
+    icon: RiAccountCircleLine,
+    onClick: "openProfile",
+  },
   {
     label: "Sign Out",
     icon: FiLogOut,
@@ -42,11 +51,13 @@ const profileMenuItems: {
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const closeMenu = () => setIsMenuOpen(false);
+  const [editProfileOpen, setEditProfileOpen] = React.useState(false);
 
   const { data } = useSession();
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+      {editProfileOpen && <UserForm mode="edit" setOpen={setEditProfileOpen} />}
       <MenuHandler>
         <Button
           ripple
@@ -80,6 +91,10 @@ function ProfileMenu() {
               key={key}
               onClick={(event) => {
                 closeMenu();
+                if (onClick === "openProfile") {
+                  setEditProfileOpen(true);
+                  return;
+                }
                 onClick?.(event);
               }}
               className={`flex transition-all text-white items-center gap-2 ${
@@ -105,7 +120,11 @@ function ProfileMenu() {
 
 // nav list menu
 // nav list component
-const navListItems = [
+const navListLinks: {
+  label: string;
+  icon: IconType;
+  url: string;
+}[] = [
   {
     label: "Account",
     icon: RiAccountCircleLine,
@@ -123,10 +142,20 @@ const navListItems = [
   },
 ];
 
+const socialLinks: {
+  icon: IconType;
+  url: string;
+}[] = [
+  {
+    icon: FaDiscord,
+    url: "",
+  },
+];
+
 const NavList: FC = () => {
   return (
     <ul className="flex flex-col gap-4 items-center mt-1 mb-1 lg:flex-row lg:gap-10 lg:mt-0 lg:mb-0">
-      {navListItems.map(({ label, icon, url }) => (
+      {navListLinks.map(({ label, icon, url }) => (
         <motion.span
           key={label}
           whileHover={{ scale: 1.2 }}
@@ -136,12 +165,33 @@ const NavList: FC = () => {
         >
           <Link href={url} className="flex justify-center items-center w-full">
             {React.createElement(icon, {
-              className: "w-4 h-4 md:w-8 md:h-8 inline mr-2",
+              className: "w-8 h-8 inline mr-2",
             })}
             <h6>{label}</h6>
           </Link>
         </motion.span>
       ))}
+      <span>
+        {socialLinks.map(({ icon, url }) => (
+          <motion.span
+            key={url}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="w-5/6 text-white lg:w-auto"
+          >
+            <Link
+              href={url}
+              target="_blank"
+              className="flex justify-center items-center w-full text-gray-900 hover:text-gray-800"
+            >
+              {React.createElement(icon, {
+                className: "w-8 h-8 inline mr-2",
+              })}
+            </Link>
+          </motion.span>
+        ))}
+      </span>
     </ul>
   );
 };

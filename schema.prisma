@@ -23,7 +23,7 @@ model User {
   sgoSticker    Boolean
 
   eventAlerts Boolean
-  lastUpdated DateTime
+  lastUpdated DateTime @default(now())
 }
 
 model Event {
