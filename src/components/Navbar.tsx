@@ -97,7 +97,7 @@ function ProfileMenu() {
                 }
                 onClick?.(event);
               }}
-              className={`flex transition-all text-white items-center gap-2 ${
+              className={`flex transition-all text-white items-end gap-2 ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
@@ -105,9 +105,8 @@ function ProfileMenu() {
             >
               {React.createElement(icon, {
                 className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
               })}
-              <span className={`${isLastItem ? "text-red-500" : ""}`}>
+              <span className={` ${isLastItem ? "text-red-500" : ""}`}>
                 {label}
               </span>
             </MenuItem>
