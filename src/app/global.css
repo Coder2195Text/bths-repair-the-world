@@ -70,8 +70,7 @@
   }
 
   input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    @apply min-w-[25px] min-h-[25px];
   }
 
   a {
