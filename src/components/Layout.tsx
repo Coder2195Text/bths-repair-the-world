@@ -27,7 +27,6 @@ const Layout: FC<Props> = ({ children }) => {
   const isBirthday =
     birthday?.getUTCDate() === today.getDate() &&
     birthday?.getUTCMonth() === today.getMonth();
-  console.log(accountStatus);
 
   if (status === "loading" || accountStatus === "pending" || !children) {
     return (

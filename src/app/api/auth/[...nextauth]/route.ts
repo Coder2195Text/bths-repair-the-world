@@ -18,7 +18,6 @@ const AUTH_OPTIONS: AuthOptions = {
     async session({ session, token, newSession }) {
       session.user.email_verified = token.email_verified; // pull that out
       session.user.id = token.id;
-      console.log(newSession);
       return session;
     },
   },

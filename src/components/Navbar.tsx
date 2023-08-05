@@ -27,26 +27,26 @@ const profileMenuItems: {
   label: ReactNode;
   icon: IconType;
   onClick?:
-    | ((
-        event:
-          | React.MouseEvent<HTMLLIElement, MouseEvent>
-          | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      ) => any)
-    | "openProfile";
+  | ((
+    event:
+      | React.MouseEvent<HTMLLIElement, MouseEvent>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => any)
+  | "openProfile";
 }[] = [
-  {
-    label: "Edit Profile",
-    icon: RiAccountCircleLine,
-    onClick: "openProfile",
-  },
-  {
-    label: "Sign Out",
-    icon: FiLogOut,
-    onClick: () => {
-      signOut();
+    {
+      label: "Edit Profile",
+      icon: RiAccountCircleLine,
+      onClick: "openProfile",
     },
-  },
-];
+    {
+      label: "Sign Out",
+      icon: FiLogOut,
+      onClick: () => {
+        signOut();
+      },
+    },
+  ];
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -77,9 +77,8 @@ function ProfileMenu() {
           />
           <BiChevronDown
             strokeWidth={2.5}
-            className={`h-4 w-4 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
+            className={`h-4 w-4 transition-transform ${isMenuOpen ? "rotate-180" : ""
+              }`}
           />
         </Button>
       </MenuHandler>
@@ -97,11 +96,10 @@ function ProfileMenu() {
                 }
                 onClick?.(event);
               }}
-              className={`flex transition-all text-white items-end gap-2 ${
-                isLastItem
+              className={`flex transition-all text-white items-end gap-2 ${isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
-              }`}
+                }`}
             >
               {React.createElement(icon, {
                 className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
@@ -124,32 +122,32 @@ const navListLinks: {
   icon: IconType;
   url: string;
 }[] = [
-  {
-    label: "Account",
-    icon: RiAccountCircleLine,
-    url: "/test",
-  },
-  {
-    label: "Blocks",
-    icon: BiCube,
-    url: "",
-  },
-  {
-    label: "Docs",
-    icon: BiCode,
-    url: "",
-  },
-];
+    {
+      label: "Account",
+      icon: RiAccountCircleLine,
+      url: "/test",
+    },
+    {
+      label: "Blocks",
+      icon: BiCube,
+      url: "",
+    },
+    {
+      label: "Docs",
+      icon: BiCode,
+      url: "",
+    },
+  ];
 
 const socialLinks: {
   icon: IconType;
   url: string;
 }[] = [
-  {
-    icon: FaDiscord,
-    url: "",
-  },
-];
+    {
+      icon: FaDiscord,
+      url: "https://discord.gg/zTDeqZd6ne",
+    },
+  ];
 
 const NavList: FC = () => {
   return (
@@ -182,7 +180,7 @@ const NavList: FC = () => {
             <Link
               href={url}
               target="_blank"
-              className="flex justify-center items-center w-full text-gray-900 hover:text-gray-800"
+              className="flex justify-center items-center w-full"
             >
               {React.createElement(icon, {
                 className: "w-8 h-8 inline mr-2",
@@ -231,19 +229,16 @@ const Navbar: FC = () => {
           ripple
         >
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${
-              isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
-            }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
+              }`}
           />
           <div
-            className={`${genericHamburgerLine}  ${
-              isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
-            }`}
+            className={`${genericHamburgerLine}  ${isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
+              }`}
           />
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${
-              isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
-            }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
+              }`}
           />
         </Button>
         {status === "authenticated" ? (

@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 
 export type UserWriteBody = Omit<
-  UserWriteBody,
+  User,
   "referredBy" | "email" | "registeredAt" | "position"
 > & {
   referredBy?: string;

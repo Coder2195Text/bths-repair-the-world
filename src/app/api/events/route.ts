@@ -12,7 +12,7 @@ const schema = Joi.object({
   eventTime: Joi.date().iso().required(),
 });
 
-type EventPOSTBody = Omit<
+type EventWriteBody = Omit<
   Event,
   "id" | "createdAt" | "description" | "createdAt"
 > & {
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
     });
 
   if ((await result)[0]) {
-    const rawData: EventPOSTBody = (await result)[1];
+    const rawData: EventWriteBody = (await result)[1];
 
     const newData: Omit<Event, "id" | "createdAt"> = {
       ...rawData,

@@ -31,21 +31,17 @@ export async function POST(_req: NextRequest) {
         headers: { "content-type": "application/json" },
         method: "POST",
         body: JSON.stringify({
-          client_id: process.env.AUTH0_CLIENT_ID,
-          client_secret: process.env.AUTH0_CLIENT_SECRET,
+          client_id: process.env.AUTH0_EMAIL_ID,
+          client_secret: process.env.AUTH0_EMAIL_SECRET,
           audience: process.env.AUTH0_API_AUDIENCE,
           grant_type: "client_credentials",
         }),
       }
     ).then((res) => res.json());
 
-    console.log(newToken);
-
-    if (typeof newToken.access_token !== "string")
-      return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 }
-      );
+    if (typeof newToken.access_token !== "string") {
+      return NextResponse.json({ error: newToken }, { status: 500 });
+    }
 
     accessToken = newToken.access_token;
     await redis.set("accessToken", newToken.access_token, "EX", 43200);

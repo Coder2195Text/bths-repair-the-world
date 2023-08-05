@@ -21,13 +21,13 @@ const Error: FC<{ name: string }> = (props) => {
 
 type Props =
   | {
-      mode: "register";
-      setOpen?: undefined;
-    }
+    mode: "register";
+    setOpen?: undefined;
+  }
   | {
-      mode: "edit";
-      setOpen: Dispatch<SetStateAction<boolean>>;
-    };
+    mode: "edit";
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  };
 
 const GRAD_YEARS = [0, 2024, 2025, 2026, 2027];
 const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
@@ -58,43 +58,41 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
         </h6>
         <hr />
         <Formik
-          initialValues={
-            mode === "register"
-              ? {
-                  referrals: undefined as string | undefined,
-                  email: undefined as string | undefined,
-                  position: undefined as string | undefined,
-                  registeredAt: undefined as string | undefined,
-                  lastUpdated: undefined as string | undefined,
-
-                  name: "",
-                  preferredName: "" as string | undefined,
-                  prefect: "",
-                  pronouns: "",
-                  gradYear: "" as number | string,
-                  birthday: undefined as string | undefined,
-                  sgoSticker: false,
-                  referredBy: "" as string | undefined,
-                  tos: false as boolean | undefined,
-                  eventAlerts: true,
-                }
-              : { ...data!, tos: false as boolean | undefined }
-          }
+          initialValues={{
+            name: data?.name || "",
+            preferredName: data?.preferredName || ("" as string | undefined),
+            prefect: data?.prefect || "",
+            pronouns: data?.pronouns || "",
+            gradYear: data?.gradYear || ("" as number | string),
+            birthday: data?.birthday as string | undefined,
+            sgoSticker: data?.sgoSticker || false,
+            referredBy: data?.referredBy || ("" as string | undefined),
+            tos: false as boolean | undefined,
+            eventAlerts: data?.eventAlerts || true,
+          }}
           onSubmit={async (values) => {
-            delete values.email;
-            delete values.position;
             delete values.tos;
-            delete values.registeredAt;
-            delete values.lastUpdated;
-            delete values.referrals;
             if (!values.referredBy) delete values.referredBy;
             if (!values.preferredName) delete values.preferredName;
             values.gradYear = parseInt(values.gradYear as string);
+            const finalValues =
+              mode === "register"
+                ? values
+                : Object.fromEntries(
+                  Object.keys(values)
+                    .filter(
+                      (k) =>
+                        values[k as keyof typeof values] !==
+                        data![k as keyof typeof data]
+                    )
+                    .map((k) => [k, values[k as keyof typeof values]])
+                );
+
             const [status, res]: [number, UserFull] = await fetch(
               "/api/users/@me",
               {
-                method: mode === "register" ? "POST" : "PUT",
-                body: JSON.stringify(values),
+                method: mode === "register" ? "POST" : "PATCH",
+                body: JSON.stringify(finalValues),
               }
             ).then(async (req) => [req.status, await req.json()]);
             if (status === 200) {
