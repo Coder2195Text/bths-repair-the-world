@@ -10,6 +10,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { useKeenSlider } from "keen-slider/react";
 import { AutoPlayPlugin } from "@/utils/keen-utils";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { HashLoader } from "react-spinners";
 
 const HomePage: FC = () => {
   const [sliderRef, instanceRef] = useKeenSlider(
@@ -22,7 +23,7 @@ const HomePage: FC = () => {
     ]
   );
   const { status } = useSession();
-  const rangeList = [...Array(2).keys()];
+  const rangeList = [...Array(4).keys()];
   return (
     <Layout>
       <h1 className="mb-6 underline decoration-blue-700 decoration-[1vw]">
@@ -48,6 +49,9 @@ const HomePage: FC = () => {
           className="inline-block relative my-3 w-full rounded-2xl h-[50vw] keen-slider lg:h-[600px]"
           ref={sliderRef}
         >
+          <div className="flex absolute justify-center items-center w-full h-full">
+            <HashLoader color="#2563EB" size={100} />
+          </div>
           {rangeList.map((i) => (
             <div className="keen-slider__slide">
               <Image
