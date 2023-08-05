@@ -88,21 +88,26 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                     .map((k) => [k, values[k as keyof typeof values]])
                 );
 
-            const [status, res]: [number, UserFull] = await fetch(
-              "/api/users/@me",
-              {
-                method: mode === "register" ? "POST" : "PATCH",
-                body: JSON.stringify(finalValues),
+            if (Object.keys(finalValues).length) {
+              const [status, res]: [number, UserFull] = await fetch(
+                "/api/users/@me",
+                {
+                  method: mode === "register" ? "POST" : "PATCH",
+                  body: JSON.stringify(finalValues),
+                }
+              ).then(async (req) => [req.status, await req.json()]);
+
+              if (status === 200) {
+                setData(res);
+                setStatus("registered");
+                if (mode === "edit") setOpen(false);
+              } else {
+                alert(
+                  `Report the error to the developer. Error: ${status} ${res}`
+                );
               }
-            ).then(async (req) => [req.status, await req.json()]);
-            if (status === 200) {
-              setData(res);
-              setStatus("registered");
-              if (mode === "edit") setOpen(false);
             } else {
-              alert(
-                `Report the error to the developer. Error: ${status} ${res}`
-              );
+              if (mode === "edit") setOpen(false);
             }
           }}
           validate={(values) => {
@@ -316,7 +321,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 className="text-xl font-tyros"
                 color="light-blue"
               >
-                Submit
+                {isSubmitting ? "Submitting" : "Submit"}
               </Button>
             </Form>
           )}

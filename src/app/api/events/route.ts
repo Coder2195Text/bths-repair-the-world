@@ -20,37 +20,18 @@ type EventWriteBody = Omit<
   eventTime: string;
 };
 
-export async function GET(req: NextRequest) {
+type EventPatchBody = Partial<EventWriteBody>;
+
+async function handler(method: "GET" | "POST", req: NextRequest) {
   const { searchParams } = new URL(req.nextUrl);
   const skip = Number(searchParams.get("page")) || 0;
   if (skip < 0)
     return NextResponse.json({ error: "Bad page" }, { status: 400 });
+
   const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(
     async (s) => {
       if (!s?.user.email_verified || !s.user.email) return false;
-      return true;
-    }
-  );
-
-  if (!allowed)
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-
-  const events = (
-    await prisma.event.findMany({
-      orderBy: { eventTime: "desc" },
-      skip: skip * 5,
-      take: 5,
-    })
-  ).map((e) => ({ ...e, description: Buffer.from(e.description).toString() }));
-
-  return NextResponse.json(events, { status: 200 });
-}
-
-export async function POST(req: NextRequest) {
-  const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(
-    async (s) => {
-      if (!s?.user.email_verified || !s.user.email) return false;
-
+      if (method === "GET") return true;
       return await prisma.user
         .findUnique({
           where: { email: s.user.email },
@@ -63,52 +44,72 @@ export async function POST(req: NextRequest) {
   if (!allowed)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
-  if (!req.body)
-    return NextResponse.json({ error: "Missing body" }, { status: 400 });
+  if (method === "GET") {
+    const events = (
+      await prisma.event.findMany({
+        orderBy: { eventTime: "desc" },
+        skip: skip * 5,
+        take: 5,
+      })
+    ).map((e) => ({
+      ...e,
+      description: Buffer.from(e.description).toString(),
+    }));
 
-  const result = req.body
-    .getReader()
-    .read()
-    .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function(val): [boolean, any] {
-      let parsed;
-      if (!val) return [false, "Missing body"];
-      try {
-        parsed = JSON.parse(val);
-      } catch (e) {
-        return [false, "Bad JSON"];
-      }
-      let errors = schema.validate(parsed).error;
-      return errors ? [false, errors] : [true, parsed];
-    });
+    return NextResponse.json(events, { status: 200 });
+  }
 
-  if ((await result)[0]) {
-    const rawData: EventWriteBody = (await result)[1];
+  if (method === "POST") {
+    if (!req.body)
+      return NextResponse.json({ error: "Missing body" }, { status: 400 });
 
-    const newData: Omit<Event, "id" | "createdAt"> = {
-      ...rawData,
-      description: Buffer.from(rawData.description),
-      eventTime: new Date(rawData.eventTime),
-    };
-
-    try {
-      const body = await prisma.event.create({
-        data: newData,
+    const result = req.body
+      .getReader()
+      .read()
+      .then((r) => r.value && new TextDecoder().decode(r.value))
+      .then(function(val): [boolean, any] {
+        let parsed;
+        if (!val) return [false, "Missing body"];
+        try {
+          parsed = JSON.parse(val);
+        } catch (e) {
+          return [false, "Bad JSON"];
+        }
+        let errors = schema.validate(parsed).error;
+        return errors ? [false, errors] : [true, parsed];
       });
 
-      return NextResponse.json(
-        {
-          ...body,
-          description: body.description.toString(),
-        },
-        {
-          status: 200,
-        }
-      );
-    } catch (e) {
-      console.log(e);
-      return NextResponse.json({ error: e }, { status: 500 });
+    if ((await result)[0]) {
+      const rawData: EventWriteBody = (await result)[1];
+
+      const newData: Omit<Event, "id" | "createdAt"> = {
+        ...rawData,
+        description: Buffer.from(rawData.description),
+        eventTime: new Date(rawData.eventTime),
+      };
+
+      try {
+        const body = await prisma.event.create({
+          data: newData,
+        });
+
+        return NextResponse.json(
+          {
+            ...body,
+            description: body.description.toString(),
+          },
+          {
+            status: 200,
+          }
+        );
+      } catch (e) {
+        console.log(e);
+        return NextResponse.json({ error: e }, { status: 500 });
+      }
     }
+    return NextResponse.json({ error: (await result)[1] }, { status: 400 });
   }
-  return NextResponse.json({ error: (await result)[1] }, { status: 400 });
 }
+
+export const GET = handler.bind(null, "GET");
+export const POST = handler.bind(null, "POST");
