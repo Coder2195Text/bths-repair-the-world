@@ -63,7 +63,7 @@ function ProfileMenu() {
           ripple
           variant="text"
           color="blue-gray"
-          className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 ml-auto text-white rounded-full"
+          className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-5 ml-auto text-white rounded-full"
         >
           <Avatar
             variant="circular"

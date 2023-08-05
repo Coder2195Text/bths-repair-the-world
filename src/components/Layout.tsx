@@ -1,14 +1,13 @@
 "use client";
 
 import { FC, ReactNode, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { BarLoader } from "react-spinners";
 import Navbar from "./Navbar";
 import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
 import UserForm from "./UserForm";
 import io from "socket.io-client";
-import NextNProgress from "nextjs-progressbar";
 
 interface Props {
   children: ReactNode;
@@ -37,6 +36,10 @@ const Layout: FC<Props> = ({ children }) => {
     );
   }
 
+  if (data?.user.id.startsWith("auth0")) {
+    signIn("auth0");
+  }
+
   return (
     <div className="flex flex-wrap justify-center text-xl py-[79px] font-tyros">
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
@@ -45,13 +48,6 @@ const Layout: FC<Props> = ({ children }) => {
         )}
         {isBirthday && <BirthdayPopup />}
         <Navbar />
-        <NextNProgress
-          color="#ff0000"
-          startPosition={0.3}
-          stopDelayMs={200}
-          height={3}
-          showOnShallow={true}
-        />
         {children}
       </main>
     </div>
