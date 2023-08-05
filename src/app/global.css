@@ -93,4 +93,8 @@
       radial-gradient(at 24% 33%, hsla(156, 100%, 50%, 1) 0px, transparent 50%),
       radial-gradient(at 55% 93%, hsla(278, 100%, 50%, 1) 0px, transparent 50%);
   }
+
+  .title {
+    @apply mb-6 underline decoration-8 decoration-blue-700;
+  }
 }

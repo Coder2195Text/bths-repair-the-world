@@ -6,17 +6,14 @@ const AUTH_OPTIONS: AuthOptions = {
     async jwt({ token, user, trigger }) {
       if (user) {
         const castUser = user as unknown as User & {
-          email_verified: boolean;
           id: string;
         };
-        token.email_verified = castUser.email_verified; // pull that out
         token.id = castUser.id;
       }
       return token;
     },
 
     async session({ session, token, newSession }) {
-      session.user.email_verified = token.email_verified; // pull that out
       session.user.id = token.id;
       return session;
     },
@@ -29,7 +26,6 @@ const AUTH_OPTIONS: AuthOptions = {
           name: profile.nickname,
           email: profile.email,
           image: profile.picture,
-          email_verified: profile.email_verified, // add the attribute here
         };
       },
 

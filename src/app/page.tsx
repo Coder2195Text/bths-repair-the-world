@@ -26,9 +26,7 @@ const HomePage: FC = () => {
   const rangeList = [...Array(4).keys()];
   return (
     <Layout>
-      <h1 className="mb-6 underline decoration-blue-700 decoration-[1vw]">
-        BTHS Repair the World
-      </h1>
+      <h1 className="title">BTHS Repair the World</h1>
       <h4>
         <Typewriter
           options={{

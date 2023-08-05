@@ -1,12 +1,9 @@
-import Layout from "@/components/Layout";
 import { FC } from "react";
+import Page from "./EventPage";
 
-const HomePage: FC = () => {
-  return (
-    <Layout>
-      <h1>Events</h1>
-    </Layout>
-  );
+export const metadata = {
+  title: "Events - BTHS Repair the World",
+  description: "Check out some of our events!",
 };
 
-export default HomePage;
+export default Page;

@@ -30,7 +30,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
 
   const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(
     async (s) => {
-      if (!s?.user.email_verified || !s.user.email) return false;
+      if (!s?.user.email) return false;
       if (method === "GET") return true;
       return await prisma.user
         .findUnique({

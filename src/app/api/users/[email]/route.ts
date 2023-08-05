@@ -57,8 +57,7 @@ async function handler(
 
   const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(
     async (s) => {
-      if (!s?.user?.email || (method !== "GET" && !s.user.email_verified))
-        return false;
+      if (!s?.user?.email) return false;
       if (email == "@me" && s.user.email) {
         email = s.user.email;
         return true;

@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { RiAccountCircleLine } from "react-icons/ri";
-import { BiChevronDown, BiCode, BiCube } from "react-icons/bi";
+import { BiCalendarCheck, BiChevronDown, BiCode, BiCube } from "react-icons/bi";
 import { FaDiscord } from "react-icons/fa";
 import UserForm from "./UserForm";
 
@@ -123,9 +123,9 @@ const navListLinks: {
   url: string;
 }[] = [
     {
-      label: "Account",
-      icon: RiAccountCircleLine,
-      url: "/test",
+      label: "Events",
+      icon: BiCalendarCheck,
+      url: "/events",
     },
     {
       label: "Blocks",
@@ -245,10 +245,11 @@ const Navbar: FC = () => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center mr-2 ml-auto text-2xl bg-lime-700 rounded-full font-tyros group"
+            className="flex flex-col justify-center items-center p-2 mr-2 ml-auto text-xl bg-lime-400 rounded-full font-tyros group"
             onClick={() => {
               signIn("auth0");
             }}
+            color="yellow"
           >
             Login
           </Button>

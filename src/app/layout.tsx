@@ -19,7 +19,7 @@ const RootLayout: FC<Props> = ({ children }) => {
 };
 
 export const metadata = {
-  title: "Repair the World",
+  title: "Home - BTHS Repair the World",
   description: "Inspring BTHS youth to make change in a unjust society.",
   viewport: "width=device-width, initial-scale=1",
   openGraph: {
