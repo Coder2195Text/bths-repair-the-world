@@ -79,6 +79,23 @@
   hr {
     @apply mt-3 w-full border-2 border-black;
   }
+
+  ul,
+  ol {
+    @apply list-inside;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  strong {
+    @apply font-bold;
+  }
 }
 
 @layer components {

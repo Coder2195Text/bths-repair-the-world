@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Page from "./EventPage";
 
 export const metadata = {
