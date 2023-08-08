@@ -23,7 +23,7 @@ export const metadata = {
   description: "Inspring BTHS youth to make change in a unjust society.",
   viewport: "width=device-width, initial-scale=1",
   openGraph: {
-    images: "https://bths-repair.vercel.app/favicon.ico",
+    images: "https://bths-repair.tech/favicon.ico",
   },
 };
 
