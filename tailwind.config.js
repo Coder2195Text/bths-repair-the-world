@@ -10,7 +10,7 @@ module.exports = withMT({
   theme: {
     fontFamily: {
       figtree: ["Figtree", "sans-serif"],
-      tyros: ["Tyros", "sans-serif"],
+      raleway: ["Raleway", "sans-serif"],
     },
   },
 });

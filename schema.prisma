@@ -33,6 +33,7 @@ model Event {
   maxPoints   Float
   attendees   EventAttendance[]
   eventTime   DateTime
+  imageURL    String?
   createdAt   DateTime          @default(now())
 }
 

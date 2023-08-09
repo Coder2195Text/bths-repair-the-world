@@ -10,6 +10,7 @@ const schema = Joi.object({
   description: Joi.string().required(),
   maxPoints: Joi.number().required(),
   eventTime: Joi.date().iso().required(),
+  image: Joi.string().uri().optional(),
 });
 
 type EventPOSTBody = Omit<
@@ -32,8 +33,8 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     const events = (
       await prisma.event.findMany({
         orderBy: { eventTime: "desc" },
-        skip: skip * 5,
-        take: 5,
+        skip: skip * 10,
+        take: 10,
       })
     ).map((e) => ({
       ...e,

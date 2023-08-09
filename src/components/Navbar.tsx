@@ -1,6 +1,13 @@
 "use client";
 
-import React, { FC, ReactNode } from "react";
+import {
+  FC,
+  MouseEvent,
+  ReactNode,
+  createElement,
+  useEffect,
+  useState,
+} from "react";
 import {
   Button,
   Menu,
@@ -29,8 +36,8 @@ const profileMenuItems: {
   onClick?:
   | ((
     event:
-      | React.MouseEvent<HTMLLIElement, MouseEvent>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | MouseEvent<HTMLLIElement, globalThis.MouseEvent>
+      | MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
   ) => any)
   | "openProfile";
 }[] = [
@@ -49,9 +56,9 @@ const profileMenuItems: {
   ];
 
 function ProfileMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
-  const [editProfileOpen, setEditProfileOpen] = React.useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   const { data } = useSession();
 
@@ -101,7 +108,7 @@ function ProfileMenu() {
                   : "mb-2 hover:text-black bg-blue-300"
                 }`}
             >
-              {React.createElement(icon, {
+              {createElement(icon, {
                 className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
               })}
               <span className={` ${isLastItem ? "text-red-500" : ""}`}>
@@ -161,7 +168,7 @@ const NavList: FC = () => {
           className="w-5/6 text-white lg:w-auto"
         >
           <Link href={url} className="flex justify-center items-center w-full">
-            {React.createElement(icon, {
+            {createElement(icon, {
               className: "w-8 h-8 inline mr-2",
             })}
             <h6>{label}</h6>
@@ -182,7 +189,7 @@ const NavList: FC = () => {
               target="_blank"
               className="flex justify-center items-center w-full"
             >
-              {React.createElement(icon, {
+              {createElement(icon, {
                 className: "w-8 h-8 inline mr-2",
               })}
             </Link>
@@ -195,15 +202,15 @@ const NavList: FC = () => {
 
 const Navbar: FC = () => {
   const genericHamburgerLine = `absolute h-0.5 rounded-full bg-gray-300 w-6 rounded-full border-white transition ease transform duration-300 -translate-x-1/2 left-1/2`;
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
   const { data, status } = useSession();
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
+      () => window.innerWidth >= 960 && setIsNavOpen(false),
     );
   }, []);
 
@@ -245,7 +252,7 @@ const Navbar: FC = () => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center p-2 mr-2 ml-auto text-xl bg-lime-400 rounded-full font-tyros group"
+            className="flex flex-col justify-center items-center p-2 mr-2 ml-auto text-xl bg-lime-400 rounded-full font-raleway group"
             onClick={() => {
               signIn("auth0");
             }}

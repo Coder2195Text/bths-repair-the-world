@@ -83,9 +83,9 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                     .filter(
                       (k) =>
                         values[k as keyof typeof values] !==
-                        data![k as keyof typeof data]
+                        data![k as keyof typeof data],
                     )
-                    .map((k) => [k, values[k as keyof typeof values]])
+                    .map((k) => [k, values[k as keyof typeof values]]),
                 );
 
             if (Object.keys(finalValues).length) {
@@ -94,7 +94,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 {
                   method: mode === "register" ? "POST" : "PATCH",
                   body: JSON.stringify(finalValues),
-                }
+                },
               ).then(async (req) => [req.status, await req.json()]);
 
               if (status === 200) {
@@ -103,7 +103,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 if (mode === "edit") setOpen(false);
               } else {
                 alert(
-                  `Report the error to the developer. Error: ${status} ${res}`
+                  `Report the error to the developer. Error: ${status} ${res}`,
                 );
               }
             } else {
@@ -245,7 +245,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                       setFieldValue(
                         "pronouns",
                         suggestion,
-                        Boolean(errors.pronouns || false)
+                        Boolean(errors.pronouns || false),
                       )
                     }
                   >
@@ -318,7 +318,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 type="submit"
                 disabled={isSubmitting}
                 ripple
-                className="text-xl font-tyros"
+                className="text-xl font-raleway"
                 color="light-blue"
               >
                 {isSubmitting ? "Submitting" : "Submit"}

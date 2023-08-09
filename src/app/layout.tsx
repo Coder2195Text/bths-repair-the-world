@@ -17,5 +17,10 @@ const RootLayout: FC<Props> = ({ children }) => {
     </html>
   );
 };
-
+export const metadata = {
+  viewport: "width=device-width, initial-scale=1",
+  openGraph: {
+    images: "/icon.png",
+  },
+};
 export default RootLayout;
