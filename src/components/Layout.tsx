@@ -1,6 +1,13 @@
 "use client";
 
-import { FC, ReactNode, useEffect } from "react";
+import {
+  FC,
+  ReactNode,
+  createRef,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { signIn, useSession } from "next-auth/react";
 import { BarLoader } from "react-spinners";
 import Navbar from "./Navbar";
@@ -23,9 +30,13 @@ const Layout: FC<Props> = ({ children }) => {
     ? new Date(accountData.birthday)
     : undefined;
 
+  const [isNavActive, setIsNavActive] = useState(true);
+
   const isBirthday =
     birthday?.getUTCDate() === today.getDate() &&
     birthday?.getUTCMonth() === today.getMonth();
+
+  const ref = createRef<HTMLDivElement>();
 
   if (status === "loading" || accountStatus === "pending" || !children) {
     return (
@@ -41,13 +52,16 @@ const Layout: FC<Props> = ({ children }) => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center text-xl py-[79px] font-raleway">
+    <div
+      className="flex overflow-auto flex-wrap justify-center text-xl py-[79px] font-raleway"
+      ref={ref}
+    >
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
         {accountStatus === "unregistered" && status === "authenticated" && (
           <UserForm mode="register" />
         )}
         {isBirthday && <BirthdayPopup />}
-        <Navbar />
+        <Navbar isNavActive={isNavActive} />
         {children}
       </main>
     </div>

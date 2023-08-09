@@ -200,7 +200,11 @@ const NavList: FC = () => {
   );
 };
 
-const Navbar: FC = () => {
+interface Props {
+  isNavActive: boolean;
+}
+
+const Navbar: FC<Props> = ({ isNavActive }) => {
   const genericHamburgerLine = `absolute h-0.5 rounded-full bg-gray-300 w-6 rounded-full border-white transition ease transform duration-300 -translate-x-1/2 left-1/2`;
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
@@ -208,14 +212,17 @@ const Navbar: FC = () => {
   const { data, status } = useSession();
 
   useEffect(() => {
-    window.addEventListener(
+    addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setIsNavOpen(false),
     );
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6">
+    <nav
+      className={`transition ease-in-out fixed left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6 ${isNavActive ? "top-0" : "-top-16"
+        }`}
+    >
       <div className="flex relative items-center mx-auto text-blue-gray-900">
         <Link href="/" className="font-medium cursor-pointer">
           <Image
