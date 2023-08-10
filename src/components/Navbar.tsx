@@ -211,6 +211,10 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
 
   const { data, status } = useSession();
 
+  if (!isNavActive && isNavOpen) {
+    setIsNavOpen(false);
+  }
+
   useEffect(() => {
     addEventListener(
       "resize",

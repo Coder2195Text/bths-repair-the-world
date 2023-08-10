@@ -8,14 +8,20 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum UserPosition {
+  MEMBER
+  EXEC
+  ADMIN
+}
+
 model User {
   email         String            @id
   name          String
   preferredName String?
   prefect       String
   pronouns      String
-  position      String            @default("member")
   gradYear      Int
+  position      UserPosition      @default(MEMBER)
   registeredAt  DateTime          @default(now())
   events        EventAttendance[] @relation("EventAttendee")
   birthday      String
