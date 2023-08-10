@@ -45,7 +45,7 @@ const Page: FC = () => {
             >
               <div className="w-full">
                 <div className="flex flex-col items-stretch w-full md:flex-row">
-                  <div className="w-1/2">
+                  <div className="w-full md:w-1/2">
                     <h3>{name}</h3>
                     Starts at {new Date(eventTime).toLocaleString()}
                     <br />
