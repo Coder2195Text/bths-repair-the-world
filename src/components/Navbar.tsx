@@ -220,7 +220,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
 
   return (
     <nav
-      className={`transition ease-in-out fixed left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6 ${isNavActive ? "top-0" : "-top-16"
+      className={`transition-all delay-150 duration-300 ease-in-out fixed left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6 ${isNavActive ? "top-0" : "-top-16"
         }`}
     >
       <div className="flex relative items-center mx-auto text-blue-gray-900">
@@ -269,7 +269,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           </Button>
         )}
       </div>
-      <Collapse open={isNavOpen}>
+      <Collapse open={isNavActive && isNavOpen}>
         <NavList />
       </Collapse>
     </nav>

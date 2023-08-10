@@ -11,6 +11,7 @@ const schema = Joi.object({
   maxPoints: Joi.number().required(),
   eventTime: Joi.date().iso().required(),
   image: Joi.string().uri().optional(),
+  maxHours: Joi.number().required(),
 });
 
 type EventPOSTBody = Omit<

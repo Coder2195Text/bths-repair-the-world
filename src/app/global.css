@@ -93,7 +93,8 @@
     @apply list-decimal;
   }
 
-  strong {
+  strong,
+  label {
     @apply font-bold;
   }
 }

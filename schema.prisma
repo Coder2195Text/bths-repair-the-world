@@ -31,6 +31,7 @@ model Event {
   name        String
   description Bytes
   maxPoints   Float
+  maxHours    Float
   attendees   EventAttendance[]
   eventTime   DateTime
   imageURL    String?
@@ -44,6 +45,7 @@ model EventAttendance {
   event        Event    @relation(fields: [eventId], references: [id])
   eventId      String
   earnedPoints Float    @default(0)
+  earnedHours  Float    @default(0)
   registeredAt DateTime @default(now())
   attended     Boolean  @default(false)
 

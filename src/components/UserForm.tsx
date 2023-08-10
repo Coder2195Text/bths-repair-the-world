@@ -6,6 +6,7 @@ import { Dispatch, FC, MouseEvent, SetStateAction, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
 import { useAccount } from "./AccountContext";
 import { UserFull } from "@/types/user";
+import Link from "next/link";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -306,9 +307,17 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                   {mode === "register"
                     ? "submitting this form"
                     : "editing your information"}
-                  , you agree that this information is accurate, as well as
-                  abiding to the club rules. Failure to comply will result in
-                  termination of your account, as well as seizure of credits.
+                  , you have read the{" "}
+                  <Link href="/tos" target="_blank">
+                    TOS
+                  </Link>
+                  ,{" "}
+                  <Link href="/privacy" target="_blank">
+                    Privacy Policy
+                  </Link>{" "}
+                  and agree this information is accurate. Failure to comply will
+                  result in termination of your account, as well as seizure of
+                  credits.
                 </span>
               </label>
 

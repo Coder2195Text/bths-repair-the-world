@@ -15,6 +15,10 @@ import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
 import UserForm from "./UserForm";
 import io from "socket.io-client";
+import {
+  ScrollDirection,
+  useScrollDirection,
+} from "react-use-scroll-direction";
 
 interface Props {
   children: ReactNode;
@@ -30,19 +34,32 @@ const Layout: FC<Props> = ({ children }) => {
     ? new Date(accountData.birthday)
     : undefined;
 
-  const [isNavActive, setIsNavActive] = useState(true);
+  const [isNavActive, setIsNavActive] = useState<[boolean, number]>([
+    true,
+    Date.now(),
+  ]);
 
   const isBirthday =
     birthday?.getUTCDate() === today.getDate() &&
     birthday?.getUTCMonth() === today.getMonth();
 
-  const ref = createRef<HTMLDivElement>();
+  const [element, setElement] = useState<HTMLElement | null>(null);
+
+  const { scrollDirection } = useScrollDirection(element!);
+
+  useEffect(() => {
+    setElement(document.getElementsByTagName("body")[0]);
+  }, []);
+
+  if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
+    setIsNavActive([scrollDirection === "UP", Date.now()]);
+  }
 
   if (status === "loading" || accountStatus === "pending" || !children) {
     return (
       <div className="flex fixed top-0 left-0 flex-col justify-center items-center p-10 w-screen h-screen">
         <h1>Loading...</h1>
-        <BarLoader color="#ffffff" width={600} className="mt-12" />
+        <BarLoader width={600} className="mt-12" height={10} color="#2563EB" />
       </div>
     );
   }
@@ -52,16 +69,13 @@ const Layout: FC<Props> = ({ children }) => {
   }
 
   return (
-    <div
-      className="flex overflow-auto flex-wrap justify-center text-xl py-[79px] font-raleway"
-      ref={ref}
-    >
+    <div className="flex overflow-auto flex-wrap justify-center text-xl py-[79px] font-raleway">
       <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] py-[3vw] max-w-screen 2xl:px-[79px] 2xl:py-[40px]">
         {accountStatus === "unregistered" && status === "authenticated" && (
           <UserForm mode="register" />
         )}
         {isBirthday && <BirthdayPopup />}
-        <Navbar isNavActive={isNavActive} />
+        <Navbar isNavActive={isNavActive[0]} />
         {children}
       </main>
     </div>

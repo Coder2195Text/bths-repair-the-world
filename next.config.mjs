@@ -13,6 +13,16 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "iili.io",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 const withMDX = createMDX({
