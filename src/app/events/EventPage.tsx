@@ -47,7 +47,10 @@ const Page: FC = () => {
                 <div className="flex flex-col items-stretch w-full md:flex-row">
                   <div className="w-full md:w-1/2">
                     <h3>{name}</h3>
-                    Starts at {new Date(eventTime).toLocaleString()}
+                    {new Date(eventTime).getTime() < Date.now()
+                      ? "Occured"
+                      : "Starts"}{" "}
+                    on {new Date(eventTime).toLocaleString()}
                     <br />
                     <BsClock className="inline" /> Total Hours : {maxHours}
                     <br />
