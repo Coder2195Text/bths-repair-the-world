@@ -60,22 +60,22 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     });
   }
 
-  const [allowed, email] = await getServerSession({ ...AUTH_OPTIONS }).then(
-    async (s) => {
-      if (!s?.user.email) return false;
-      return await prisma.user
-        .findUnique({
-          where: { email: s.user.email },
-          select: { position: true, email: true },
-        })
-        .then((u) => [
-          ([UserPosition.EXEC, UserPosition.ADMIN] as UserPosition[]).includes(
-            u?.position!,
-          ),
-          u?.email,
-        ]);
-    },
-  );
+  const [allowed, email]: [boolean, string] = await getServerSession({
+    ...AUTH_OPTIONS,
+  }).then(async (s) => {
+    if (!s?.user.email) return [false, "No email"];
+    return await prisma.user
+      .findUnique({
+        where: { email: s.user.email },
+        select: { position: true, email: true },
+      })
+      .then((u) => [
+        ([UserPosition.EXEC, UserPosition.ADMIN] as UserPosition[]).includes(
+          u?.position!,
+        ),
+        u?.email as string,
+      ]);
+  });
 
   if (!allowed)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -87,7 +87,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function (val): [boolean, any] {
+    .then(function(val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -127,14 +127,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       embed
         .setTitle("New Event: " + newData.name)
         .setDescription(
-          `# ${name} has posted a [new event](https://bths-repair.tech/events/${
-            body.id
-          })!\n## **Description**\n ${
-            newData.description
-          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${
-            newData.maxPoints
-          }\n## **Hours:** ${newData.maxHours}\n## **Location:** ${
-            newData.mapURL
+          `# ${name} has posted a [new event](https://bths-repair.tech/events/${body.id
+          })!\n## **Description**\n ${newData.description
+          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${newData.maxPoints
+          }\n## **Hours:** ${newData.maxHours}\n## **Location:** ${newData.mapURL
           }
 `,
         )
