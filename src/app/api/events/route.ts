@@ -3,7 +3,9 @@ import { AUTH_OPTIONS } from "../auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
 import { prisma } from "@/utils/prisma";
-import { Event } from "@prisma/client";
+import { Event, UserPosition } from "@prisma/client";
+import { Embed, Webhook } from "@vermaysha/discord-webhook";
+import { Optional } from "@prisma/client/runtime/library";
 
 const schema = Joi.object({
   name: Joi.string().required().max(190),
@@ -12,6 +14,8 @@ const schema = Joi.object({
   eventTime: Joi.date().iso().required(),
   image: Joi.string().uri().optional(),
   maxHours: Joi.number().required(),
+  mapURL: Joi.string().uri().required().max(190),
+  mapEmbed: Joi.string().uri().required().max(1000),
 });
 
 type EventPOSTBody = Omit<
@@ -31,29 +35,45 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     return NextResponse.json({ error: "Bad page" }, { status: 400 });
 
   if (method === "GET") {
-    const events = (
+    let events = (
       await prisma.event.findMany({
         orderBy: { eventTime: "desc" },
         skip: skip * 10,
         take: 10,
       })
-    ).map((e) => ({
-      ...e,
-      description: Buffer.from(e.description).toString(),
-    }));
+    ).map((e) => {
+      if (searchParams.has("preview")) {
+        delete (e as Optional<Event>).mapURL;
+        delete (e as Optional<Event>).mapEmbed;
+        delete (e as Optional<Event>).description;
+        return e;
+      }
 
-    return NextResponse.json(events, { status: 200 });
+      return {
+        ...e,
+        description: Buffer.from(e.description).toString(),
+      };
+    });
+
+    return NextResponse.json(searchParams.get("preview") ? events : events, {
+      status: 200,
+    });
   }
 
-  const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(
+  const [allowed, email] = await getServerSession({ ...AUTH_OPTIONS }).then(
     async (s) => {
       if (!s?.user.email) return false;
       return await prisma.user
         .findUnique({
           where: { email: s.user.email },
-          select: { position: true },
+          select: { position: true, email: true },
         })
-        .then((u) => ["admin", "exec"].includes(u?.position!));
+        .then((u) => [
+          ([UserPosition.EXEC, UserPosition.ADMIN] as UserPosition[]).includes(
+            u?.position!,
+          ),
+          u?.email,
+        ]);
     },
   );
 
@@ -67,7 +87,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function(val): [boolean, any] {
+    .then(function (val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -89,9 +109,48 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     };
 
     try {
-      const body = await prisma.event.create({
-        data: newData,
-      });
+      const [body, name] = await Promise.all([
+        prisma.event.create({
+          data: newData,
+        }),
+        prisma.user
+          .findUnique({
+            where: { email },
+            select: { preferredName: true },
+          })
+          .then((u) => u?.preferredName),
+      ]);
+
+      const hook = new Webhook(process.env.EVENT_WEBHOOK!);
+
+      const embed = new Embed();
+      embed
+        .setTitle("New Event: " + newData.name)
+        .setDescription(
+          `# ${name} has posted a [new event](https://bths-repair.tech/events/${
+            body.id
+          })!\n## **Description**\n ${
+            newData.description
+          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${
+            newData.maxPoints
+          }\n## **Hours:** ${newData.maxHours}\n## **Location:** ${
+            newData.mapURL
+          }
+`,
+        )
+        .setThumbnail({
+          url: body.imageURL || "https://bths-repair.tech/icon.png",
+        })
+        .setAuthor({
+          name: name!,
+        })
+        .setTimestamp()
+        .setUrl(`https://bths-repair.tech/events/${body.id}`);
+
+      hook
+        .setContent("<@&1136780952274735266> New event posted!")
+        .addEmbed(embed)
+        .send();
 
       return NextResponse.json(
         {

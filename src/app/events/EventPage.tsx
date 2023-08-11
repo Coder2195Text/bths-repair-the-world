@@ -1,11 +1,14 @@
 "use client";
 import { useAccount } from "@/components/AccountContext";
+import EventForm from "@/components/EventForm";
 import Layout from "@/components/Layout";
-import { Event } from "@prisma/client";
+import { Button } from "@material-tailwind/react";
+import { Event, UserPosition } from "@prisma/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
+import { BiCalendarPlus } from "react-icons/bi";
 import { BsAward, BsClock } from "react-icons/bs";
 import { FiXCircle, FiCheckCircle } from "react-icons/fi";
 import { BarLoader } from "react-spinners";
@@ -23,18 +26,35 @@ const Page: FC = () => {
   const [loading, setLoading] = useState<LoadingState>(LoadingState.Loading);
   const [page, setPage] = useState<number>(1);
 
+  const [formOpen, setFormOpen] = useState<boolean>(false);
+
   useEffect(() => {
     fetch("/api/events")
       .then((res) => res.json())
       .then((data) => {
         setEvents(data);
-        setLoading(LoadingState.Loaded);
+        if (data.length < 10) setLoading(LoadingState.NoMore);
+        else setLoading(LoadingState.Loaded);
       });
   }, []);
 
   return (
     <Layout>
-      <h1>Events</h1>
+      {formOpen && <EventForm mode="post" setOpen={setFormOpen} />}
+      <h1 className="flex flex-wrap justify-around w-full">
+        Events
+        {([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
+          data?.position!,
+        ) && (
+          <Button
+            color="blue"
+            className="bg-[#2356ff] font-figtree p-1 text-2xl"
+            onClick={() => setFormOpen(true)}
+          >
+            <BiCalendarPlus className="inline" /> Add Event
+          </Button>
+        )}
+      </h1>
 
       <div className="flex flex-col justify-center w-full">
         {events.map(
@@ -45,7 +65,7 @@ const Page: FC = () => {
             >
               <div className="w-full">
                 <div className="flex flex-col items-stretch w-full md:flex-row">
-                  <div className="w-full md:w-1/2">
+                  <div className={`w-full ${imageURL ? "md:w-1/2" : ""}`}>
                     <h3>{name}</h3>
                     {new Date(eventTime).getTime() < Date.now()
                       ? "Occured"

@@ -22,13 +22,13 @@ const Error: FC<{ name: string }> = (props) => {
 
 type Props =
   | {
-    mode: "register";
-    setOpen?: undefined;
-  }
+      mode: "register";
+      setOpen?: undefined;
+    }
   | {
-    mode: "edit";
-    setOpen: Dispatch<SetStateAction<boolean>>;
-  };
+      mode: "edit";
+      setOpen: Dispatch<SetStateAction<boolean>>;
+    };
 
 const GRAD_YEARS = [0, 2024, 2025, 2026, 2027];
 const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
@@ -38,7 +38,14 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
   const { data, setData, setStatus } = useAccount();
   if (mode === "edit" && !data) return;
   return (
-    <div className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50">
+    <div
+      className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50"
+      onClick={(e: MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+          if (mode !== "register") setOpen(false);
+        }
+      }}
+    >
       <div className="overflow-auto max-w-5xl max-h-full text-center bg-blue-100 rounded-lg lg:p-8 p-[3.2vw]">
         <h5 className="font-bold">
           {mode === "register"
@@ -80,14 +87,14 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
               mode === "register"
                 ? values
                 : Object.fromEntries(
-                  Object.keys(values)
-                    .filter(
-                      (k) =>
-                        values[k as keyof typeof values] !==
-                        data![k as keyof typeof data],
-                    )
-                    .map((k) => [k, values[k as keyof typeof values]]),
-                );
+                    Object.keys(values)
+                      .filter(
+                        (k) =>
+                          values[k as keyof typeof values] !==
+                          data![k as keyof typeof data],
+                      )
+                      .map((k) => [k, values[k as keyof typeof values]]),
+                  );
 
             if (Object.keys(finalValues).length) {
               const [status, res]: [number, UserFull] = await fetch(

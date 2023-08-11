@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
 import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
+import { UserPosition } from "@prisma/client";
 
 type Params = { params: { email: string } };
 
@@ -68,7 +69,7 @@ async function handler(
           where: { email: s.user.email },
           select: { position: true },
         })
-        .then((u) => ["admin", "exec"].includes(u?.position!));
+        .then((u) => ([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(u?.position!));
     },
   );
 

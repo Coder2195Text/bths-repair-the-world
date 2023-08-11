@@ -41,11 +41,14 @@ model Event {
   attendees   EventAttendance[]
   eventTime   DateTime
   imageURL    String?
-  createdAt   DateTime          @default(now())
+
+  mapURL   String
+  mapEmbed String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
 }
 
 model EventAttendance {
-  id           String   @id @default(cuid())
   user         User     @relation("EventAttendee", fields: [userEmail], references: [email])
   userEmail    String
   event        Event    @relation(fields: [eventId], references: [id])
@@ -55,6 +58,7 @@ model EventAttendance {
   registeredAt DateTime @default(now())
   attended     Boolean  @default(false)
 
+  @@id([userEmail, eventId])
   @@index([userEmail])
   @@index([eventId])
   @@map("EventAttendee")
