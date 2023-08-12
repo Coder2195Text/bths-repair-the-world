@@ -14,8 +14,7 @@ const schema = Joi.object({
   eventTime: Joi.date().iso().required(),
   image: Joi.string().uri().optional(),
   maxHours: Joi.number().required(),
-  mapURL: Joi.string().uri().required().max(190),
-  mapEmbed: Joi.string().uri().required().max(1000),
+  address: Joi.string().required().max(1000),
 });
 
 type EventPOSTBody = Omit<
@@ -25,8 +24,6 @@ type EventPOSTBody = Omit<
   description: string;
   eventTime: string;
 };
-
-type EventPATCHBody = Partial<EventPOSTBody>;
 
 async function handler(method: "GET" | "POST", req: NextRequest) {
   const { searchParams } = new URL(req.nextUrl);
@@ -43,8 +40,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       })
     ).map((e) => {
       if (searchParams.has("preview")) {
-        delete (e as Optional<Event>).mapURL;
-        delete (e as Optional<Event>).mapEmbed;
+        delete (e as Optional<Event>).address;
         delete (e as Optional<Event>).description;
         return e;
       }
@@ -100,10 +96,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     });
 
   if ((await result)[0]) {
-    const rawData: EventPOSTBody | EventPATCHBody = (await result)[1];
+    const rawData: EventPOSTBody = (await result)[1];
 
     const newData: Omit<Event, "id" | "createdAt"> = {
-      ...(rawData as EventPOSTBody),
+      ...rawData,
       description: Buffer.from(rawData.description!),
       eventTime: new Date(rawData.eventTime!),
     };
@@ -130,9 +126,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           `# ${name} has posted a [new event](https://bths-repair.tech/events/${body.id
           })!\n## **Description**\n ${newData.description
           }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${newData.maxPoints
-          }\n## **Hours:** ${newData.maxHours}\n## **Location:** ${newData.mapURL
-          }
-`,
+          }\n## **Hours:** ${newData.maxHours}\n## Location: [${newData.address
+          }](${encodeURI(
+            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`,
+          )})`,
         )
         .setThumbnail({
           url: body.imageURL || "https://bths-repair.tech/icon.png",
@@ -144,7 +141,9 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         .setUrl(`https://bths-repair.tech/events/${body.id}`);
 
       hook
-        .setContent("<@&1136780952274735266> New event posted!")
+        .setContent(
+          "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!",
+        )
         .addEmbed(embed)
         .send();
 

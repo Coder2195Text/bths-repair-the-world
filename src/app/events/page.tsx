@@ -1,4 +1,4 @@
-import Page from "./EventPage";
+import Page from "./EventsPage";
 
 export const metadata = {
   title: "Events - BTHS Repair the World",

@@ -21,9 +21,8 @@ const Error: FC<{ name: string }> = (props) => {
 };
 
 type Props = {
-  mode: "edit" | "post";
   setOpen: Dispatch<SetStateAction<boolean>>;
-};
+} & ({ mode: "post" } | { mode: "edit"; eventData: Event });
 
 const UserForm: FC<Props> = ({ mode, setOpen }) => {
   const { data, setData, setStatus } = useAccount();
@@ -54,7 +53,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
         <hr />
         <Formik
           initialValues={{}}
-          onSubmit={async (values) => {}}
+          onSubmit={async (values) => { }}
           validate={(values) => {
             const errors: any = {};
             return errors;
