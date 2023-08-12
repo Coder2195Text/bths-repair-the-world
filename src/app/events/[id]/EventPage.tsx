@@ -34,7 +34,12 @@ const EventPage: FC<Props> = ({ event }) => {
           <br />
           <BsAward className="inline" /> Total Points : {event.maxPoints}
           <br />
-          <h3>Event Time: {event.eventTime.toLocaleString()}</h3>
+          <h3>
+            Event Time:{" "}
+            {event.eventTime.toLocaleString("en-US", {
+              timeZone: "America/New_York",
+            })}
+          </h3>
           <h3>
             Location:{" "}
             <Link

@@ -127,11 +127,11 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             body.id
           })!\n## **Description**\n ${
             newData.description
-          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${
-            newData.maxPoints
-          }\n## **Hours:** ${newData.maxHours}\n## Location: [${
-            newData.address
-          }](${encodeURI(
+          }\n## **Event Time:** ${newData.eventTime.toLocaleString("en-US", {
+            timeZone: "America/New_York",
+          })}\n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
+            newData.maxHours
+          }\n## Location: [${newData.address}](${encodeURI(
             `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
           )})`
         )
