@@ -17,7 +17,7 @@ const POSTSchema = Joi.object({
     .required()
     .regex(/^[A-Za-z]\d[A-Za-z]$/),
   birthday: Joi.string().regex(
-    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/,
+    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/
   ),
   referredBy: Joi.string()
     .optional()
@@ -34,7 +34,7 @@ const PATCHSchema = Joi.object({
   preferredName: Joi.string().max(190),
   prefect: Joi.string().regex(/^[A-Za-z]\d[A-Za-z]$/),
   birthday: Joi.string().regex(
-    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/,
+    /\b\d{4}-(?:1[0-2]|0?[1-9])-(?:3[0-1]|[12][0-9]|0?[1-9])\b/
   ),
   referredBy: Joi.string()
     .email()
@@ -46,7 +46,7 @@ const PATCHSchema = Joi.object({
 async function handler(
   method: "GET" | "PATCH" | "POST",
   req: NextRequest,
-  { params: { email } }: Params,
+  { params: { email } }: Params
 ) {
   if (!email) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -69,8 +69,12 @@ async function handler(
           where: { email: s.user.email },
           select: { position: true },
         })
-        .then((u) => ([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(u?.position!));
-    },
+        .then((u) =>
+          ([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
+            u?.position!
+          )
+        );
+    }
   );
 
   if (!allowed) {
@@ -102,7 +106,7 @@ async function handler(
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function(val): [boolean, any] {
+    .then(function (val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -111,7 +115,7 @@ async function handler(
         return [false, "Bad JSON"];
       }
       let errors = (method === "POST" ? POSTSchema : PATCHSchema).validate(
-        parsed,
+        parsed
       ).error;
       return errors ? [false, errors] : [true, parsed];
     });
@@ -123,20 +127,20 @@ async function handler(
       const [body, referrals] = await Promise.all([
         method === "POST"
           ? prisma.user.create({
-            data: {
-              ...data,
-              email,
-              preferredName: data.preferredName || data.name,
-            },
-          })
+              data: {
+                ...data,
+                email,
+                preferredName: data.preferredName || data.name,
+              },
+            })
           : prisma.user.update({
-            where: { email },
-            data: {
-              ...data,
-              preferredName: data.preferredName || data.name,
-              lastUpdated: new Date().toISOString(),
-            },
-          }),
+              where: { email },
+              data: {
+                ...data,
+                preferredName: data.preferredName || data.name,
+                lastUpdated: new Date().toISOString(),
+              },
+            }),
         prisma.user
           .findMany({
             where: { referredBy: email },
@@ -154,7 +158,7 @@ async function handler(
         },
         {
           status: 200,
-        },
+        }
       );
     } catch (e) {
       console.log(e);

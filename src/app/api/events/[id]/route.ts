@@ -3,26 +3,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 
-type Params = { params: { id: string } };
+export type Params = { params: { id: string } };
 
 async function handler(
-  method: "GET",
+  method: "GET" | "PATCH" | "DELETE",
   req: NextRequest,
-  { params: { id } }: Params,
+  { params: { id } }: Params
 ) {
   const session = await getServerSession({ ...AUTH_OPTIONS });
   if (method === "GET") {
-    const [event, attending] = await Promise.all([
-      prisma.event.findUnique({
-        where: { id },
-      }),
-      session?.user.email &&
-      prisma.eventAttendance.findUnique({
-        where: {
-          userEmail_eventId: { eventId: id, userEmail: session.user.email },
-        },
-      }),
-    ]);
+    const event = await prisma.event.findUnique({
+      where: { id },
+    });
 
     if (!event)
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
@@ -30,10 +22,9 @@ async function handler(
     return NextResponse.json(
       {
         ...event,
-        description: Buffer.from(event.description).toString(),
-        attending: Boolean(attending),
+        description: event.description.toString(),
       },
-      { status: 200 },
+      { status: 200 }
     );
   }
 }

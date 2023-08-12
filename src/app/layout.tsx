@@ -3,6 +3,9 @@ import { FC, ReactNode } from "react";
 import "./global.css";
 import { NextAuthProvider } from "./providers";
 import "keen-slider/keen-slider.min.css";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
 
 interface Props {
   children: ReactNode;

@@ -53,23 +53,23 @@
     @apply text-[25px] font-[500];
   }
 
-  button,
+  button::not([class*="react-"]),
   [type="button"],
   [type="reset"],
   [type="submit"] {
     @apply bg-blue-800 p-3 rounded-full;
   }
 
-  input:not([type="checkbox"]),
-  select {
+  input:not([type="checkbox"]):not([class*="react-"]),
+  select:not([class*="react-"]) {
     @apply m-1 p-1 w-full md:w-[40vw] bg-transparent border-b-2 border-black  focus:outline-none;
   }
 
-  input:not([type="checkbox"]):focus {
+  input:not([type="checkbox"]):not([class*="react-"]):focus {
     box-shadow: 0 0 8pt 4pt #d3d3d3;
   }
 
-  input[type="checkbox"] {
+  input[type="checkbox"]:not([class*="react-"]) {
     @apply min-w-[25px] min-h-[25px];
   }
 

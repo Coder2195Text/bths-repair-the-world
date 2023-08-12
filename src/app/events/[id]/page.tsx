@@ -1,6 +1,11 @@
 import { prisma } from "@/utils/prisma";
 import { Metadata } from "next";
-import Page from "./EventPage";
+import EventPage from "./EventPage";
+import { notFound } from "next/navigation";
+import { Event } from "@prisma/client";
+import { FC } from "react";
+
+export const dynamicParams = true;
 
 type Params = {
   params: {
@@ -34,5 +39,36 @@ export async function generateMetadata({
     openGraph: { ...(event.imageURL ? { images: event.imageURL } : {}) },
   };
 }
+
+export async function generateStaticParams() {
+  const events = await prisma.event.findMany({
+    select: { id: true },
+  });
+
+  return events.map((event) => ({ id: event.id }));
+}
+
+async function fetchEvent(id: string) {
+  const res = await fetch(`${process.env.BASE_URL}/api/events/${id}`, {
+    next: {
+      revalidate: 10,
+    },
+  });
+  if (res.status === 404) {
+    return null;
+  }
+  return res.json();
+}
+
+const Page: FC<Params> = async ({ params: { id } }) => {
+  const event = await fetchEvent(id);
+  event.eventTime = new Date(event.eventTime);
+  event.createdAt = new Date(event.createdAt);
+  if (!event) {
+    notFound();
+  }
+
+  return <EventPage event={event} />;
+};
 
 export default Page;

@@ -12,7 +12,7 @@ const schema = Joi.object({
   description: Joi.string().required(),
   maxPoints: Joi.number().required(),
   eventTime: Joi.date().iso().required(),
-  image: Joi.string().uri().optional(),
+  imageURL: Joi.string().uri().optional(),
   maxHours: Joi.number().required(),
   address: Joi.string().required().max(1000),
 });
@@ -67,7 +67,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       })
       .then((u) => [
         ([UserPosition.EXEC, UserPosition.ADMIN] as UserPosition[]).includes(
-          u?.position!,
+          u?.position!
         ),
         u?.email as string,
       ]);
@@ -83,7 +83,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function(val): [boolean, any] {
+    .then(function (val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -123,13 +123,17 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       embed
         .setTitle("New Event: " + newData.name)
         .setDescription(
-          `# ${name} has posted a [new event](https://bths-repair.tech/events/${body.id
-          })!\n## **Description**\n ${newData.description
-          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${newData.maxPoints
-          }\n## **Hours:** ${newData.maxHours}\n## Location: [${newData.address
+          `# ${name} has posted a [new event](https://bths-repair.tech/events/${
+            body.id
+          })!\n## **Description**\n ${
+            newData.description
+          }\n## **Event Time:** ${newData.eventTime.toLocaleString()}\n## **Points:** ${
+            newData.maxPoints
+          }\n## **Hours:** ${newData.maxHours}\n## Location: [${
+            newData.address
           }](${encodeURI(
-            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`,
-          )})`,
+            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
+          )})`
         )
         .setThumbnail({
           url: body.imageURL || "https://bths-repair.tech/icon.png",
@@ -142,7 +146,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
 
       hook
         .setContent(
-          "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!",
+          "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!"
         )
         .addEmbed(embed)
         .send();
@@ -154,7 +158,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         },
         {
           status: 200,
-        },
+        }
       );
     } catch (e) {
       console.log(e);

@@ -44,7 +44,7 @@ const Page: FC = () => {
       <h1 className="flex flex-wrap justify-around w-full">
         Events
         {([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
-          data?.position!,
+          data?.position!
         ) && (
           <Button
             color="blue"
@@ -60,6 +60,7 @@ const Page: FC = () => {
         {events.map(
           ({ name, id, imageURL, eventTime, maxHours, maxPoints }) => (
             <Link
+              key={id}
               href={`/events/${id}`}
               className="p-3 my-2 text-left text-white bg-white bg-opacity-10 rounded-lg hover:text-white hover:shadow-2xl shadow-white hover:brightness-75"
             >
@@ -111,7 +112,7 @@ const Page: FC = () => {
                 </div>
               </div>
             </Link>
-          ),
+          )
         )}
         {loading === LoadingState.Loading ? (
           <div className="mt-5 text-center">
@@ -130,7 +131,7 @@ const Page: FC = () => {
             onClick={async () => {
               setLoading(LoadingState.Loading);
               const more: Event[] = await fetch(
-                `/api/events?page=${page}`,
+                `/api/events?page=${page}`
               ).then((res) => res.json());
               setPage(page + 1);
               setEvents([...events, ...more]);
