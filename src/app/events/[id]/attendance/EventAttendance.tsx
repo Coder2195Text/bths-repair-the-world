@@ -75,6 +75,8 @@ const RemoveButton: FC<{ attendance: Attendance; event: EventParsed }> = ({
             method: "PATCH",
             body: JSON.stringify({
               attendedAt: null,
+              earnedPoints: 0,
+              earnedHours: 0,
             }),
           }
         );
