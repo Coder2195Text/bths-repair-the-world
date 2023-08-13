@@ -151,7 +151,9 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
                 earned {eventAttendance.earnedHours} hours and{" "}
                 {eventAttendance.earnedPoints} points.
               </div>
-              {new Date(event?.eventTime) < new Date() || (
+              {new Date(event?.eventTime) < new Date() ? (
+                <h5>You cannot leave an event that has already happened.</h5>
+              ) : (
                 <Button
                   disabled={buttonProgress}
                   color="blue"
@@ -178,26 +180,31 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
             <>
               <h3>Event Attendance:</h3>
               <div>You have not registered for this event yet.</div>
-              <Button
-                disabled={buttonProgress}
-                color="blue"
-                className="bg-[#2356ff] font-figtree p-1 text-2xl"
-                onClick={async () => {
-                  setButtonProgress(true);
-                  const res = await fetch(
-                    `/api/events/${event.id}/attendance/@me`,
-                    {
-                      method: "POST",
-                    }
-                  );
-                  if (res.status === 200) setEventAttendance(await res.json());
-                  else alert("Error joining event!");
-                  setButtonProgress(false);
-                }}
-              >
-                <BsCalendar2Check className="inline" />{" "}
-                {buttonProgress ? "Joining" : "Join"} Event
-              </Button>
+              {new Date(event?.eventTime) < new Date() ? (
+                <h5>You cannot join an event that has already happened.</h5>
+              ) : (
+                <Button
+                  disabled={buttonProgress}
+                  color="blue"
+                  className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                  onClick={async () => {
+                    setButtonProgress(true);
+                    const res = await fetch(
+                      `/api/events/${event.id}/attendance/@me`,
+                      {
+                        method: "POST",
+                      }
+                    );
+                    if (res.status === 200)
+                      setEventAttendance(await res.json());
+                    else alert("Error joining event!");
+                    setButtonProgress(false);
+                  }}
+                >
+                  <BsCalendar2Check className="inline" />{" "}
+                  {buttonProgress ? "Joining" : "Join"} Event
+                </Button>
+              )}
             </>
           )}
         </div>

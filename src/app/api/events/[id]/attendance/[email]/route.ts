@@ -69,6 +69,13 @@ async function handler(
     return NextResponse.json(event, { status: 200 });
   }
 
+  if (rank !== "admin" && new Date(event?.eventTime) < new Date()) {
+    return NextResponse.json(
+      { error: "Event has already passed" },
+      { status: 403 }
+    );
+  }
+
   if (method === "POST") {
     try {
       const event = await prisma.eventAttendance.create({
@@ -88,12 +95,6 @@ async function handler(
   }
 
   if (method === "DELETE") {
-    if (rank !== "admin" && new Date(event?.eventTime) < new Date()) {
-      return NextResponse.json(
-        { error: "Event has already passed" },
-        { status: 403 }
-      );
-    }
     try {
       const event = await prisma.eventAttendance.delete({
         where: {
