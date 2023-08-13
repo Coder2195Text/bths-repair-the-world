@@ -20,6 +20,7 @@ import EventForm from "@/components/EventForm";
 import { Button, button } from "@material-tailwind/react";
 import { useAccount } from "@/components/AccountContext";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 interface Props {
   event: EventParsed;
@@ -35,6 +36,7 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
   const [deleteProgress, setDeleteProgress] = useState<boolean>(false);
   const router = useRouter();
+  const { status } = useSession();
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -140,54 +142,21 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
               {event.description}
             </ReactMarkdown>
           </div>
-          {eventAttendance === "unloaded" ? (
-            <h3>Loading Attendance...</h3>
-          ) : eventAttendance ? (
-            <>
-              <h3>Event Attendance:</h3>
-              <div>
-                You have registered for this event. You have{" "}
-                {!eventAttendance.attended && "not"} attended the event and
-                earned {eventAttendance.earnedHours} hours and{" "}
-                {eventAttendance.earnedPoints} points.
-              </div>
-              {new Date(event?.eventTime) < new Date() ? (
-                <h5>You cannot leave an event that has already happened.</h5>
-              ) : (
-                <Button
-                  disabled={buttonProgress}
-                  color="blue"
-                  className="bg-[#2356ff] font-figtree p-1 text-2xl"
-                  onClick={async () => {
-                    setButtonProgress(true);
-                    const res = await fetch(
-                      `/api/events/${event.id}/attendance/@me`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
-                    if (res.status === 200) setEventAttendance(null);
-                    else alert("Error leaving event!");
-                    setButtonProgress(false);
-                  }}
-                >
-                  <BiLogOut className="inline" />{" "}
-                  {buttonProgress ? "Leaving" : "Leave"} Event
-                </Button>
-              )}
-            </>
-          ) : (
-            <>
-              <h3>Event Attendance:</h3>
-              <div>You have not registered for this event yet.</div>
-              {new Date(event?.eventTime) < new Date() ? (
-                <h5>You cannot join an event that has already happened.</h5>
-              ) : (
-                <>
-                  <h5>
-                    By clicking join, you have read the description and done
-                    anything required by it.
-                  </h5>
+          {status === "authenticated" ? (
+            eventAttendance === "unloaded" ? (
+              <h3>Loading Attendance...</h3>
+            ) : eventAttendance ? (
+              <>
+                <h3>Event Attendance:</h3>
+                <div>
+                  You have registered for this event. You have{" "}
+                  {!eventAttendance.attendedAt && "not"} attended the event and
+                  earned {eventAttendance.earnedHours} hours and{" "}
+                  {eventAttendance.earnedPoints} points.
+                </div>
+                {new Date(event?.eventTime) < new Date() ? (
+                  <h5>You cannot leave an event that has already happened.</h5>
+                ) : (
                   <Button
                     disabled={buttonProgress}
                     color="blue"
@@ -197,20 +166,66 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
                       const res = await fetch(
                         `/api/events/${event.id}/attendance/@me`,
                         {
-                          method: "POST",
+                          method: "DELETE",
                         }
                       );
-                      if (res.status === 200)
-                        setEventAttendance(await res.json());
-                      else alert("Error joining event!");
+                      if (res.status === 200) setEventAttendance(null);
+                      else alert("Error leaving event!");
                       setButtonProgress(false);
                     }}
                   >
-                    <BsCalendar2Check className="inline" />{" "}
-                    {buttonProgress ? "Joining" : "Join"} Event
+                    <BiLogOut className="inline" />{" "}
+                    {buttonProgress ? "Leaving" : "Leave"} Event
                   </Button>
-                </>
-              )}
+                )}
+              </>
+            ) : (
+              <>
+                <h3>Event Attendance:</h3>
+                <div>You have not registered for this event yet.</div>
+                {new Date(event?.eventTime) < new Date() ? (
+                  <h5>You cannot join an event that has already happened.</h5>
+                ) : (
+                  <>
+                    <h5>
+                      By clicking join, you have read the description and done
+                      anything required by it.
+                    </h5>
+                    <Button
+                      disabled={buttonProgress}
+                      color="blue"
+                      className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                      onClick={async () => {
+                        setButtonProgress(true);
+                        const res = await fetch(
+                          `/api/events/${event.id}/attendance/@me`,
+                          {
+                            method: "POST",
+                          }
+                        );
+                        if (res.status === 200)
+                          setEventAttendance(await res.json());
+                        else alert("Error joining event!");
+                        setButtonProgress(false);
+                      }}
+                    >
+                      <BsCalendar2Check className="inline" />{" "}
+                      {buttonProgress ? "Joining" : "Join"} Event
+                    </Button>
+                  </>
+                )}
+              </>
+            )
+          ) : (
+            <>
+              <h3>You must be logged in to join an event.</h3>
+              <Button
+                color="blue"
+                className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                onClick={() => signIn("auth0")}
+              >
+                Login
+              </Button>
             </>
           )}
         </div>

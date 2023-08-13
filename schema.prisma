@@ -47,14 +47,14 @@ model Event {
 }
 
 model EventAttendance {
-  user         User     @relation("EventAttendee", fields: [userEmail], references: [email])
+  user         User      @relation("EventAttendee", fields: [userEmail], references: [email])
   userEmail    String
-  event        Event    @relation(fields: [eventId], references: [id])
+  event        Event     @relation(fields: [eventId], references: [id])
   eventId      String
-  earnedPoints Float    @default(0)
-  earnedHours  Float    @default(0)
-  registeredAt DateTime @default(now())
-  attended     Boolean  @default(false)
+  earnedPoints Float     @default(0)
+  earnedHours  Float     @default(0)
+  registeredAt DateTime  @default(now())
+  attendedAt   DateTime?
 
   @@id([userEmail, eventId])
   @@index([userEmail])
