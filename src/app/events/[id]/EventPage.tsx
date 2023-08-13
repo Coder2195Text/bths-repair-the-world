@@ -11,7 +11,12 @@ import {
   BiLogOut,
   BiTrash,
 } from "react-icons/bi";
-import { BsClock, BsAward, BsCalendar2Check } from "react-icons/bs";
+import {
+  BsClock,
+  BsAward,
+  BsCalendar2Check,
+  BsFillPersonCheckFill,
+} from "react-icons/bs";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
@@ -83,6 +88,13 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
             onClick={() => setFormOpen(true)}
           >
             <BiCalendarPlus className="inline" /> Edit Event
+          </Button>
+          <Button
+            color="blue"
+            className="bg-[#2356ff] font-figtree p-1 text-2xl mx-2"
+            onClick={() => router.push(`/events/${event.id}/attendance`)}
+          >
+            <BsFillPersonCheckFill className="inline" /> Attendance
           </Button>
           <Button
             color="red"
