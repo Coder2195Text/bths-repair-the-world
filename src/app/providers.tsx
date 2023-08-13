@@ -7,6 +7,15 @@ import { MDXProvider } from "@mdx-js/react";
 import { MDXComponents } from "mdx/types";
 import { MergeComponents } from "@mdx-js/react/lib";
 import Link from "next/link";
+import {
+  PusherProvider as $PusherProvider,
+  type PusherProviderProps,
+} from "@harelpls/use-pusher";
+import { FC, PropsWithChildren } from "react";
+
+const PusherProvider = $PusherProvider as FC<
+  PropsWithChildren<PusherProviderProps>
+>;
 
 type Props = {
   children?: React.ReactNode;
@@ -32,11 +41,16 @@ const components: MDXComponents | MergeComponents = {
 
 export const NextAuthProvider = ({ children }: Props) => {
   return (
-    <MDXProvider components={components}>
-      <AccountProvider>
-        <NextNProgress options={{}} color="lightblue" height="5px" />
-        <SessionProvider>{children}</SessionProvider>
-      </AccountProvider>
-    </MDXProvider>
+    <PusherProvider
+      clientKey={process.env.NEXT_PUBLIC_PUSHER_KEY!}
+      cluster={process.env.NEXT_PUBLIC_PUSHER_CLUSTER!}
+    >
+      <MDXProvider components={components}>
+        <AccountProvider>
+          <NextNProgress options={{}} color="lightblue" height="5px" />
+          <SessionProvider>{children}</SessionProvider>
+        </AccountProvider>
+      </MDXProvider>
+    </PusherProvider>
   );
 };

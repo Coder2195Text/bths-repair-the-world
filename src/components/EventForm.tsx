@@ -194,6 +194,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 name="maxHours"
                 id="maxHours"
                 min={0}
+                step={0.25}
                 placeholder="Max hours"
               />
               <br />

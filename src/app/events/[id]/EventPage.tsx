@@ -21,6 +21,8 @@ import { Button, button } from "@material-tailwind/react";
 import { useAccount } from "@/components/AccountContext";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
+import { useChannel, useEvent } from "@harelpls/use-pusher";
+import { Params } from "@/app/api/events/[id]/route";
 
 interface Props {
   event: EventParsed;
@@ -37,6 +39,16 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
   const [deleteProgress, setDeleteProgress] = useState<boolean>(false);
   const router = useRouter();
   const { status } = useSession();
+
+  const channel = useChannel(defaultEvent.id);
+  useEvent(channel, "update", (data) => {
+    console.log(data);
+    if (eventAttendance && eventAttendance !== "unloaded")
+      setEventAttendance({
+        ...eventAttendance,
+        ...(data as Partial<EventAttendance>),
+      });
+  });
 
   useEffect(() => {
     const fetchAttendance = async () => {

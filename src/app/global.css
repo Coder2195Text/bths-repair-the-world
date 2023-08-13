@@ -62,7 +62,12 @@
 
   input:not([type="checkbox"]):not([class*="react-"]),
   select:not([class*="react-"]) {
-    @apply m-1 p-1 w-full md:w-[40vw] bg-transparent border-b-2 border-black  focus:outline-none;
+    @apply m-1 p-1  bg-transparent border-b-2 border-black  focus:outline-none;
+  }
+
+  input:not([type="checkbox"]):not([class*="react-"]):not([class*="custom"]),
+  select:not([class*="react-"]):not([class*="custom"]) {
+    @apply w-full md:w-[40vw];
   }
 
   input:not([type="checkbox"]):not([class*="react-"]):focus {
