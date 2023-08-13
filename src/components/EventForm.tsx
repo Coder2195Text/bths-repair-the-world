@@ -14,6 +14,7 @@ import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
 import { BiX, BiXCircle } from "react-icons/bi";
 import DateTimePicker from "react-datetime-picker";
+import { useRouter } from "next/navigation";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -35,6 +36,7 @@ type Props = {
 };
 
 const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
+  const router = useRouter();
   const [uploading, setUploading] = useState(false);
   return (
     <div
@@ -89,6 +91,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               });
               if (res.status === 200) {
                 setOpen(false);
+                router.push(`/events/${(await res.json()).id}`);
               }
             } else {
               const editted = Object.fromEntries(

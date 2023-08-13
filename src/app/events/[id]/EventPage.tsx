@@ -183,27 +183,33 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
               {new Date(event?.eventTime) < new Date() ? (
                 <h5>You cannot join an event that has already happened.</h5>
               ) : (
-                <Button
-                  disabled={buttonProgress}
-                  color="blue"
-                  className="bg-[#2356ff] font-figtree p-1 text-2xl"
-                  onClick={async () => {
-                    setButtonProgress(true);
-                    const res = await fetch(
-                      `/api/events/${event.id}/attendance/@me`,
-                      {
-                        method: "POST",
-                      }
-                    );
-                    if (res.status === 200)
-                      setEventAttendance(await res.json());
-                    else alert("Error joining event!");
-                    setButtonProgress(false);
-                  }}
-                >
-                  <BsCalendar2Check className="inline" />{" "}
-                  {buttonProgress ? "Joining" : "Join"} Event
-                </Button>
+                <>
+                  <h5>
+                    By clicking join, you have read the description and done
+                    anything required by it.
+                  </h5>
+                  <Button
+                    disabled={buttonProgress}
+                    color="blue"
+                    className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                    onClick={async () => {
+                      setButtonProgress(true);
+                      const res = await fetch(
+                        `/api/events/${event.id}/attendance/@me`,
+                        {
+                          method: "POST",
+                        }
+                      );
+                      if (res.status === 200)
+                        setEventAttendance(await res.json());
+                      else alert("Error joining event!");
+                      setButtonProgress(false);
+                    }}
+                  >
+                    <BsCalendar2Check className="inline" />{" "}
+                    {buttonProgress ? "Joining" : "Join"} Event
+                  </Button>
+                </>
               )}
             </>
           )}
