@@ -21,9 +21,19 @@ async function handler(
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
+  const event = await prisma.event.findUnique({
+    where: { id },
+    select: {
+      eventTime: true,
+    },
+  });
+
+  if (!event)
+    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+
   const session = await getServerSession({ ...AUTH_OPTIONS });
 
-  const allowed = (async () => {
+  const rank = await (async () => {
     if (!session?.user?.email) return false;
     if (email == "@me" && session.user.email) {
       email = session.user.email;
@@ -43,7 +53,7 @@ async function handler(
       );
   })();
 
-  if (!allowed) {
+  if (!rank) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   if (method === "GET") {
@@ -78,6 +88,12 @@ async function handler(
   }
 
   if (method === "DELETE") {
+    if (rank !== "admin" && new Date(event?.eventTime) < new Date()) {
+      return NextResponse.json(
+        { error: "Event has already passed" },
+        { status: 403 }
+      );
+    }
     try {
       const event = await prisma.eventAttendance.delete({
         where: {

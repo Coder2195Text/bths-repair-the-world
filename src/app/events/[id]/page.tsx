@@ -2,7 +2,6 @@ import { prisma } from "@/utils/prisma";
 import { Metadata } from "next";
 import EventPage from "./EventPage";
 import { notFound } from "next/navigation";
-import { Event } from "@prisma/client";
 import { FC } from "react";
 
 export const dynamicParams = true;
@@ -62,11 +61,11 @@ async function fetchEvent(id: string) {
 
 const Page: FC<Params> = async ({ params: { id } }) => {
   const event = await fetchEvent(id);
-  event.eventTime = new Date(event.eventTime);
-  event.createdAt = new Date(event.createdAt);
   if (!event) {
     notFound();
   }
+  event.eventTime = new Date(event.eventTime);
+  event.createdAt = new Date(event.createdAt);
 
   return <EventPage event={event} />;
 };

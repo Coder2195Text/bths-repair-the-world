@@ -1,23 +1,98 @@
+"use client";
+
 import Layout from "@/components/Layout";
-import { Event } from "@prisma/client";
+import { Event, EventAttendance, UserPosition } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
-import { BiLinkExternal } from "react-icons/bi";
-import { BsClock, BsAward } from "react-icons/bs";
+import { FC, useEffect, useState } from "react";
+import {
+  BiCalendarPlus,
+  BiLinkExternal,
+  BiLogOut,
+  BiTrash,
+} from "react-icons/bi";
+import { BsClock, BsAward, BsCalendar2Check } from "react-icons/bs";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
 import { EventParsed } from "@/types/event";
+import EventForm from "@/components/EventForm";
+import { Button, button } from "@material-tailwind/react";
+import { useAccount } from "@/components/AccountContext";
+import { useRouter } from "next/navigation";
 
 interface Props {
   event: EventParsed;
 }
 
-const EventPage: FC<Props> = ({ event }) => {
+const EventPage: FC<Props> = ({ event: defaultEvent }) => {
+  const { data } = useAccount();
+  const [formOpen, setFormOpen] = useState<boolean>(false);
+  const [event, setEvent] = useState<EventParsed>(defaultEvent);
+  const [eventAttendance, setEventAttendance] = useState<
+    EventAttendance | null | "unloaded"
+  >("unloaded");
+  const [buttonProgress, setButtonProgress] = useState<boolean>(false);
+  const [deleteProgress, setDeleteProgress] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      const res = await fetch(`/api/events/${event.id}/attendance/@me`);
+      const data = await res.json();
+      console.log(data);
+      setEventAttendance(data);
+    };
+    fetchAttendance();
+  }, []);
+
   return (
     <Layout>
-      <h1>Event: {event.name}</h1>
+      {formOpen && (
+        <EventForm
+          mode="edit"
+          setOpen={setFormOpen}
+          eventData={event}
+          setEventData={setEvent}
+        />
+      )}
+      <h1 className="flex flex-wrap justify-around w-full">
+        Event: {event.name}
+      </h1>
+      {([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
+        data?.position!
+      ) && (
+        <>
+          <Button
+            color="blue"
+            className="bg-[#2356ff] font-figtree p-1 text-2xl mx-2"
+            onClick={() => setFormOpen(true)}
+          >
+            <BiCalendarPlus className="inline" /> Edit Event
+          </Button>
+          <Button
+            color="red"
+            className="bg-[#ff4a5a] font-figtree p-1 text-2xl mx-2"
+            onClick={async () => {
+              if (!confirm("Are you sure you want to delete this event?"))
+                return;
+
+              setDeleteProgress(true);
+              const res = await fetch(`/api/events/${event.id}`, {
+                method: "DELETE",
+              });
+              if (res.status === 200) {
+                router.push("/events");
+              } else {
+                alert("Error deleting event!");
+                setDeleteProgress(false);
+              }
+            }}
+          >
+            <BiTrash className="inline" /> Delete Event
+          </Button>
+        </>
+      )}
       <div className="w-full flex flex-wrap mt-5">
         <div className="w-full md:w-1/2 inline-block">
           {event.imageURL && (
@@ -60,12 +135,71 @@ const EventPage: FC<Props> = ({ event }) => {
         </div>
         <div className="w-full md:w-1/2 inline-block">
           <h3>Event Description: </h3>
-          <div className="min-h-[100px]">
+          <div className="min-h-[200px]">
             <ReactMarkdown remarkPlugins={[remarkGfm, reactGemoji]}>
               {event.description}
             </ReactMarkdown>
           </div>
-          <h3>Event Attendance:</h3>
+          {eventAttendance === "unloaded" ? (
+            <h3>Loading Attendance...</h3>
+          ) : eventAttendance ? (
+            <>
+              <h3>Event Attendance:</h3>
+              <div>
+                You have registered for this event. You have{" "}
+                {!eventAttendance.attended && "not"} attended the event and
+                earned {eventAttendance.earnedHours} hours and{" "}
+                {eventAttendance.earnedPoints} points.
+              </div>
+              {new Date(event?.eventTime) < new Date() || (
+                <Button
+                  disabled={buttonProgress}
+                  color="blue"
+                  className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                  onClick={async () => {
+                    setButtonProgress(true);
+                    const res = await fetch(
+                      `/api/events/${event.id}/attendance/@me`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
+                    if (res.status === 200) setEventAttendance(null);
+                    else alert("Error leaving event!");
+                    setButtonProgress(false);
+                  }}
+                >
+                  <BiLogOut className="inline" />{" "}
+                  {buttonProgress ? "Leaving" : "Leave"} Event
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <h3>Event Attendance:</h3>
+              <div>You have not registered for this event yet.</div>
+              <Button
+                disabled={buttonProgress}
+                color="blue"
+                className="bg-[#2356ff] font-figtree p-1 text-2xl"
+                onClick={async () => {
+                  setButtonProgress(true);
+                  const res = await fetch(
+                    `/api/events/${event.id}/attendance/@me`,
+                    {
+                      method: "POST",
+                    }
+                  );
+                  if (res.status === 200) setEventAttendance(await res.json());
+                  else alert("Error joining event!");
+                  setButtonProgress(false);
+                }}
+              >
+                <BsCalendar2Check className="inline" />{" "}
+                {buttonProgress ? "Joining" : "Join"} Event
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </Layout>

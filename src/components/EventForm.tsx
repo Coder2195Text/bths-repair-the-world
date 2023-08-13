@@ -31,9 +31,10 @@ type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   mode: "post" | "edit";
   eventData?: EventParsed;
+  setEventData?: Dispatch<SetStateAction<EventParsed>>;
 };
 
-const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
+const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
   const [uploading, setUploading] = useState(false);
   return (
     <div
@@ -70,12 +71,14 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
                 ? eventData!.eventTime
                 : (undefined as Date | undefined),
             address: mode == "edit" ? eventData!.address : "",
-            imageURL: mode == "edit" ? eventData!.imageURL : undefined,
+            imageURL:
+              mode == "edit"
+                ? eventData!.imageURL || null
+                : (null as null | string | undefined),
           }}
           onSubmit={async (values) => {
-            if (!values.imageURL) delete values.imageURL;
-
             if (mode === "post") {
+              if (!values.imageURL) delete values.imageURL;
               const res = await fetch("/api/events", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -86,6 +89,34 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
               });
               if (res.status === 200) {
                 setOpen(false);
+              }
+            } else {
+              const editted = Object.fromEntries(
+                Object.keys(values)
+                  .filter(
+                    (key) =>
+                      values[key as keyof typeof values]?.valueOf() !==
+                      eventData![key as keyof typeof values]?.valueOf()
+                  )
+                  .map((key) => [key, values[key as keyof typeof values]])
+              );
+
+              if (Object.keys(editted).length === 0) {
+                setOpen(false);
+                return;
+              }
+
+              const res = await fetch(`/api/events/${eventData!.id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                  ...editted,
+                  eventTime: new Date(values.eventTime!).toISOString(),
+                }),
+              });
+
+              if (res.status === 200) {
+                setOpen(false);
+                setEventData?.((await res.json()) as EventParsed);
               }
             }
           }}
@@ -175,7 +206,6 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
               <br />
               <Error name="maxPoints" />
               <label htmlFor="eventTime">Event Time: </label>
-
               <DateTimePicker
                 onChange={(value) => {
                   setFieldValue("eventTime", value);
@@ -183,7 +213,6 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
                 }}
                 value={values.eventTime}
               />
-
               <br />
               <Error name="eventTime" />
               <label htmlFor="address">Address: </label>
@@ -195,7 +224,6 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
               />
               <br />
               <Error name="address" />
-
               {values.address && (
                 <div>
                   <label>Preview:</label>
@@ -240,7 +268,6 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
                   setUploading(false);
                 }}
               />
-
               <div className="w-full flex justify-center relative items-center">
                 {values.imageURL ? (
                   <span className="relative">
@@ -252,7 +279,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
                       type="button"
                       className="absolute top-0 right-0 p-0 bg-black bg-opacity-20 rounded-full"
                       onClick={() => {
-                        setFieldValue("imageURL", undefined);
+                        setFieldValue("imageURL", null);
                       }}
                     >
                       <BiXCircle className="w-10 h-10 text-white" />
@@ -262,9 +289,18 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData }) => {
                   "No image for the event."
                 )}
               </div>
-
               <Error name="imageURL" />
-              <br />
+              {mode === "post" ? (
+                <br />
+              ) : (
+                <>
+                  <hr />
+                  <div>
+                    Due to caching, it may take up to 10 seconds for the event
+                    to update.
+                  </div>
+                </>
+              )}
               <Button
                 type="submit"
                 disabled={isSubmitting}
