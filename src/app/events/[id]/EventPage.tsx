@@ -48,7 +48,11 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
   const channel = useChannel(defaultEvent.id);
   useEvent(channel, "update", (data) => {
     console.log(data);
-    if (eventAttendance && eventAttendance !== "unloaded")
+    if (
+      eventAttendance &&
+      eventAttendance !== "unloaded" &&
+      (data as EventAttendance).userEmail === eventAttendance.userEmail
+    )
       setEventAttendance({
         ...eventAttendance,
         ...(data as Partial<EventAttendance>),
@@ -120,7 +124,7 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
         </>
       )}
       <div className="w-full flex flex-wrap mt-5">
-        <div className="w-full md:w-1/2 inline-block">
+        <div className="w-full md:w-5/12 inline-block p-1.5">
           {event.imageURL && (
             <Image
               src={event.imageURL}
@@ -159,10 +163,33 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
             className="w-full border-none h-60"
           ></iframe>
         </div>
-        <div className="w-full md:w-1/2 inline-block">
+        <div className="w-full md:w-7/12 inline-block p-1.5">
           <h3>Event Description: </h3>
-          <div className="min-h-[200px]">
-            <ReactMarkdown remarkPlugins={[remarkGfm, reactGemoji]}>
+          <div className="min-h-[200px] rounded-md bg-blue-gray-900 bg-opacity-50 py-2">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm, reactGemoji]}
+              linkTarget="_blank"
+              components={{
+                h1: (props) => (
+                  <h1 {...props} className="text-[35px] font-[700]" />
+                ),
+                h2: (props) => (
+                  <h2 {...props} className="text-[32.5px] font-[650]" />
+                ),
+                h3: (props) => (
+                  <h3 {...props} className="text-[30px] font-[600]" />
+                ),
+                h4: (props) => (
+                  <h4 {...props} className="text-[27.5px] font-[550]" />
+                ),
+                h5: (props) => (
+                  <h5 {...props} className="text-[25px] font-[500]" />
+                ),
+                h6: (props) => (
+                  <h6 {...props} className="text-[22.5px] font-[450]" />
+                ),
+              }}
+            >
               {event.description}
             </ReactMarkdown>
           </div>
