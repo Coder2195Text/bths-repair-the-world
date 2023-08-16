@@ -181,7 +181,30 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 <>
                   <label>Preview:</label>
                   <div className="w-full max-h-52 bg-gray-800 bg-opacity-20 overflow-auto p-1 rounded-md">
-                    <ReactMarkdown remarkPlugins={[remarkGfm, reactGemoji]}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm, reactGemoji]}
+                      linkTarget="_blank"
+                      components={{
+                        h1: (props) => (
+                          <h1 {...props} className="text-[35px] font-[700]" />
+                        ),
+                        h2: (props) => (
+                          <h2 {...props} className="text-[32.5px] font-[650]" />
+                        ),
+                        h3: (props) => (
+                          <h3 {...props} className="text-[30px] font-[600]" />
+                        ),
+                        h4: (props) => (
+                          <h4 {...props} className="text-[27.5px] font-[550]" />
+                        ),
+                        h5: (props) => (
+                          <h5 {...props} className="text-[25px] font-[500]" />
+                        ),
+                        h6: (props) => (
+                          <h6 {...props} className="text-[22.5px] font-[450]" />
+                        ),
+                      }}
+                    >
                       {values.description}
                     </ReactMarkdown>
                   </div>
