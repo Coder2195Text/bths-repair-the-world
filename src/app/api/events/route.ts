@@ -135,7 +135,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
           )})`
         )
-        .setThumbnail({
+        .setImage({
           url: body.imageURL || "https://bths-repair.tech/icon.png",
         })
         .setAuthor({
