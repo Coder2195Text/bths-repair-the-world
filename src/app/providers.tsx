@@ -11,7 +11,9 @@ import {
   PusherProvider as $PusherProvider,
   type PusherProviderProps,
 } from "@harelpls/use-pusher";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { useScrollDirection } from "react-use-scroll-direction";
+import Navbar from "@/components/Navbar";
 
 const PusherProvider = $PusherProvider as FC<
   PropsWithChildren<PusherProviderProps>
@@ -40,6 +42,22 @@ const components: MDXComponents | MergeComponents = {
 };
 
 export const NextAuthProvider = ({ children }: Props) => {
+  const [isNavActive, setIsNavActive] = useState<[boolean, number]>([
+    true,
+    Date.now(),
+  ]);
+
+  const [element, setElement] = useState<HTMLElement | null>(null);
+
+  const { scrollDirection } = useScrollDirection(element!);
+
+  useEffect(() => {
+    setElement(document.getElementsByTagName("body")[0]);
+  }, []);
+
+  if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
+    setIsNavActive([scrollDirection === "UP", Date.now()]);
+  }
   return (
     <PusherProvider
       clientKey={process.env.NEXT_PUBLIC_PUSHER_KEY!}
@@ -48,7 +66,10 @@ export const NextAuthProvider = ({ children }: Props) => {
       <MDXProvider components={components}>
         <AccountProvider>
           <NextNProgress options={{}} color="lightblue" height="5px" />
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <Navbar isNavActive={isNavActive[0]} />
+            {children}
+          </SessionProvider>
         </AccountProvider>
       </MDXProvider>
     </PusherProvider>

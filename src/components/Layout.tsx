@@ -21,7 +21,7 @@ import {
 } from "react-use-scroll-direction";
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 let socket;
@@ -34,35 +34,9 @@ const Layout: FC<Props> = ({ children }) => {
     ? new Date(accountData.birthday)
     : undefined;
 
-  const [isNavActive, setIsNavActive] = useState<[boolean, number]>([
-    true,
-    Date.now(),
-  ]);
-
   const isBirthday =
     birthday?.getUTCDate() === today.getDate() &&
     birthday?.getUTCMonth() === today.getMonth();
-
-  const [element, setElement] = useState<HTMLElement | null>(null);
-
-  const { scrollDirection } = useScrollDirection(element!);
-
-  useEffect(() => {
-    setElement(document.getElementsByTagName("body")[0]);
-  }, []);
-
-  if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
-    setIsNavActive([scrollDirection === "UP", Date.now()]);
-  }
-
-  if (status === "loading" || accountStatus === "pending" || !children) {
-    return (
-      <div className="flex fixed top-0 left-0 flex-col justify-center items-center p-10 w-screen h-screen">
-        <h1>Loading...</h1>
-        <BarLoader width={600} className="mt-12" height={10} color="#2563EB" />
-      </div>
-    );
-  }
 
   if (data?.user.id.startsWith("auth0")) {
     signIn("auth0");
@@ -74,8 +48,19 @@ const Layout: FC<Props> = ({ children }) => {
         {accountStatus === "unregistered" && status === "authenticated" && (
           <UserForm mode="register" />
         )}
+        {!children && (
+          <div className="w-screen h-screen flex items-center justify-center fixed flex-wrap flex-col top-0 left-0">
+            <h1>Loading...</h1>
+            <BarLoader
+              color="#2563EB"
+              className="my-3"
+              width={600}
+              height={10}
+            />
+          </div>
+        )}
         {isBirthday && <BirthdayPopup />}
-        <Navbar isNavActive={isNavActive[0]} />
+
         {children}
       </main>
     </div>

@@ -34,33 +34,33 @@ const profileMenuItems: {
   label: ReactNode;
   icon: IconType;
   onClick?:
-  | ((
-    event:
-      | MouseEvent<HTMLLIElement, globalThis.MouseEvent>
-      | MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-  ) => any)
-  | "openProfile";
+    | ((
+        event:
+          | MouseEvent<HTMLLIElement, globalThis.MouseEvent>
+          | MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+      ) => any)
+    | "openProfile";
 }[] = [
-    {
-      label: "Edit Profile",
-      icon: RiAccountCircleLine,
-      onClick: "openProfile",
+  {
+    label: "Edit Profile",
+    icon: RiAccountCircleLine,
+    onClick: "openProfile",
+  },
+  {
+    label: "Sign Out",
+    icon: FiLogOut,
+    onClick: () => {
+      signOut();
     },
-    {
-      label: "Sign Out",
-      icon: FiLogOut,
-      onClick: () => {
-        signOut();
-      },
-    },
-  ];
+  },
+];
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
 
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -71,21 +71,23 @@ function ProfileMenu() {
           variant="text"
           color="blue-gray"
           className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full"
+          disabled={status === "loading"}
         >
           <Avatar
             variant="circular"
             size="sm"
             alt="candice wu"
-            className="p-0.5 w-8 h-8 rounded-full border border-blue-500"
+            className="w-8 h-8 rounded-full"
             src={
               data?.user?.image ||
-              "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png"
+              "https://static.wixstatic.com/media/369c26_b396f2977e5a40839e2fc77a6f9aac2b~mv2.gif"
             }
           />
           <BiChevronDown
             strokeWidth={2.5}
-            className={`h-4 w-4 transition-transform ${isMenuOpen ? "rotate-180" : ""
-              }`}
+            className={`h-4 w-4 transition-transform ${
+              isMenuOpen ? "rotate-180" : ""
+            }`}
           />
         </Button>
       </MenuHandler>
@@ -103,10 +105,11 @@ function ProfileMenu() {
                 }
                 onClick?.(event);
               }}
-              className={`flex transition-all text-white items-end gap-2 ${isLastItem
+              className={`flex transition-all text-white items-end gap-2 ${
+                isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
-                }`}
+              }`}
             >
               {createElement(icon, {
                 className: `h-5 w-5 ${isLastItem ? "text-red-500" : ""}`,
@@ -129,32 +132,32 @@ const navListLinks: {
   icon: IconType;
   url: string;
 }[] = [
-    {
-      label: "Events",
-      icon: BiCalendarCheck,
-      url: "/events",
-    },
-    {
-      label: "Blocks",
-      icon: BiCube,
-      url: "",
-    },
-    {
-      label: "Docs",
-      icon: BiCode,
-      url: "",
-    },
-  ];
+  {
+    label: "Events",
+    icon: BiCalendarCheck,
+    url: "/events",
+  },
+  {
+    label: "Blocks",
+    icon: BiCube,
+    url: "",
+  },
+  {
+    label: "Docs",
+    icon: BiCode,
+    url: "",
+  },
+];
 
 const socialLinks: {
   icon: IconType;
   url: string;
 }[] = [
-    {
-      icon: FaDiscord,
-      url: "https://discord.gg/zTDeqZd6ne",
-    },
-  ];
+  {
+    icon: FaDiscord,
+    url: "https://discord.gg/zTDeqZd6ne",
+  },
+];
 
 const NavList: FC = () => {
   return (
@@ -218,14 +221,15 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
   useEffect(() => {
     addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false),
+      () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
 
   return (
     <nav
-      className={`transition-all delay-150 duration-300 ease-in-out fixed left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6 ${isNavActive ? "top-0" : "-top-16"
-        }`}
+      className={`transition-all delay-150 duration-300 ease-in-out fixed left-0 z-30 p-2 w-screen bg-gray-700 bg-opacity-90 border-none lg:pl-6 ${
+        isNavActive ? "top-0" : "-top-16"
+      }`}
     >
       <div className="flex relative items-center mx-auto text-blue-gray-900">
         <Link href="/" className="font-medium cursor-pointer">
@@ -247,19 +251,22 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           ripple
         >
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
-              }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${
+              isNavOpen ? "rotate-45" : "opacity-100 top-1/3"
+            }`}
           />
           <div
-            className={`${genericHamburgerLine}  ${isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
-              }`}
+            className={`${genericHamburgerLine}  ${
+              isNavOpen ? "opacity-0" : "-translate-y-1/2 top-1/2 opacity-100"
+            }`}
           />
           <div
-            className={`-translate-y-1/2 ${genericHamburgerLine} ${isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
-              }`}
+            className={`-translate-y-1/2 ${genericHamburgerLine} ${
+              isNavOpen ? "-rotate-45 " : "opacity-100 top-2/3"
+            }`}
           />
         </Button>
-        {status === "authenticated" ? (
+        {status !== "unauthenticated" ? (
           <ProfileMenu />
         ) : (
           <Button

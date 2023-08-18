@@ -1,16 +1,136 @@
 "use client";
 
 import Layout from "@/components/Layout";
-import { Button } from "@material-tailwind/react";
+import {
+  Button,
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
+} from "@material-tailwind/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, ReactNode, createElement } from "react";
 import Typewriter from "typewriter-effect";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare, BsTools } from "react-icons/bs";
 import { useKeenSlider } from "keen-slider/react";
 import { AutoPlayPlugin } from "@/utils/keen-utils";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaFistRaised } from "react-icons/fa";
 import { HashLoader } from "react-spinners";
+import { MdRestore } from "react-icons/md";
+import { GiPowerLightning } from "react-icons/gi";
+import { AiFillHeart, AiOutlineStock } from "react-icons/ai";
+
+const REPAIR_TABS: {
+  label: ReactNode;
+  value: string;
+  content: ReactNode;
+}[] = [
+  {
+    label: "R",
+    value: "r",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Restoration
+          <MdRestore className="hidden sm:inline ml-2 " />
+        </h3>
+        We understand that sometimes the world needs healing. Through
+        collaborative efforts and dedicated initiatives, we work tirelessly to
+        mend what's been fractured and restore what's been lost. Whether it's
+        revitalizing neglected urban spaces, rehabilitating natural habitats, or
+        helping communities recover from adversity, it breathes new life into
+        the world around us.
+      </>
+    ),
+  },
+  {
+    label: "E",
+    value: "e",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Empowerment
+          <GiPowerLightning className="hidden sm:inline ml-2 " />
+        </h3>
+        We believe that everyone has the power to make a difference. Through
+        various events, we work tirelessly to empower individuals to take action
+        and make change. Whether it's providing resources to those in need,
+        educating others on important issues, or inspiring youth to become
+        leaders, it mobilizes people to make a difference.
+      </>
+    ),
+  },
+  {
+    label: "P",
+    value: "p",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Progress
+          <AiOutlineStock className="hidden sm:inline ml-2 " />
+        </h3>
+        We know that the world is constantly changing. Sometimes it's for the
+        better, and sometimes it's for the worse. Through our various projects,
+        we progress tirelessly to make the world a better place, no matter the
+        cirumstances. Whether it's fighting for social justice, advocating for
+        the environment, or promoting equality, it sets the stage for change.
+      </>
+    ),
+  },
+  {
+    label: "A",
+    value: "a",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Action
+          <BsTools className="hidden sm:inline ml-2 " />
+        </h3>
+        Do the world's problems come by surprise? No. Do they go away by
+        themselves? No. We know that the world needs help, and we're not afraid
+        to take action. Through our various projects, we work tirelessly to
+        tackle the world's problems head-on. Whether it's helping communities
+        shadowed by poverty, racism, or inequality, we should all take action to
+        make a difference.
+      </>
+    ),
+  },
+  {
+    label: "I",
+    value: "i",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Impact
+          <FaFistRaised className="hidden sm:inline ml-2 " />
+        </h3>
+        Our work is not done in vain. We should make it so that our efforts have
+        a lasting impact on the world around us. We dismantle the barriers that
+        prevent changes from being made. After all, we came to REPAIR, not to
+        make a temporary fix. The world never changed by temporary fixes, did
+        it?
+      </>
+    ),
+  },
+  {
+    label: "R",
+    value: "lr",
+    content: (
+      <>
+        <h3 className="flex items-center justify-center">
+          Regeneration
+          <AiFillHeart className="hidden sm:inline ml-2 " />
+        </h3>
+        The world is full of cracks and fractures. We should work to repair and
+        mend the gaps that have been created. We should work to restore the
+        world to its former glory. We should work to make the world a better
+        place. We should work to REPAIR the world.
+      </>
+    ),
+  },
+];
 
 const HomePage: FC = () => {
   const [sliderRef, instanceRef] = useKeenSlider(
@@ -20,7 +140,7 @@ const HomePage: FC = () => {
     [
       AutoPlayPlugin(2000),
       // add plugins here
-    ],
+    ]
   );
   const { status } = useSession();
   const rangeList = [...Array(4).keys()];
@@ -80,6 +200,32 @@ const HomePage: FC = () => {
           <FaChevronRight className="lg:w-10 lg:h-10 w-[4vw] h-[4vw]" />
         </button>
       </div>
+
+      <Tabs value="r">
+        <TabsHeader className="flex">
+          {REPAIR_TABS.map(({ label, value }) => (
+            <Tab key={value} value={value}>
+              <h6
+                className="lg:text-[40px] lg:font-[800] md:text-[35px] md:font-[700];
+              sm:text-[30px] sm:font-[600] text-[25px] font-[500] flex items-center"
+              >
+                {label}
+              </h6>
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody>
+          {REPAIR_TABS.map(({ value, content }) => (
+            <TabPanel
+              key={value}
+              value={value}
+              className="text-white font-raleway"
+            >
+              {content}
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
 
       {status === "unauthenticated" && (
         <Button
