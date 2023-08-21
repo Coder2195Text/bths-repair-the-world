@@ -33,15 +33,16 @@ const REPAIR_TABS: {
     content: (
       <>
         <h3 className="flex items-center justify-center">
-          Restoration
+          Real Change
           <MdRestore className="hidden sm:inline ml-2 " />
         </h3>
-        We understand that sometimes the world needs healing. Through
-        collaborative efforts and dedicated initiatives, we work tirelessly to
-        mend what's been fractured and restore what's been lost. Whether it's
-        revitalizing neglected urban spaces, rehabilitating natural habitats, or
-        helping communities recover from adversity, it breathes new life into
-        the world around us.
+        Don't lie to yourself. What has 100B dollars done for the peace in the
+        Russo-Ukrainian war? What kind of world problems have been solved by
+        dumping money stolen from the poor? We encourage our members to aim for
+        non monetary methods of helping the community. We believe that the
+        world's problems can be solved by the people, not by the money. Monetary
+        methods are allowed on the side, but our club will utilize the power of
+        the people to make a difference.
       </>
     ),
   },
@@ -120,13 +121,15 @@ const REPAIR_TABS: {
     content: (
       <>
         <h3 className="flex items-center justify-center">
-          Regeneration
-          <AiFillHeart className="hidden sm:inline ml-2 " />
+          Restoration
+          <MdRestore className="hidden sm:inline ml-2 " />
         </h3>
-        The world is full of cracks and fractures. We should work to repair and
-        mend the gaps that have been created. We should work to restore the
-        world to its former glory. We should work to make the world a better
-        place. We should work to REPAIR the world.
+        We understand that sometimes the world needs healing. Through
+        collaborative efforts and dedicated initiatives, we work tirelessly to
+        mend what's been fractured and restore what's been lost. Whether it's
+        revitalizing neglected urban spaces, rehabilitating natural habitats, or
+        helping communities recover from adversity, it breathes new life into
+        the world around us.
       </>
     ),
   },
@@ -143,7 +146,7 @@ const HomePage: FC = () => {
     ]
   );
   const { status } = useSession();
-  const rangeList = [...Array(4).keys()];
+  const rangeList = [...Array(5).keys()];
   return (
     <Layout>
       <h1 className="title">BTHS Repair the World</h1>
