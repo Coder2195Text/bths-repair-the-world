@@ -49,18 +49,17 @@ const Layout: FC<Props> = ({ children }) => {
           <UserForm mode="register" />
         )}
         {!children && (
-          <div className="w-screen h-screen flex items-center justify-center fixed flex-wrap flex-col top-0 left-0">
+          <div className="w-full h-screen flex items-center justify-center fixed flex-wrap flex-col top-0 left-0">
             <h1>Loading...</h1>
             <BarLoader
               color="#2563EB"
-              className="my-3"
+              className="my-3 max-w-full"
               width={600}
               height={10}
             />
           </div>
         )}
         {isBirthday && <BirthdayPopup />}
-
         {children}
       </main>
     </div>
