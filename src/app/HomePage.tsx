@@ -19,7 +19,7 @@ import { AutoPlayPlugin } from "@/utils/keen-utils";
 import { FaChevronLeft, FaChevronRight, FaFistRaised } from "react-icons/fa";
 import { HashLoader } from "react-spinners";
 import { MdRestore } from "react-icons/md";
-import { GiPowerLightning } from "react-icons/gi";
+import { GiEarthAmerica, GiPowerLightning } from "react-icons/gi";
 import { AiFillHeart, AiOutlineStock } from "react-icons/ai";
 
 const REPAIR_TABS: {
@@ -34,7 +34,7 @@ const REPAIR_TABS: {
       <>
         <h3 className="flex items-center justify-center">
           Real Change
-          <MdRestore className="hidden sm:inline ml-2 " />
+          <GiEarthAmerica className="hidden sm:inline ml-2 " />
         </h3>
         Don't lie to yourself. What has 100B dollars done for the peace in the
         Russo-Ukrainian war? What kind of world problems have been solved by
