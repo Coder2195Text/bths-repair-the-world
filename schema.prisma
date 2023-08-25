@@ -14,6 +14,17 @@ enum UserPosition {
   ADMIN
 }
 
+model ExecDetails {
+  user      User   @relation(fields: [userEmail], references: [email])
+  userEmail String @id
+
+  position    String
+  description String @db.VarChar(5000)
+  selfieURL   String
+
+  @@index([userEmail])
+}
+
 model User {
   email         String            @id
   name          String
@@ -27,6 +38,7 @@ model User {
   birthday      String
   referredBy    String?
   sgoSticker    Boolean
+  execDetails   ExecDetails?
 
   eventAlerts Boolean
   lastUpdated DateTime @default(now())
