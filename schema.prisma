@@ -14,15 +14,26 @@ enum UserPosition {
   ADMIN
 }
 
+model GalleryPicture {
+  id String @id @default(cuid())
+
+  date        String
+  title       String
+  description String @db.VarChar(5000)
+  imageURL    String
+
+  createdAt DateTime @default(now())
+}
+
 model ExecDetails {
-  user      User   @relation(fields: [userEmail], references: [email])
-  userEmail String @id
+  user  User   @relation(fields: [email], references: [email])
+  email String @id
 
   position    String
   description String @db.VarChar(5000)
   selfieURL   String
 
-  @@index([userEmail])
+  @@index([email])
 }
 
 model User {
