@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import {
+  BiCalendarEdit,
   BiCalendarPlus,
   BiLinkExternal,
   BiLogOut,
@@ -91,7 +92,7 @@ const EventPage: FC<Props> = ({ event: defaultEvent }) => {
             className="bg-[#2356ff] font-figtree p-1 text-2xl mx-2"
             onClick={() => setFormOpen(true)}
           >
-            <BiCalendarPlus className="inline" /> Edit Event
+            <BiCalendarEdit className="inline" /> Edit Event
           </Button>
           <Button
             color="blue"

@@ -11,16 +11,13 @@ import {
 } from "@material-tailwind/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { FC, ReactNode, createElement } from "react";
+import { FC, ReactNode } from "react";
 import Typewriter from "typewriter-effect";
 import { BsPencilSquare, BsTools } from "react-icons/bs";
-import { useKeenSlider } from "keen-slider/react";
-import { AutoPlayPlugin } from "@/utils/keen-utils";
-import { FaChevronLeft, FaChevronRight, FaFistRaised } from "react-icons/fa";
-import { HashLoader } from "react-spinners";
+import { FaFistRaised } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { GiEarthAmerica, GiPowerLightning } from "react-icons/gi";
-import { AiFillHeart, AiOutlineStock } from "react-icons/ai";
+import { AiOutlineStock } from "react-icons/ai";
 
 const REPAIR_TABS: {
   label: ReactNode;
@@ -136,113 +133,78 @@ const REPAIR_TABS: {
 ];
 
 const HomePage: FC = () => {
-  const [sliderRef, instanceRef] = useKeenSlider(
-    {
-      loop: true,
-    },
-    [
-      AutoPlayPlugin(2000),
-      // add plugins here
-    ]
-  );
   const { status } = useSession();
-  const rangeList = [...Array(5).keys()];
+
   return (
-    <Layout>
-      <h1 className="title">BTHS Repair the World</h1>
-      <h4>
-        <Typewriter
-          options={{
-            strings: [
-              "Inspiring BTHS youth to make change in a unjust society.",
-              "Empowering everyone to make a difference.",
-              "Mobilizing productivity for a better tomorrow.",
-              "Setting the stage for change.",
-              "Repairing the world, one step at a time.",
-            ],
-            autoStart: true,
-            loop: true,
-          }}
-        />
-      </h4>
-      <div className="relative">
-        <div
-          className="inline-block relative my-3 w-full rounded-2xl h-[50vw] keen-slider lg:h-[600px]"
-          ref={sliderRef}
-        >
-          <div className="flex absolute justify-center items-center w-full h-full">
-            <HashLoader color="#2563EB" size={100} />
-          </div>
-          {rangeList.map((i) => (
-            <div className="keen-slider__slide">
-              <Image
-                src={`/images/home${i + 1}.jpg`}
-                fill
-                className="object-cover"
-                alt=""
-              />
-            </div>
-          ))}
+    <>
+      <div className="relative w-full h-[75vw] lg:h-[720px] rounded-xl mb-3 mt-68">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
+          <h1 className="title">BTHS Repair the World</h1>
+          <h4>
+            <Typewriter
+              options={{
+                strings: [
+                  "Inspiring BTHS youth to make change in a unjust society.",
+                  "Empowering everyone to make a difference.",
+                  "Mobilizing productivity for a better tomorrow.",
+                  "Setting the stage for change.",
+                  "Repairing the world, one step at a time.",
+                ],
+                autoStart: true,
+                loop: true,
+              }}
+            />
+          </h4>
         </div>
-        <button
-          className="absolute left-0 top-1/2 bg-transparent -translate-y-1/2"
-          onClick={(e) => {
-            e.stopPropagation();
-            instanceRef.current?.prev();
-          }}
-        >
-          <FaChevronLeft className="lg:w-10 lg:h-10 w-[4vw] h-[4vw]" />
-        </button>
-        <button
-          className="absolute right-0 top-1/2 bg-transparent -translate-y-1/2"
-          onClick={(e) => {
-            e.stopPropagation();
-            instanceRef.current?.next();
-          }}
-        >
-          <FaChevronRight className="lg:w-10 lg:h-10 w-[4vw] h-[4vw]" />
-        </button>
+
+        <Image
+          src="/images/banner.jpg"
+          alt=""
+          fill
+          className="object-cover -z-20 brightness-75"
+        />
       </div>
-
-      <Tabs value="r">
-        <TabsHeader className="flex">
-          {REPAIR_TABS.map(({ label, value }) => (
-            <Tab key={value} value={value}>
-              <h6
-                className="lg:text-[40px] lg:font-[800] md:text-[35px] md:font-[700];
+      <Layout>
+        <Tabs value="r" className="-mt-10">
+          <TabsHeader className="flex">
+            {REPAIR_TABS.map(({ label, value }) => (
+              <Tab key={value} value={value}>
+                <h6
+                  className="lg:text-[40px] lg:font-[800] md:text-[35px] md:font-[700];
               sm:text-[30px] sm:font-[600] text-[25px] font-[500] flex items-center"
+                >
+                  {label}
+                </h6>
+              </Tab>
+            ))}
+          </TabsHeader>
+          <TabsBody>
+            {REPAIR_TABS.map(({ value, content }) => (
+              <TabPanel
+                key={value}
+                value={value}
+                className="text-white font-raleway"
               >
-                {label}
-              </h6>
-            </Tab>
-          ))}
-        </TabsHeader>
-        <TabsBody>
-          {REPAIR_TABS.map(({ value, content }) => (
-            <TabPanel
-              key={value}
-              value={value}
-              className="text-white font-raleway"
-            >
-              {content}
-            </TabPanel>
-          ))}
-        </TabsBody>
-      </Tabs>
+                {content}
+              </TabPanel>
+            ))}
+          </TabsBody>
+        </Tabs>
 
-      {status === "unauthenticated" && (
-        <Button
-          ripple
-          onClick={() => signIn("auth0")}
-          className="bg-blue-700 lg:p-4 p-[1.6vw]"
-        >
-          <h5>
-            <BsPencilSquare className="inline-block mr-2 lg:w-9 w-[3.6vw]" />
-            Join us now!
-          </h5>
-        </Button>
-      )}
-    </Layout>
+        {status === "unauthenticated" && (
+          <Button
+            ripple
+            onClick={() => signIn("auth0")}
+            className="bg-blue-700 lg:p-4 p-[1.6vw]"
+          >
+            <h5>
+              <BsPencilSquare className="inline-block mr-2 lg:w-9 w-[3.6vw]" />
+              Join us now!
+            </h5>
+          </Button>
+        )}
+      </Layout>
+    </>
   );
 };
 

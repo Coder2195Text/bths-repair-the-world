@@ -1,9 +1,11 @@
 "use client";
 
 import {
+  Dispatch,
   FC,
   MouseEvent,
   ReactNode,
+  SetStateAction,
   createElement,
   useEffect,
   useState,
@@ -24,9 +26,16 @@ import { motion } from "framer-motion";
 import { FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { RiAccountCircleLine } from "react-icons/ri";
-import { BiCalendarCheck, BiChevronDown, BiCode, BiCube } from "react-icons/bi";
+import {
+  BiCalendarCheck,
+  BiChevronDown,
+  BiCode,
+  BiCube,
+  BiPhotoAlbum,
+} from "react-icons/bi";
 import { FaDiscord } from "react-icons/fa";
 import UserForm from "./UserForm";
+import { useRouter } from "next/navigation";
 
 // profile menu component
 
@@ -138,14 +147,9 @@ const navListLinks: {
     url: "/events",
   },
   {
-    label: "Blocks",
-    icon: BiCube,
-    url: "",
-  },
-  {
-    label: "Docs",
-    icon: BiCode,
-    url: "",
+    label: "Gallery",
+    icon: BiPhotoAlbum,
+    url: "/gallery",
   },
 ];
 
@@ -159,7 +163,10 @@ const socialLinks: {
   },
 ];
 
-const NavList: FC = () => {
+const NavList: FC<{
+  setNavOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ setNavOpen }) => {
+  const router = useRouter();
   return (
     <ul className="flex flex-col gap-4 items-center mt-1 mb-1 lg:flex-row lg:gap-10 lg:mt-0 lg:mb-0">
       {navListLinks.map(({ label, icon, url }) => (
@@ -170,7 +177,13 @@ const NavList: FC = () => {
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="w-5/6 text-white lg:w-auto"
         >
-          <Link href={url} className="flex justify-center items-center w-full">
+          <Link
+            href={url}
+            onClick={(e) => {
+              setNavOpen(false);
+            }}
+            className="flex justify-center items-center w-full"
+          >
             {createElement(icon, {
               className: "w-8 h-8 inline mr-2",
             })}
@@ -189,6 +202,9 @@ const NavList: FC = () => {
           >
             <Link
               href={url}
+              onClick={() => {
+                setNavOpen(false);
+              }}
               target="_blank"
               className="flex justify-center items-center w-full"
             >
@@ -232,7 +248,13 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
       }`}
     >
       <div className="flex relative items-center mx-auto text-blue-gray-900">
-        <Link href="/" className="font-medium cursor-pointer">
+        <Link
+          href="/"
+          className="font-medium cursor-pointer"
+          onClick={() => {
+            setIsNavOpen(false);
+          }}
+        >
           <Image
             src="/favicon.ico"
             width={48}
@@ -242,7 +264,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           />
         </Link>
         <div className="hidden absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 lg:block">
-          <NavList />
+          <NavList setNavOpen={setIsNavOpen} />
         </div>
         <Button
           color="blue-gray"
@@ -280,8 +302,8 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           </Button>
         )}
       </div>
-      <Collapse open={isNavActive && isNavOpen}>
-        <NavList />
+      <Collapse className="lg:hidden display" open={isNavActive && isNavOpen}>
+        <NavList setNavOpen={setIsNavOpen} />
       </Collapse>
     </nav>
   );
