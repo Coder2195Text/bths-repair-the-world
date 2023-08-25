@@ -137,7 +137,7 @@ const HomePage: FC = () => {
 
   return (
     <>
-      <div className="relative w-full h-[75vw] lg:h-[720px] rounded-xl mb-3 mt-68">
+      <div className="relative w-full h-[40vw] rounded-xl mb-3 mt-[68px]">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
           <h1 className="title">BTHS Repair the World</h1>
           <h4>
