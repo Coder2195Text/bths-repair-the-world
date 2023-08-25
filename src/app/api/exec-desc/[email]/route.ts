@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
-import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
 
@@ -61,7 +60,7 @@ async function handler(
   }
 
   if (method === "GET") {
-    const body = prisma.execDetails.findUnique({
+    const body = await prisma.execDetails.findUnique({
       where: {
         email,
       },
@@ -95,15 +94,14 @@ async function handler(
     const data = (await result)[1] as ExecDetails;
 
     try {
-      const body =
-        method === "POST"
-          ? prisma.execDetails.create({
-              data,
-            })
-          : prisma.execDetails.update({
-              where: { email },
-              data,
-            });
+      const body = await (method === "POST"
+        ? prisma.execDetails.create({
+            data,
+          })
+        : prisma.execDetails.update({
+            where: { email },
+            data,
+          }));
 
       return NextResponse.json(body, {
         status: 200,

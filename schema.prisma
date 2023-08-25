@@ -14,6 +14,13 @@ enum UserPosition {
   ADMIN
 }
 
+enum ExecPosition {
+  PRESIDENT
+  VICE_PRESIDENT
+  EVENT_COORDINATOR
+  TREASURER
+}
+
 model GalleryPicture {
   id String @id @default(cuid())
 
@@ -29,8 +36,8 @@ model ExecDetails {
   user  User   @relation(fields: [email], references: [email])
   email String @id
 
-  position    String
-  description String @db.VarChar(5000)
+  position    ExecPosition
+  description String       @db.VarChar(5000)
   selfieURL   String
 
   @@index([email])
