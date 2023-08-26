@@ -4,13 +4,7 @@ import { ExecCard } from "./components";
 import { Loading } from "@/components/Loading";
 
 async function fetchExecs() {
-  const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
-    next: {
-      revalidate: 30,
-      tags: ["execs-desc"],
-    },
-  });
-  return res.json();
+  return {};
 }
 
 export type ExecsDetails = ({
