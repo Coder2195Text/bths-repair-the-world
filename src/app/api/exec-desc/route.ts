@@ -17,13 +17,6 @@ export async function GET(req: NextRequest) {
       gradYear: true,
       email: true,
     },
-
-    orderBy: {
-      execDetails: {
-        position: "asc",
-      },
-      name: "asc",
-    },
   });
 
   return NextResponse.json(body, {

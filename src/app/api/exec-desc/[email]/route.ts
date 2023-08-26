@@ -2,8 +2,10 @@ import { getServerSession } from "next-auth";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
+import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 
 type Params = { params: { email: string } };
 
@@ -103,6 +105,7 @@ async function handler(
             data,
           }));
 
+      await revalidateTag("exec-desc");
       return NextResponse.json(body, {
         status: 200,
       });

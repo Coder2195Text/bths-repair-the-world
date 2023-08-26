@@ -171,39 +171,44 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
           <>
             <h1>{event.name} - Attendance</h1>
             <div className="w-full">
-              {attendance.map((a) => (
+              {attendance.map((userAttendance) => (
                 <div
-                  key={a.userEmail}
+                  key={userAttendance.userEmail}
                   className="border-2 border-solid border-gray-500 p-2"
                 >
-                  {a?.user?.preferredName} ({a?.user?.name}) - {a?.userEmail}
+                  {userAttendance?.user?.preferredName} (
+                  {userAttendance?.user?.name}) - {userAttendance?.userEmail}
                   <br />
                   <div>
-                    {a?.attendedAt ? (
+                    {userAttendance?.attendedAt ? (
                       <>
                         <span className="mr-2">
                           Marked present at{" "}
-                          {a.attendedAt.toLocaleString("en-us", {
+                          {userAttendance.attendedAt.toLocaleString("en-us", {
                             timeZone: "America/New_York",
                           })}
-                          <RemoveButton attendance={a} event={event} />
+                          <RemoveButton
+                            attendance={userAttendance}
+                            event={event}
+                          />
                         </span>
 
                         <label>
                           Points:
                           <input
                             ref={(element) =>
-                              (pointsRef.current[a.userEmail] = element!)
+                              (pointsRef.current[userAttendance.userEmail] =
+                                element!)
                             }
                             type="number"
                             min="0"
                             className="custom w-12"
                             max={event?.maxPoints}
-                            defaultValue={a?.earnedPoints}
+                            defaultValue={userAttendance?.earnedPoints}
                             step={0.1}
                             onBlur={async (e) => {
                               const res = await fetch(
-                                `/api/events/${event.id}/attendance/${a.userEmail}`,
+                                `/api/events/${event.id}/attendance/${userAttendance.userEmail}`,
                                 {
                                   method: "PATCH",
                                   body: JSON.stringify({
@@ -230,13 +235,14 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
                             min="0"
                             step={0.25}
                             max={event?.maxHours}
-                            defaultValue={a?.earnedHours}
+                            defaultValue={userAttendance?.earnedHours}
                             ref={(element) =>
-                              (hoursRef.current[a.userEmail] = element!)
+                              (hoursRef.current[userAttendance.userEmail] =
+                                element!)
                             }
                             onBlur={async (e) => {
                               const res = await fetch(
-                                `/api/events/${event.id}/attendance/${a.userEmail}`,
+                                `/api/events/${event.id}/attendance/${userAttendance.userEmail}`,
                                 {
                                   method: "PATCH",
                                   body: JSON.stringify({
@@ -252,7 +258,10 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
                       </>
                     ) : (
                       <>
-                        <CheckInButton attendance={a} event={event} />
+                        <CheckInButton
+                          attendance={userAttendance}
+                          event={event}
+                        />
                       </>
                     )}
                   </div>

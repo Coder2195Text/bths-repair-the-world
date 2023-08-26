@@ -1,6 +1,4 @@
 "use client";
-
-import Layout from "@/components/Layout";
 import {
   Button,
   Tab,
@@ -132,80 +130,81 @@ const REPAIR_TABS: {
   },
 ];
 
-const HomePage: FC = () => {
-  const { status } = useSession();
-
+export const Banner: FC = () => {
   return (
-    <>
-      <div className="relative w-full min-h-[570px] h-[90vh] rounded-xl mb-3">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
-          <h1 className="title">BTHS Repair the World</h1>
-          <h4>
-            <Typewriter
-              options={{
-                strings: [
-                  "Inspiring BTHS youth to make change in a unjust society.",
-                  "Empowering everyone to make a difference.",
-                  "Mobilizing productivity for a better tomorrow.",
-                  "Setting the stage for change.",
-                  "Repairing the world, one step at a time.",
-                ],
-                autoStart: true,
-                loop: true,
-              }}
-            />
-          </h4>
-        </div>
-
-        <Image
-          src="/images/banner.jpg"
-          alt=""
-          fill
-          className="object-cover -z-20 brightness-75"
-        />
+    <div className="relative w-full min-h-[570px] h-[90vh] rounded-xl mb-3">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
+        <h1 className="title">BTHS Repair the World</h1>
+        <h4>
+          <Typewriter
+            options={{
+              strings: [
+                "Inspiring BTHS youth to make change in a unjust society.",
+                "Empowering everyone to make a difference.",
+                "Mobilizing productivity for a better tomorrow.",
+                "Setting the stage for change.",
+                "Repairing the world, one step at a time.",
+              ],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        </h4>
       </div>
-      <Layout>
-        <Tabs value="r" className="-mt-10">
-          <TabsHeader className="flex">
-            {REPAIR_TABS.map(({ label, value }) => (
-              <Tab key={value} value={value}>
-                <h6
-                  className="lg:text-[40px] lg:font-[800] md:text-[35px] md:font-[700];
-              sm:text-[30px] sm:font-[600] text-[25px] font-[500] flex items-center"
-                >
-                  {label}
-                </h6>
-              </Tab>
-            ))}
-          </TabsHeader>
-          <TabsBody>
-            {REPAIR_TABS.map(({ value, content }) => (
-              <TabPanel
-                key={value}
-                value={value}
-                className="text-white font-raleway"
-              >
-                {content}
-              </TabPanel>
-            ))}
-          </TabsBody>
-        </Tabs>
 
-        {status === "unauthenticated" && (
-          <Button
-            ripple
-            onClick={() => signIn("auth0")}
-            className="bg-blue-700 lg:p-4 p-[1.6vw]"
-          >
-            <h5>
-              <BsPencilSquare className="inline-block mr-2 lg:w-9 w-[3.6vw]" />
-              Join us now!
-            </h5>
-          </Button>
-        )}
-      </Layout>
-    </>
+      <Image
+        src="/images/banner.jpg"
+        alt=""
+        fill
+        className="object-cover -z-20 brightness-75"
+      />
+    </div>
   );
 };
 
-export default HomePage;
+export const REPAIRTabs: FC = () => {
+  return (
+    <Tabs value="r" className="-mt-10">
+      <TabsHeader className="flex">
+        {REPAIR_TABS.map(({ label, value }) => (
+          <Tab key={value} value={value}>
+            <h6
+              className="lg:text-[40px] lg:font-[800] md:text-[35px] md:font-[700];
+      sm:text-[30px] sm:font-[600] text-[25px] font-[500] flex items-center"
+            >
+              {label}
+            </h6>
+          </Tab>
+        ))}
+      </TabsHeader>
+      <TabsBody>
+        {REPAIR_TABS.map(({ value, content }) => (
+          <TabPanel
+            key={value}
+            value={value}
+            className="text-white font-raleway"
+          >
+            {content}
+          </TabPanel>
+        ))}
+      </TabsBody>
+    </Tabs>
+  );
+};
+
+export const JoinButton: FC = () => {
+  const { status } = useSession();
+  if (status === "unauthenticated")
+    return (
+      <Button
+        ripple
+        onClick={() => signIn("auth0")}
+        className="bg-blue-700 lg:p-4 p-[1.6vw]"
+      >
+        <h5>
+          <BsPencilSquare className="inline-block mr-2 lg:w-9 w-[3.6vw]" />
+          Join us now!
+        </h5>
+      </Button>
+    );
+};

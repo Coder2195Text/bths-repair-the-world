@@ -1,24 +1,10 @@
 "use client";
-
-import {
-  FC,
-  ReactNode,
-  createRef,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { FC, ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { BarLoader } from "react-spinners";
-import Navbar from "./Navbar";
 import { useAccount } from "./AccountContext";
 import BirthdayPopup from "./BirthdayPopup";
 import UserForm from "./UserForm";
-import io from "socket.io-client";
-import {
-  ScrollDirection,
-  useScrollDirection,
-} from "react-use-scroll-direction";
 
 interface Props {
   children?: ReactNode;

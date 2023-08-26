@@ -1,6 +1,6 @@
 import { prisma } from "@/utils/prisma";
 import { Metadata } from "next";
-import EventPage from "./EventPage";
+import { EventPage } from "./components";
 import { notFound } from "next/navigation";
 import { FC } from "react";
 

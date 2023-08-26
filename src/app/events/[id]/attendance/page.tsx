@@ -1,4 +1,4 @@
-import EventAttendance from "./EventAttendance";
+import EventAttendance from "./components";
 
 export const metadata = {
   title: "Event Attendance - BTHS Repair the World",

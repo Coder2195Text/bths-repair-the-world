@@ -1,4 +1,5 @@
 import { UserFull } from "@/types/user";
+import { ExecDetails } from "@prisma/client";
 import {
   FC,
   ReactNode,
@@ -13,26 +14,36 @@ interface ContextType {
   data: UserFull | null;
   setData: (data: UserFull | null) => void;
   setStatus: (status: "pending" | "registered" | "unregistered") => void;
+  execData: ExecDetails | null;
+  setExecData: (data: ExecDetails | null) => void;
 }
 const AccountContext = createContext<ContextType>({
   status: "pending",
   data: null,
-  setData: () => { },
-  setStatus: () => { },
+  setData: () => {},
+  setStatus: () => {},
+  execData: null,
+  setExecData: () => {},
 });
 
 export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [status, setStatus] = useState<ContextType["status"]>("pending");
   const [data, setData] = useState<ContextType["data"]>(null);
+  const [execData, setExecData] = useState<ContextType["execData"]>(null);
 
   useEffect(() => {
     async function getAccount() {
       let success = false;
       while (!success) {
         try {
-          return await fetch("/api/users/@me").then((res) =>
-            res.status == 200 ? res.json() : null
-          );
+          return Promise.all([
+            fetch("/api/users/@me").then((res) =>
+              res.status == 200 ? res.json() : null
+            ),
+            fetch("/api/exec-desc/@me").then((res) =>
+              res.status == 200 ? res.json() : null
+            ),
+          ]);
         } catch (e) {
           await new Promise((r) => setTimeout(r, 1000));
         }
@@ -40,8 +51,10 @@ export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     getAccount().then((data) => {
-      if (data) {
-        setData(data);
+      if (data && data[0]) {
+        setData(data[0]);
+        setExecData(data[1]);
+
         setStatus("registered");
       } else {
         setStatus("unregistered");
@@ -52,6 +65,8 @@ export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <AccountContext.Provider
       value={{
+        execData,
+        setExecData,
         status,
         data,
         setData,
