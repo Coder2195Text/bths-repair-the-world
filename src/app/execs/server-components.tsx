@@ -4,7 +4,7 @@ import { ExecCard } from "./components";
 import { Loading } from "@/components/Loading";
 
 async function fetchExecs() {
-  return {};
+  return [];
 }
 
 export type ExecsDetails = ({
