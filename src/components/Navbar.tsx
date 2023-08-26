@@ -33,9 +33,10 @@ import {
   BiCube,
   BiPhotoAlbum,
 } from "react-icons/bi";
-import { FaDiscord } from "react-icons/fa";
+import { FaDiscord, FaUserTie } from "react-icons/fa";
 import UserForm from "./UserForm";
 import { useRouter } from "next/navigation";
+import { LiaUserTieSolid } from "react-icons/lia";
 
 // profile menu component
 
@@ -150,6 +151,11 @@ const navListLinks: {
     label: "Gallery",
     icon: BiPhotoAlbum,
     url: "/gallery",
+  },
+  {
+    label: "Executives",
+    icon: LiaUserTieSolid,
+    url: "/execs",
   },
 ];
 

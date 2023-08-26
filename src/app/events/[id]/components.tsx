@@ -73,7 +73,7 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
     },
     {
       color: "red",
-      hexColor: "#ff4a5a",
+      hexColor: "red",
       icon: BiTrash,
       onClick: async () => {
         if (!confirm("Are you sure you want to delete this event?")) return;
@@ -115,7 +115,9 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
             <Button
               key={index}
               color={color as colors}
-              className={`bg-[${hexColor}] font-figtree p-1 text-2xl flex items-center`}
+              className={`${
+                hexColor === "red" ? `bg-red-500` : `bg-[${hexColor}]`
+              } font-figtree p-1 text-2xl flex items-center`}
               onClick={onClick}
             >
               {createElement(icon, { className: "mr-2" })}

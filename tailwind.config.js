@@ -13,4 +13,9 @@ module.exports = withMT({
       raleway: ["Raleway", "sans-serif"],
     },
   },
+  safeList: [
+    {
+      pattern: /bg-\[.+?\]/
+    }
+  ]
 });
