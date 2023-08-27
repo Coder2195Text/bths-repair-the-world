@@ -3,21 +3,15 @@ import { FC, Suspense } from "react";
 import { ExecCard } from "./components";
 import { Loading } from "@/components/Loading";
 
-async function fetchExecs() {
-  const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
-    next: {
-      revalidate: 15,
-    },
-  });
-  return res.json();
-}
-
 export type ExecsDetails = ({
   execDetails?: ExecDetails;
 } & Pick<User, "name" | "preferredName" | "gradYear" | "pronouns" | "email">)[];
 
-const AsyncExecList: FC = async () => {
-  const execs = (await fetchExecs()) as ExecsDetails;
+interface Props {
+  execs: ExecsDetails;
+}
+
+const AsyncExecList: FC<Props> = async ({ execs }) => {
   execs.sort(function compareModels(a, b) {
     const positions: {
       [key in ExecPosition | "undefined"]: number;
@@ -51,10 +45,10 @@ const AsyncExecList: FC = async () => {
   );
 };
 
-export const ExecList: FC = () => {
+export const ExecList: FC<Props> = ({ execs }) => {
   return (
     <Suspense fallback={<Loading>Loading Executives...</Loading>}>
-      <AsyncExecList />
+      <AsyncExecList execs={execs} />
     </Suspense>
   );
 };
