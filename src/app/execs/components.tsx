@@ -1,22 +1,13 @@
 "use client";
 import { useAccount } from "@/components/AccountContext";
 import { POSITION_MAP } from "@/utils/constants";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
+import { ExecsDetails } from "./server-components";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
-import { ExecDetails, ExecPosition, User } from "@prisma/client";
-import { Loading } from "@/components/Loading";
-
-export type ExecsDetails = ({
-  execDetails?: ExecDetails;
-} & Pick<User, "name" | "preferredName" | "gradYear" | "pronouns" | "email">)[];
-
-interface Props {
-  execs: ExecsDetails;
-}
 
 export const ExecCard: FC<{ info: ExecsDetails[number] }> = ({
   info: {
@@ -34,26 +25,25 @@ export const ExecCard: FC<{ info: ExecsDetails[number] }> = ({
   return (
     <div className="rounded-xl overflow-hidden">
       <div
-        className="flex flex-wrap flex-col relative justify-center items-center p-2 w-full"
+        className="flex flex-col flex-wrap relative justify-center items-center p-2 w-full"
         style={{
           background: "linear-gradient(0deg, #757575 30%, #5ac8fa 0%)",
         }}
       >
-        {execDetails && (
-          <h3 className="text-orange-600">
-            {POSITION_MAP[execDetails.position]}
-          </h3>
-        )}
-
         {execDetails ? (
-          <div className="mt-5 rounded-full overflow-hidden relative w-[200px] h-[200px]">
-            <Image
-              src={execDetails.selfieURL}
-              alt=""
-              fill
-              className="object-cover"
-            />
-          </div>
+          <>
+            <h6 className="text-xl font-bold">
+              {POSITION_MAP[execDetails.position]}
+            </h6>
+            <div className="mt-5 rounded-full overflow-hidden relative w-[200px] h-[200px]">
+              <Image
+                src={execDetails.selfieURL}
+                alt=""
+                fill
+                className="object-cover"
+              />
+            </div>
+          </>
         ) : (
           <BiUserCircle size={200} className="mt-10 rounded-full" />
         )}
@@ -102,51 +92,5 @@ export const ExecCard: FC<{ info: ExecsDetails[number] }> = ({
         )}
       </div>
     </div>
-  );
-};
-
-export const ExecList: FC = async () => {
-  const [execs, setExecs] = useState<ExecsDetails>();
-
-  useEffect(() => {
-    if (!execs)
-      fetch("/api/exec-desc")
-        .then((res) => res.json())
-        .then((data: ExecsDetails) => {
-          data.sort((a, b) => {
-            const positions: {
-              [key in ExecPosition | "undefined"]: number;
-            } = {
-              PRESIDENT: 1,
-              VICE_PRESIDENT: 2,
-              TREASURER: 3,
-              EVENT_COORDINATOR: 4,
-              undefined: 5,
-            };
-
-            // Compare positions first
-            const positionComparison =
-              positions[String(a.execDetails?.position) as ExecPosition] -
-              positions[String(b.execDetails?.position) as ExecPosition];
-
-            if (positionComparison !== 0) {
-              return positionComparison;
-            }
-
-            // If positions are the same, compare names
-            return a.name.localeCompare(b.name);
-          });
-          setExecs(data);
-        });
-  }, []);
-
-  return execs ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-      {execs.map((info) => (
-        <ExecCard info={info} key={info.email} />
-      ))}
-    </div>
-  ) : (
-    <Loading>Loading Executives</Loading>
   );
 };
