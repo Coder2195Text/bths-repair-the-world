@@ -5,7 +5,6 @@ import Joi from "joi";
 import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
-import { revalidateTag } from "next/cache";
 import { POSITION_LIST } from "@/utils/constants";
 
 type Params = { params: { email: string } };
@@ -109,7 +108,6 @@ async function handler(
             data,
           }));
 
-      await revalidateTag("exec-desc");
       return NextResponse.json(body, {
         status: 200,
       });
