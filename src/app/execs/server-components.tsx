@@ -6,7 +6,7 @@ import { Loading } from "@/components/Loading";
 async function fetchExecs() {
   const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
     next: {
-      revalidate: 20,
+      revalidate: 10,
     },
   });
   return res.json();

@@ -254,7 +254,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                 <>
                   <hr />
                   <div>
-                    Due to caching, it may take up to 30 seconds for the profile
+                    Due to caching, it may take up to 15 seconds for the profile
                     to update.
                   </div>
                 </>
