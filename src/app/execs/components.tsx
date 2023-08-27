@@ -147,6 +147,6 @@ export const ExecList: FC = async () => {
       ))}
     </div>
   ) : (
-    <Loading>Loading Executivies</Loading>
+    <Loading>Loading Executives</Loading>
   );
 };

@@ -6,8 +6,10 @@ import { ExecDetails, User } from "@prisma/client";
 const ExecsPage: FC = () => {
   return (
     <Layout>
-      <h1>Our Exec Team</h1>
-      <ExecList />
+      <div>
+        <h1>Our Exec Team</h1>
+        <ExecList />
+      </div>
     </Layout>
   );
 };
