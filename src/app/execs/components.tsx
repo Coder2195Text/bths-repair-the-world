@@ -32,10 +32,10 @@ export const ExecCard: FC<{ info: ExecsDetails[number] }> = ({
       >
         {execDetails ? (
           <>
-            <h6 className="text-xl font-bold">
+            <h3 className="text-orange-600">
               {POSITION_MAP[execDetails.position]}
-            </h6>
-            <div className="mt-5 rounded-full overflow-hidden relative w-[200px] h-[200px]">
+            </h3>
+            <div className="mt-2 rounded-full overflow-hidden relative w-[200px] h-[200px]">
               <Image
                 src={execDetails.selfieURL}
                 alt=""
