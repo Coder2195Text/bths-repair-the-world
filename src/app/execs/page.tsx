@@ -4,8 +4,8 @@ import { ExecList } from "./components";
 import { ExecDetails, User } from "@prisma/client";
 
 export const metadata = {
-  title: "Events - BTHS Repair the World",
-  description: "Check out some of our events!",
+  title: "Execs - BTHS Repair the World",
+  description: "Check out our exec team! Our execs are very cool fr no cap!",
 };
 
 const ExecsPage: FC = () => {
