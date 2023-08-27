@@ -37,6 +37,8 @@ import { FaDiscord, FaUserTie } from "react-icons/fa";
 import UserForm from "./UserForm";
 import { useRouter } from "next/navigation";
 import { LiaUserTieSolid } from "react-icons/lia";
+import ExecForm from "./ExecForm";
+import { useAccount } from "./AccountContext";
 
 // profile menu component
 
@@ -49,12 +51,18 @@ const profileMenuItems: {
           | MouseEvent<HTMLLIElement, globalThis.MouseEvent>
           | MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
       ) => any)
-    | "openProfile";
+    | "openProfile"
+    | "openExecProfile";
 }[] = [
   {
     label: "Edit Profile",
     icon: RiAccountCircleLine,
     onClick: "openProfile",
+  },
+  {
+    label: "Edit Exec Profile",
+    icon: LiaUserTieSolid,
+    onClick: "openExecProfile",
   },
   {
     label: "Sign Out",
@@ -68,13 +76,25 @@ const profileMenuItems: {
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
+  const { execData, data: accountData } = useAccount();
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [editExecProfileOpen, setEditExecProfileOpen] = useState(false);
 
   const { data, status } = useSession();
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       {editProfileOpen && <UserForm mode="edit" setOpen={setEditProfileOpen} />}
+      {editExecProfileOpen &&
+        (execData ? (
+          <ExecForm
+            mode="edit"
+            setOpen={setEditExecProfileOpen}
+            execData={execData}
+          />
+        ) : (
+          <ExecForm mode="post" setOpen={setEditExecProfileOpen} />
+        ))}
       <MenuHandler>
         <Button
           ripple
@@ -103,6 +123,12 @@ function ProfileMenu() {
       </MenuHandler>
       <MenuList className="z-40 p-2 bg-gray-700 border-none">
         {profileMenuItems.map(({ label, icon, onClick }, key) => {
+          if (
+            onClick === "openExecProfile" &&
+            accountData?.position !== "EXEC"
+          ) {
+            return;
+          }
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
@@ -113,6 +139,11 @@ function ProfileMenu() {
                   setEditProfileOpen(true);
                   return;
                 }
+                if (onClick === "openExecProfile") {
+                  setEditExecProfileOpen(true);
+                  return;
+                }
+
                 onClick?.(event);
               }}
               className={`flex transition-all text-white items-end gap-2 ${

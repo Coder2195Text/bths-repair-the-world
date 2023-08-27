@@ -6,21 +6,22 @@ import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { POSITION_LIST } from "@/utils/constants";
 
 type Params = { params: { email: string } };
 
 const POSTSchema = Joi.object({
-  date: Joi.string().max(190).required(),
-  name: Joi.string().max(190).required(),
+  position: Joi.string()
+    .valid(...POSITION_LIST)
+    .required(),
   description: Joi.string().max(5000).required(),
-  imageURL: Joi.string().max(190).uri().required(),
+  selfieURL: Joi.string().max(190).uri().required(),
 });
 
 const PATCHSchema = Joi.object({
-  date: Joi.string().max(190),
-  name: Joi.string().max(190),
+  position: Joi.string().valid(...POSITION_LIST),
   description: Joi.string().max(5000),
-  imageURL: Joi.string().max(190).uri(),
+  selfieURL: Joi.string().max(190).uri(),
 });
 
 async function handler(
@@ -98,7 +99,10 @@ async function handler(
     try {
       const body = await (method === "POST"
         ? prisma.execDetails.create({
-            data,
+            data: {
+              ...data,
+              email,
+            },
           })
         : prisma.execDetails.update({
             where: { email },

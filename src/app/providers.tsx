@@ -1,12 +1,10 @@
 "use client";
-
 import { AccountProvider } from "@/components/AccountContext";
 import { SessionProvider } from "next-auth/react";
 import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
 import { MDXProvider } from "@mdx-js/react";
 import { MDXComponents } from "mdx/types";
 import { MergeComponents } from "@mdx-js/react/lib";
-import Link from "next/link";
 import {
   PusherProvider as $PusherProvider,
   type PusherProviderProps,
@@ -41,7 +39,7 @@ const components: MDXComponents | MergeComponents = {
   ),
 };
 
-export const NextAuthProvider = ({ children }: Props) => {
+export const AppProviders = ({ children }: Props) => {
   const [isNavActive, setIsNavActive] = useState<[boolean, number]>([
     true,
     Date.now(),
@@ -58,6 +56,7 @@ export const NextAuthProvider = ({ children }: Props) => {
   if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
     setIsNavActive([scrollDirection === "UP", Date.now()]);
   }
+
   return (
     <PusherProvider
       clientKey={process.env.NEXT_PUBLIC_PUSHER_KEY!}

@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import BirthdayPopup from "./BirthdayPopup";
 
 interface ContextType {
   status: "pending" | "registered" | "unregistered";
@@ -62,6 +63,13 @@ export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
     });
   }, []);
 
+  const today = new Date();
+  const birthday = data?.birthday ? new Date(data.birthday) : undefined;
+
+  const isBirthday =
+    birthday?.getUTCDate() === today.getDate() &&
+    birthday?.getUTCMonth() === today.getMonth();
+
   return (
     <AccountContext.Provider
       value={{
@@ -73,6 +81,8 @@ export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setStatus,
       }}
     >
+      {isBirthday && <BirthdayPopup />}
+
       {children}
     </AccountContext.Provider>
   );

@@ -7,4 +7,8 @@ export const POSITION_MAP: {
   VICE_PRESIDENT: "Vice President",
   TREASURER: "Treasurer",
   EVENT_COORDINATOR: "Event Coordinator",
-};
+} as const;
+
+export const POSITION_LIST: ExecPosition[] = Object.keys(
+  POSITION_MAP
+) as ExecPosition[];

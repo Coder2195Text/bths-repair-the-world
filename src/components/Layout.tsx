@@ -15,14 +15,6 @@ let socket;
 const Layout: FC<Props> = ({ children }) => {
   const { status, data } = useSession();
   const { status: accountStatus, data: accountData } = useAccount();
-  const today = new Date();
-  const birthday = accountData?.birthday
-    ? new Date(accountData.birthday)
-    : undefined;
-
-  const isBirthday =
-    birthday?.getUTCDate() === today.getDate() &&
-    birthday?.getUTCMonth() === today.getMonth();
 
   if (data?.user.id.startsWith("auth0")) {
     signIn("auth0");
@@ -45,7 +37,6 @@ const Layout: FC<Props> = ({ children }) => {
             />
           </div>
         )}
-        {isBirthday && <BirthdayPopup />}
         {children}
       </main>
     </div>

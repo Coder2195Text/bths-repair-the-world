@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 
 import "./global.css";
-import { NextAuthProvider } from "./providers";
+import { AppProviders } from "./providers";
 import "keen-slider/keen-slider.min.css";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
@@ -15,7 +15,7 @@ const RootLayout: FC<Props> = ({ children }) => {
   return (
     <html lang="en">
       <body>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
