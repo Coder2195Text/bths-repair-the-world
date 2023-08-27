@@ -21,5 +21,8 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(body, {
     status: 200,
+    headers: {
+      "Cache-Control": "public, max-age=10",
+    },
   });
 }

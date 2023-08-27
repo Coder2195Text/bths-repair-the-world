@@ -249,6 +249,12 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
               </div>
               <Error name="selfieURL" />
 
+              <hr />
+              <div>
+                Due to caching, it may take up to 15 seconds for the execs to
+                update.
+              </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
