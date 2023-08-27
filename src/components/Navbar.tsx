@@ -146,7 +146,7 @@ function ProfileMenu() {
 
                 onClick?.(event);
               }}
-              className={`flex transition-all text-white items-end gap-2 ${
+              className={`font-figtree flex transition-all text-white items-end gap-2 ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
