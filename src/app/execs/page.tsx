@@ -2,6 +2,8 @@ import { FC } from "react";
 import Layout from "@/components/Layout";
 import { ExecList } from "./server-components";
 
+export const revalidate = 15;
+
 export const metadata = {
   title: "Executives - BTHS Repair the World",
   description: "Meet the BTHS Repair the World Executives.",
