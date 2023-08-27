@@ -5,7 +5,9 @@ import { Loading } from "@/components/Loading";
 
 async function fetchExecs() {
   const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
-    cache: "no-cache",
+    next: {
+      revalidate: 15,
+    },
   });
   return res.json();
 }
