@@ -6,6 +6,7 @@ import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
 import { POSITION_LIST } from "@/utils/constants";
+import { revalidatePath } from "next/cache";
 
 type Params = { params: { email: string } };
 

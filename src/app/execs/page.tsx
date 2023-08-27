@@ -3,11 +3,11 @@ import Layout from "@/components/Layout";
 import { ExecList, ExecsDetails } from "./server-components";
 import { ExecDetails, User } from "@prisma/client";
 
+export const revalidate = 1;
+
 async function fetchExecs() {
   const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
-    next: {
-      revalidate: 15,
-    },
+    cache: "no-store",
   });
   return res.json();
 }
