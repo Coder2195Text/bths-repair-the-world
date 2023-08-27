@@ -248,6 +248,17 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                 )}
               </div>
               <Error name="selfieURL" />
+              {mode === "post" ? (
+                <br />
+              ) : (
+                <>
+                  <hr />
+                  <div>
+                    Due to caching, it may take up to 30 seconds for the profile
+                    to update.
+                  </div>
+                </>
+              )}
 
               <Button
                 type="submit"
