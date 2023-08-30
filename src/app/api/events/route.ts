@@ -8,6 +8,7 @@ import { Embed, Webhook } from "@vermaysha/discord-webhook";
 import { Optional } from "@prisma/client/runtime/library";
 
 const schema = Joi.object({
+  limit: Joi.number().optional().allow(null),
   name: Joi.string().required().max(190),
   description: Joi.string().required(),
   maxPoints: Joi.number().required(),
@@ -129,7 +130,9 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             newData.description
           }\n## **Event Time:** ${newData.eventTime.toLocaleString("en-US", {
             timeZone: "America/New_York",
-          })}\n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
+          })}
+          ${newData.limit ? `\n## **Max Members:** ${newData.limit}` : ""}
+          \n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
             newData.maxHours
           }\n## Location: [${newData.address}](${encodeURI(
             `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`

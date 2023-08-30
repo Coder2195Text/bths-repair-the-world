@@ -92,7 +92,7 @@ async function handler(
 
   if (method === "POST") {
     try {
-      const event = await prisma.eventAttendance.create({
+      const eventAttendance = await prisma.eventAttendance.create({
         data: {
           userEmail: email,
           eventId: id,
@@ -109,9 +109,9 @@ async function handler(
         },
       });
 
-      await pusher.trigger(id, "create", event);
+      await pusher.trigger(id, "create", eventAttendance);
 
-      return NextResponse.json(event, { status: 200 });
+      return NextResponse.json(eventAttendance, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Exception).toString() },
@@ -122,7 +122,7 @@ async function handler(
 
   if (method === "DELETE") {
     try {
-      const event = await prisma.eventAttendance.delete({
+      const eventAttendance = await prisma.eventAttendance.delete({
         where: {
           userEmail_eventId: {
             userEmail: email,
@@ -135,7 +135,7 @@ async function handler(
         email,
       });
 
-      return NextResponse.json(event, { status: 200 });
+      return NextResponse.json(eventAttendance, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Exception).toString() },

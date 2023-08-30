@@ -129,13 +129,15 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
     );
 };
 
-const UserAttendance: FC<Props> = ({ event }) => {
+const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
   const { status } = useSession();
 
   const [eventAttendance, setEventAttendance] = useState<
     EventAttendance | null | "unloaded"
   >("unloaded");
+
+  const blockedJoin = event.limit ? event.formCount >= event.limit : false;
 
   const channel = useChannel(event.id);
   useEvent(channel, "update", (data) => {
@@ -149,6 +151,20 @@ const UserAttendance: FC<Props> = ({ event }) => {
         ...eventAttendance,
         ...(data as Partial<EventAttendance>),
       });
+  });
+
+  useEvent(channel, "delete", () => {
+    setEvent({
+      ...event,
+      formCount: event.formCount - 1,
+    });
+  });
+
+  useEvent(channel, "create", () => {
+    setEvent({
+      ...event,
+      formCount: event.formCount + 1,
+    });
   });
 
   useEffect(() => {
@@ -193,36 +209,51 @@ const UserAttendance: FC<Props> = ({ event }) => {
           already happened.
         </h5>
       ) : (
-        <Button
-          disabled={buttonProgress}
-          color="blue"
-          className="bg-[#2356ff] font-figtree p-1 text-2xl"
-          onClick={async () => {
-            setButtonProgress(true);
-            const res = await fetch(`/api/events/${event.id}/attendance/@me`, {
-              method: eventAttendance ? "DELETE" : "POST",
-            });
-            if (res.status === 200)
-              eventAttendance
-                ? setEventAttendance(null)
-                : setEventAttendance(await res.json());
-            else
-              alert(`Error ${eventAttendance ? "leaving" : "joining"} event!`);
-            setButtonProgress(false);
-          }}
-        >
-          {createElement(eventAttendance ? BiLogOut : BsCalendar2Check, {
-            className: "inline",
-          })}{" "}
-          {buttonProgress
-            ? eventAttendance
-              ? "Leaving"
-              : "Joining"
-            : eventAttendance
-            ? "Leave"
-            : "Join"}{" "}
-          Event
-        </Button>
+        <>
+          {!eventAttendance &&
+            (blockedJoin ? (
+              <h5>You cannot join this event because it is full.</h5>
+            ) : (
+              <h5>
+                Event seats: {event.formCount}/{event.limit}
+              </h5>
+            ))}
+          <Button
+            disabled={buttonProgress || (blockedJoin && !eventAttendance)}
+            color="blue"
+            className="bg-[#2356ff] font-figtree p-1 text-2xl"
+            onClick={async () => {
+              setButtonProgress(true);
+              const res = await fetch(
+                `/api/events/${event.id}/attendance/@me`,
+                {
+                  method: eventAttendance ? "DELETE" : "POST",
+                }
+              );
+              if (res.status === 200)
+                eventAttendance
+                  ? setEventAttendance(null)
+                  : setEventAttendance(await res.json());
+              else
+                alert(
+                  `Error ${eventAttendance ? "leaving" : "joining"} event!`
+                );
+              setButtonProgress(false);
+            }}
+          >
+            {createElement(eventAttendance ? BiLogOut : BsCalendar2Check, {
+              className: "inline",
+            })}{" "}
+            {buttonProgress
+              ? eventAttendance
+                ? "Leaving"
+                : "Joining"
+              : eventAttendance
+              ? "Leave"
+              : "Join"}{" "}
+            Event
+          </Button>
+        </>
       )}
     </>
   );
@@ -315,7 +346,7 @@ export const EventPage: FC<Props> = ({ event: defaultEvent }) => {
         </div>
         <div className="w-full md:w-1/2 p-2">
           <EventDescription event={event} />
-          <UserAttendance event={event} />
+          <UserAttendance event={event} setEvent={setEvent} />
         </div>
       </div>
     </Layout>

@@ -70,6 +70,7 @@ model Event {
   maxHours    Float
   attendees   EventAttendance[]
   eventTime   DateTime
+  limit       Int?
   imageURL    String?
 
   address   String   @db.VarChar(1000)

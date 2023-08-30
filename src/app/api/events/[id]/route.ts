@@ -9,6 +9,7 @@ import { EventParsed } from "@/types/event";
 export type Params = { params: { id: string } };
 
 const schema = Joi.object({
+  limit: Joi.number().optional().allow(null),
   name: Joi.string().optional().max(190),
   description: Joi.string().optional(),
   maxPoints: Joi.number().optional(),
@@ -34,6 +35,9 @@ async function handler(
       {
         ...event,
         description: event.description.toString(),
+        formCount: await prisma.eventAttendance.count({
+          where: { eventId: id },
+        }),
       },
       { status: 200 }
     );

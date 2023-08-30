@@ -77,10 +77,13 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               mode == "edit"
                 ? eventData!.imageURL || null
                 : (null as null | string | undefined),
+
+            limit: mode == "edit" ? eventData!.limit : undefined,
           }}
           onSubmit={async (values) => {
             if (mode === "post") {
               if (!values.imageURL) delete values.imageURL;
+              if (!values.limit) delete values.limit;
               const res = await fetch("/api/events", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -152,6 +155,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
             if (!values.address) {
               errors.address = "Address is required.";
             }
+
             return errors;
           }}
         >
@@ -262,6 +266,16 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                   ></iframe>
                 </div>
               )}
+              <label htmlFor="limit">Event Time: </label>
+              <Field
+                type="number"
+                name="limit"
+                id="limit"
+                placeholder="Limit"
+              />
+              <br />
+              <Error name="limit" />
+
               <label htmlFor="imageURL">Image: </label>
               <input
                 type="file"
