@@ -129,15 +129,16 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
     );
 };
 
-const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
+const UserAttendance: FC<Props> = ({ event }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
+  const [formCount, setFormCount] = useState<number | "unloaded">("unloaded");
   const { status } = useSession();
 
   const [eventAttendance, setEventAttendance] = useState<
     EventAttendance | null | "unloaded"
   >("unloaded");
 
-  const blockedJoin = event.limit ? event.formCount >= event.limit : false;
+  const blockedJoin = event.limit ? formCount >= event.limit : false;
 
   const channel = useChannel(event.id);
   useEvent(channel, "update", (data) => {
@@ -154,17 +155,11 @@ const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
   });
 
   useEvent(channel, "delete", () => {
-    setEvent({
-      ...event,
-      formCount: event.formCount - 1,
-    });
+    if (formCount !== "unloaded") setFormCount(formCount - 1);
   });
 
   useEvent(channel, "create", () => {
-    setEvent({
-      ...event,
-      formCount: event.formCount + 1,
-    });
+    if (formCount !== "unloaded") setFormCount(formCount + 1);
   });
 
   useEffect(() => {
@@ -174,7 +169,15 @@ const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
       console.log(data);
       setEventAttendance(data);
     };
+    const fetchFormCount = async () => {
+      const res = await fetch(`/api/events/${event.id}/attendance/form-count`);
+      const data = await res.json();
+      console.log(data);
+      setFormCount(data);
+    };
+
     fetchAttendance();
+    fetchFormCount();
   }, []);
 
   if (status === "unauthenticated")
@@ -190,7 +193,11 @@ const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
         </Button>
       </>
     );
-  if (eventAttendance === "unloaded" || status === "loading")
+  if (
+    eventAttendance === "unloaded" ||
+    status === "loading" ||
+    formCount === "unloaded"
+  )
     return <h3>Loading Attendance...</h3>;
 
   return (
@@ -215,7 +222,7 @@ const UserAttendance: FC<AdminActionsProps> = ({ event, setEvent }) => {
               <h5>You cannot join this event because it is full.</h5>
             ) : (
               <h5>
-                Event seats: {event.formCount}/{event.limit}
+                Event seats: {formCount}/{event.limit}
               </h5>
             ))}
           <Button
@@ -346,7 +353,7 @@ export const EventPage: FC<Props> = ({ event: defaultEvent }) => {
         </div>
         <div className="w-full md:w-1/2 p-2">
           <EventDescription event={event} />
-          <UserAttendance event={event} setEvent={setEvent} />
+          <UserAttendance event={event} />
         </div>
       </div>
     </Layout>

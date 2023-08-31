@@ -10,7 +10,7 @@ async function handler(
   req: NextRequest,
   { params: { id } }: Params
 ) {
-  const allowed = await getServerSession({
+  const admin = await getServerSession({
     ...AUTH_OPTIONS,
   }).then(async (s) => {
     if (!s?.user.email) return false;
@@ -25,9 +25,6 @@ async function handler(
         )
       );
   });
-
-  if (!allowed)
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   try {
     const attendance = await prisma.eventAttendance.findMany({
