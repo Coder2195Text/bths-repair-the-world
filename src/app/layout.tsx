@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, Suspense } from "react";
 
 import "./global.css";
 import { AppProviders } from "./providers";
@@ -20,6 +20,7 @@ const RootLayout: FC<Props> = ({ children }) => {
     </html>
   );
 };
+
 export const metadata = {
   title: "BTHS Repair the World",
   description: "A BTHS club for repairing the world through acts of service.",
