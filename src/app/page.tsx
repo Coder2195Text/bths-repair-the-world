@@ -28,4 +28,4 @@ const HomePageSuspense: FC = () => {
   );
 };
 
-export default HomePage;
+export default HomePageSuspense;
