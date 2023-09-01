@@ -138,7 +138,9 @@ const UserAttendance: FC<Props> = ({ event }) => {
     EventAttendance | null | "unloaded"
   >("unloaded");
 
-  const blockedJoin = event.limit ? formCount >= event.limit : false;
+  const blockedJoin = event.limit
+    ? (formCount as number) >= event.limit
+    : false;
 
   const channel = useChannel(event.id);
   useEvent(channel, "update", (data) => {
