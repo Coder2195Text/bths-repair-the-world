@@ -137,11 +137,15 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
             if (!values.description) {
               errors.description = "Description is required.";
             }
-            if (!values.maxHours) {
-              errors.maxHours = "Max hours is required.";
+            if (!values.maxHours && !values.maxPoints) {
+              errors.maxHours = errors.maxPoints =
+                "Max hours or max points is required.";
             }
-            if (!values.maxPoints) {
-              errors.maxPoints = "Max points is required.";
+            if (values.maxPoints < 0) {
+              errors.maxPoints = "Max points must be greater than 0.";
+            }
+            if (values.maxHours < 0) {
+              errors.maxHours = "Max hours must be greater than 0.";
             }
             if (values.maxHours < 0) {
               errors.maxHours = "Max hours must be greater than 0.";
@@ -266,7 +270,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                   ></iframe>
                 </div>
               )}
-              <label htmlFor="limit">Event Time: </label>
+              <label htmlFor="limit">Event Limit: </label>
               <Field
                 type="number"
                 name="limit"

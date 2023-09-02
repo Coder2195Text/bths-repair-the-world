@@ -12,10 +12,10 @@ const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
   name: Joi.string().optional().max(190),
   description: Joi.string().optional(),
-  maxPoints: Joi.number().optional(),
+  maxPoints: Joi.number().optional().min(0),
   eventTime: Joi.date().iso().optional(),
   imageURL: Joi.string().uri().optional().allow(null),
-  maxHours: Joi.number().optional(),
+  maxHours: Joi.number().optional().min(0),
   address: Joi.string().optional().max(1000),
 });
 

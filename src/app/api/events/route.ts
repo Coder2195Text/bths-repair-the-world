@@ -6,15 +6,17 @@ import { prisma } from "@/utils/prisma";
 import { Event, UserPosition } from "@prisma/client";
 import { Embed, Webhook } from "@vermaysha/discord-webhook";
 import { Optional } from "@prisma/client/runtime/library";
+import { Converter } from "showdown";
+import { sendEmail } from "@/utils/mail";
 
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
   name: Joi.string().required().max(190),
   description: Joi.string().required(),
-  maxPoints: Joi.number().required(),
+  maxPoints: Joi.number().required().min(0),
   eventTime: Joi.date().iso().required(),
   imageURL: Joi.string().uri().optional(),
-  maxHours: Joi.number().required(),
+  maxHours: Joi.number().required().min(0),
   address: Joi.string().required().max(1000),
 });
 
@@ -131,8 +133,8 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           }\n## **Event Time:** ${newData.eventTime.toLocaleString("en-US", {
             timeZone: "America/New_York",
           })}
-          ${newData.limit ? `\n## **Max Members:** ${newData.limit}` : ""}
-          \n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
+        ${newData.limit ? `\n## **Max Members:** ${newData.limit}` : ""}
+        \n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
             newData.maxHours
           }\n## Location: [${newData.address}](${encodeURI(
             `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
@@ -147,12 +149,57 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         .setTimestamp()
         .setUrl(`https://bths-repair.tech/events/${body.id}`);
 
-      hook
-        .setContent(
-          "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!"
-        )
-        .addEmbed(embed)
-        .send();
+      const subscribers = await prisma.user.findMany({
+        where: {
+          eventAlerts: true,
+        },
+        select: {
+          email: true,
+        },
+      });
+
+      const htmlBody = new Converter({}).makeHtml(
+        `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
+          "en-US"
+        )} we will be having a new event called **${
+          newData.name
+        }**!\n#### Description:\n${newData.description
+          .toString()
+          .split("\n")
+          .map((e) => `> ${e}`)
+          .join(
+            "\n"
+          )}\n\n#### **Event Time:** ${newData.eventTime.toLocaleString(
+          "en-US",
+          {
+            timeZone: "America/New_York",
+          }
+        )}\n${
+          newData.limit
+            ? `\n#### **Max Members (Register Quick!!!):** ${newData.limit}`
+            : ""
+        }\n#### **Points:** ${newData.maxPoints} | **Hours:** ${
+          newData.maxHours
+        }\n#### Location: [${newData.address}](${encodeURI(
+          `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
+        )})\nView the whole event [here](https://bths-repair.tech/events/${
+          body.id
+        }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
+      );
+
+      Promise.all([
+        hook
+          .setContent(
+            "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!"
+          )
+          .addEmbed(embed)
+          .send(),
+        sendEmail({
+          subject: "New Event: " + newData.name,
+          bcc: subscribers,
+          html: htmlBody,
+        }),
+      ]);
 
       return NextResponse.json(
         {
