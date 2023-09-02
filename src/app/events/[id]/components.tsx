@@ -224,7 +224,14 @@ const UserAttendance: FC<Props> = ({ event }) => {
               <h5>You cannot join this event because it is full.</h5>
             ) : (
               <h5>
-                Event seats: {formCount}/{event.limit}
+                Reading the description is critical, as you may do something
+                wrong and not get credit for the event.
+                <br />
+                {event.limit && (
+                  <>
+                    Event seats: {formCount}/{event.limit}
+                  </>
+                )}
               </h5>
             ))}
           <Button
