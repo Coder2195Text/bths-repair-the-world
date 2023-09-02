@@ -160,7 +160,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
 
       const htmlBody = new Converter({}).makeHtml(
         `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
-          "en-US"
+          "en-US",
+          {
+            timeZone: "America/New_York",
+          }
         )} we will be having a new event called **${
           newData.name
         }**!\n#### Description:\n${newData.description
