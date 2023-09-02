@@ -194,11 +194,11 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           )
           .addEmbed(embed)
           .send(),
-        // sendEmail({
-        //   subject: "New Event: " + newData.name,
-        //   bcc: subscribers,
-        //   html: htmlBody,
-        // }),
+        sendEmail({
+          subject: "New Event: " + newData.name,
+          bcc: subscribers,
+          html: htmlBody,
+        }),
       ]);
 
       return NextResponse.json(
