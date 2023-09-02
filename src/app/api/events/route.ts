@@ -149,14 +149,16 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         .setTimestamp()
         .setUrl(`https://bths-repair.tech/events/${body.id}`);
 
-      const subscribers = await prisma.user.findMany({
-        where: {
-          eventAlerts: true,
-        },
-        select: {
-          email: true,
-        },
-      });
+      const subscribers = (
+        await prisma.user.findMany({
+          where: {
+            eventAlerts: true,
+          },
+          select: {
+            email: true,
+          },
+        })
+      ).map((e) => e.email);
 
       const htmlBody = new Converter({}).makeHtml(
         `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
