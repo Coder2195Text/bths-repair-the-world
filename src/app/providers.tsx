@@ -1,7 +1,6 @@
 "use client";
 import { AccountProvider } from "@/components/AccountContext";
 import { SessionProvider } from "next-auth/react";
-import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
 import { MDXProvider } from "@mdx-js/react";
 import { MDXComponents } from "mdx/types";
 import { MergeComponents } from "@mdx-js/react/lib";
@@ -12,6 +11,7 @@ import {
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { useScrollDirection } from "react-use-scroll-direction";
 import Navbar from "@/components/Navbar";
+import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
 
 const PusherProvider = $PusherProvider as FC<
   PropsWithChildren<PusherProviderProps>
@@ -73,3 +73,7 @@ export const AppProviders = ({ children }: Props) => {
     </PusherProvider>
   );
 };
+
+export const LoadingBar = () => (
+  <NextNProgress options={{}} color="lightblue" height="5px" />
+);
