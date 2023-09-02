@@ -20,12 +20,4 @@ const HomePage: FC = () => {
   );
 };
 
-const HomePageSuspense: FC = () => {
-  return (
-    <Suspense fallback={<Loading>Loading Homepage...</Loading>}>
-      <HomePage />
-    </Suspense>
-  );
-};
-
-export default HomePageSuspense;
+export default HomePage;

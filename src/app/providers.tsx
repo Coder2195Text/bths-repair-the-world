@@ -64,7 +64,6 @@ export const AppProviders = ({ children }: Props) => {
     >
       <MDXProvider components={components}>
         <AccountProvider>
-          <NextNProgress options={{}} color="lightblue" height="5px" />
           <SessionProvider>
             <Navbar isNavActive={isNavActive[0]} />
             {children}
