@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { EventPage } from "./components";
 import { notFound } from "next/navigation";
 import { FC } from "react";
+import probe from "probe-image-size";
 
 export const dynamicParams = true;
 
@@ -28,6 +29,8 @@ export async function generateMetadata({
   }
 
   const description = event.description.toString();
+  let imageSize;
+  if (event.imageURL) imageSize = await probe(event.imageURL);
 
   return {
     title: `${event.name} - BTHS Repair the World`,
@@ -35,7 +38,17 @@ export async function generateMetadata({
       description.length > 200
         ? description.substring(0, 200) + "..."
         : description,
-    openGraph: { ...(event.imageURL ? { images: event.imageURL } : {}) },
+    openGraph: {
+      ...(event.imageURL
+        ? {
+            images: {
+              url: event.imageURL,
+              width: imageSize?.width,
+              height: imageSize?.height,
+            },
+          }
+        : {}),
+    },
   };
 }
 
