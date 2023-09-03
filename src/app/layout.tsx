@@ -43,6 +43,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     images: "/icon.png",
+    siteName: "BTHS Repair the World",
   },
   metadataBase: new URL("https://bths-repair.tech"),
 };

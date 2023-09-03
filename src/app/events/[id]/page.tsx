@@ -32,7 +32,7 @@ export async function generateMetadata({
   let imageSize;
   if (event.imageURL) imageSize = await probe(event.imageURL);
 
-  return {
+  const metadata: Metadata = {
     title: `${event.name} - BTHS Repair the World`,
     description:
       description.length > 200
@@ -49,7 +49,16 @@ export async function generateMetadata({
           }
         : {}),
     },
+    twitter: {
+      card: "summary_large_image",
+    },
   };
+
+  metadata.twitter!.description = metadata.description!;
+  metadata.twitter!.title = metadata.title!;
+  metadata.twitter!.images = metadata.openGraph!.images;
+
+  return metadata;
 }
 
 export async function generateStaticParams() {
