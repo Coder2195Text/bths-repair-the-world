@@ -4,8 +4,7 @@ import { EventPage } from "./components";
 import { notFound } from "next/navigation";
 import { FC } from "react";
 import probe from "probe-image-size";
-import { Converter } from "showdown";
-import { htmlToText } from "html-to-text";
+import removeMarkdown from "markdown-to-text";
 
 export const dynamicParams = true;
 
@@ -30,9 +29,7 @@ export async function generateMetadata({
     };
   }
 
-  const description = htmlToText(
-    new Converter({}).makeHtml(event.description.toString())
-  );
+  const description = removeMarkdown(event.description.toString());
   let imageSize;
   if (event.imageURL) imageSize = await probe(event.imageURL);
 
