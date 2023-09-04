@@ -33,12 +33,13 @@ import {
   BiCube,
   BiPhotoAlbum,
 } from "react-icons/bi";
-import { FaDiscord, FaUserTie } from "react-icons/fa";
+import { FaDiscord, FaInstagram, FaUserTie } from "react-icons/fa";
 import UserForm from "./UserForm";
 import { useRouter } from "next/navigation";
 import { LiaUserTieSolid } from "react-icons/lia";
 import ExecForm from "./ExecForm";
 import { useAccount } from "./AccountContext";
+import { AiOutlineMail } from "react-icons/ai";
 
 // profile menu component
 
@@ -198,6 +199,14 @@ const socialLinks: {
     icon: FaDiscord,
     url: "https://discord.gg/zTDeqZd6ne",
   },
+  {
+    icon: FaInstagram,
+    url: "https://www.instagram.com/bths.repair/",
+  },
+  {
+    icon: AiOutlineMail,
+    url: "mailto:bthsrepairtheworld@gmail.com",
+  },
 ];
 
 const NavList: FC<{
@@ -228,14 +237,14 @@ const NavList: FC<{
           </Link>
         </motion.span>
       ))}
-      <span>
+      <span className="flex">
         {socialLinks.map(({ icon, url }) => (
           <motion.span
             key={url}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="w-5/6 text-white lg:w-auto"
+            className="w-5/6 text-white lg:w-auto inline"
           >
             <Link
               href={url}

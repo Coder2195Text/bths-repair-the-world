@@ -4,6 +4,8 @@ import { EventPage } from "./components";
 import { notFound } from "next/navigation";
 import { FC } from "react";
 import probe from "probe-image-size";
+import { Converter } from "showdown";
+import { htmlToText } from "html-to-text";
 
 export const dynamicParams = true;
 
@@ -28,15 +30,17 @@ export async function generateMetadata({
     };
   }
 
-  const description = event.description.toString();
+  const description = htmlToText(
+    new Converter({}).makeHtml(event.description.toString())
+  );
   let imageSize;
   if (event.imageURL) imageSize = await probe(event.imageURL);
 
   const metadata: Metadata = {
     title: `${event.name} - BTHS Repair the World`,
     description:
-      description.length > 200
-        ? description.substring(0, 200) + "..."
+      description.length > 500
+        ? description.substring(0, 500) + "..."
         : description,
     openGraph: {
       ...(event.imageURL
@@ -53,10 +57,6 @@ export async function generateMetadata({
       card: "summary_large_image",
     },
   };
-
-  metadata.twitter!.description = metadata.description!;
-  metadata.twitter!.title = metadata.title!;
-  metadata.twitter!.images = metadata.openGraph!.images;
 
   return metadata;
 }

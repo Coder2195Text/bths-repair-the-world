@@ -126,20 +126,39 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       embed
         .setTitle("New Event: " + newData.name)
         .setDescription(
-          `# ${name} has posted a [new event](https://bths-repair.tech/events/${
-            body.id
-          })!\n## **Description**\n ${
-            newData.description
-          }\n## **Event Time:** ${newData.eventTime.toLocaleString("en-US", {
-            timeZone: "America/New_York",
-          })}
-        ${newData.limit ? `\n## **Max Members:** ${newData.limit}` : ""}
-        \n## **Points:** ${newData.maxPoints}\n## **Hours:** ${
-            newData.maxHours
-          }\n## Location: [${newData.address}](${encodeURI(
-            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-          )})`
+          `${
+            newData.description.toString().slice(0, 4090) +
+            (newData.description.toString().length > 4090 ? "..." : "")
+          }`
         )
+        .addField({
+          name: "**Event Time:**",
+          value: newData.eventTime.toLocaleString("en-US", {
+            timeZone: "America/New_York",
+          }),
+        });
+
+      if (newData.limit)
+        embed.addField({
+          name: "**Max Members:**",
+          value: newData.limit.toString(),
+        });
+
+      embed
+        .addField({
+          name: "**Points:**",
+          value: newData.maxPoints.toString(),
+        })
+        .addField({
+          name: "**Hours:**",
+          value: newData.maxHours.toString(),
+        })
+        .addField({
+          name: "**Location:**",
+          value: `[${newData.address}](${encodeURI(
+            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
+          )})`,
+        })
         .setImage({
           url: body.imageURL || "https://bths-repair.tech/icon.png",
         })
@@ -148,17 +167,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         })
         .setTimestamp()
         .setUrl(`https://bths-repair.tech/events/${body.id}`);
-
-      const subscribers = (
-        await prisma.user.findMany({
-          where: {
-            eventAlerts: true,
-          },
-          select: {
-            email: true,
-          },
-        })
-      ).map((e) => e.email);
 
       const htmlBody = new Converter({}).makeHtml(
         `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
@@ -172,18 +180,16 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           .toString()
           .split("\n")
           .map((e) => `> ${e}`)
-          .join(
-            "\n"
-          )}\n\n#### **Event Time:** ${newData.eventTime.toLocaleString(
+          .join("\n")}\n\n#### Event Time: ${newData.eventTime.toLocaleString(
           "en-US",
           {
             timeZone: "America/New_York",
           }
         )}\n${
           newData.limit
-            ? `\n#### **Max Members (Register Quick!!!):** ${newData.limit}`
+            ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
             : ""
-        }\n#### **Points:** ${newData.maxPoints} | **Hours:** ${
+        }\n#### Points: ${newData.maxPoints} | Hours: ${
           newData.maxHours
         }\n#### Location: [${newData.address}](${encodeURI(
           `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
@@ -201,7 +207,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           .send(),
         sendEmail({
           subject: "New Event: " + newData.name,
-          bcc: subscribers,
           html: htmlBody,
         }),
       ]);
