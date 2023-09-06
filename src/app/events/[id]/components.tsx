@@ -36,6 +36,7 @@ import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
 import Image from "next/image";
 import Link from "next/link";
+import { AiOutlineWarning } from "react-icons/ai";
 
 interface Props {
   event: EventParsed;
@@ -207,6 +208,10 @@ const UserAttendance: FC<Props> = ({ event }) => {
       <h3>Event Attendance:</h3>
       {eventAttendance && (
         <div>
+          <h5>
+            <AiOutlineWarning className="inline" /> You must check in and check
+            out with an exec to get credit for the event.
+          </h5>
           You have {!eventAttendance.attendedAt && "not"} attended the event and
           earned {eventAttendance.earnedHours} hours and{" "}
           {eventAttendance.earnedPoints} points.

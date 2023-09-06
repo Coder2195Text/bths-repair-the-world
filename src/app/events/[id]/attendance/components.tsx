@@ -9,6 +9,7 @@ import { FC, useEffect, useState, PropsWithChildren, useRef } from "react";
 import { BsClipboard2Check, BsClipboard2X } from "react-icons/bs";
 import { Button } from "@material-tailwind/react";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
+import { Loading } from "@/components/Loading";
 
 type Attendance = {
   user: {
@@ -165,6 +166,9 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
 
   return (
     <Layout>
+      {(event === "unset" || attendance === "unset") && (
+        <Loading>Loading event attendance...</Loading>
+      )}
       {event !== "unset" &&
         attendance !== "unset" &&
         (event && attendance ? (
