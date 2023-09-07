@@ -55,8 +55,7 @@ export const AppProviders = ({ children }: Props) => {
 
   if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
     setIsNavActive([
-      scrollDirection === "UP" ||
-        (scrollDirection === "DOWN" && element?.scrollTop === 0),
+      element?.scrollTop === 0 || scrollDirection === "UP",
       Date.now(),
     ]);
   }
