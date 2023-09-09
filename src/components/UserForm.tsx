@@ -7,6 +7,7 @@ import { BsExclamationOctagon } from "react-icons/bs";
 import { useAccount } from "./AccountContext";
 import { UserFull } from "@/types/user";
 import Link from "next/link";
+import { GRAD_YEARS, PRONOUNS } from "@/utils/constants";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -29,9 +30,6 @@ type Props =
       mode: "edit";
       setOpen: Dispatch<SetStateAction<boolean>>;
     };
-
-const GRAD_YEARS = [0, 2024, 2025, 2026, 2027];
-const PRONOUNS = ["He/Him", "She/Her", "They/Them", "Ze/Zir", "It/Its"];
 
 const UserForm: FC<Props> = ({ mode, setOpen }) => {
   const [prefectDetails, setPrefectDetails] = useState(false);
@@ -263,13 +261,18 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
               </div>
               <Error name="pronouns" />
               <label htmlFor="gradYear">Graduation Year: </label>
-              <Field id="gradYear" name="gradYear" as="select">
-                {GRAD_YEARS.map((year) => (
-                  <option value={year || ""} key={year}>
-                    {year || "Not Selected"}
-                  </option>
-                ))}
-              </Field>
+              {values.gradYear &&
+              !GRAD_YEARS.includes(Number(values.gradYear)) ? (
+                "Tech Alumni"
+              ) : (
+                <Field id="gradYear" name="gradYear" as="select">
+                  {GRAD_YEARS.map((year) => (
+                    <option value={year || ""} key={year}>
+                      {year || "Not Selected"}
+                    </option>
+                  ))}
+                </Field>
+              )}
               <br />
               <Error name="gradYear" />
               <label htmlFor="birthday">Birthday: </label>

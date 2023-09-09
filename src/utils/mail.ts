@@ -18,7 +18,7 @@ export async function sendEmail(
         process.env.ADVISOR_EMAIL!,
         ...(
           await prisma.user.findMany({
-            where: { position: "EXEC", email: "emmak3@nycstudents.net" },
+            where: { position: "EXEC" },
           })
         ).map((user) => user.email),
       ],
