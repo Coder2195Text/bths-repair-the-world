@@ -16,18 +16,7 @@ import { BiX, BiXCircle } from "react-icons/bi";
 import DateTimePicker from "react-datetime-picker";
 import { useRouter } from "next/navigation";
 import { POSITION_LIST, POSITION_MAP } from "@/utils/constants";
-
-const Error: FC<{ name: string }> = (props) => {
-  return (
-    <ErrorMessage name={props.name}>
-      {(msg: string) => (
-        <div className="flex justify-center items-center text-red-500">
-          <BsExclamationOctagon size={24} className="mr-2" /> {msg}
-        </div>
-      )}
-    </ErrorMessage>
-  );
-};
+import FormError from "./FormError";
 
 type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -142,7 +131,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                 ))}
               </Field>
               <br />
-              <Error name="position" />
+              <FormError name="position" />
               <label htmlFor="description">
                 Executive Description: ({5000 - values.description.length} chars
                 left){" "}
@@ -158,7 +147,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
               />
               <br />
 
-              <Error name="description" />
+              <FormError name="description" />
               {values.description && (
                 <>
                   <label>Preview:</label>
@@ -247,7 +236,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                   "No selfie selected."
                 )}
               </div>
-              <Error name="selfieURL" />
+              <FormError name="selfieURL" />
 
               <hr />
               <div>

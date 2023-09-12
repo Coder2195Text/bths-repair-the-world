@@ -8,18 +8,7 @@ import { useAccount } from "./AccountContext";
 import { UserFull } from "@/types/user";
 import Link from "next/link";
 import { GRAD_YEARS, PRONOUNS } from "@/utils/constants";
-
-const Error: FC<{ name: string }> = (props) => {
-  return (
-    <ErrorMessage name={props.name}>
-      {(msg: string) => (
-        <div className="flex justify-center items-center text-red-500">
-          <BsExclamationOctagon size={24} className="mr-2" /> {msg}
-        </div>
-      )}
-    </ErrorMessage>
-  );
-};
+import FormError from "./FormError";
 
 type Props =
   | {
@@ -197,7 +186,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 placeholder="Your name"
               />
               <br />
-              <Error name="name" />
+              <FormError name="name" />
               <label htmlFor="preferredName">Preferred Name (Optional): </label>
               <Field
                 id="preferredName"
@@ -207,7 +196,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 placeholder={values.name || "Your preferred name"}
               />
               <br />
-              <Error name="preferredName" />
+              <FormError name="preferredName" />
               <label htmlFor="prefect">Prefect: </label>
               <Field
                 className="w-16"
@@ -230,7 +219,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                   like this "A1B"
                 </div>
               </Collapse>
-              <Error name="prefect" />
+              <FormError name="prefect" />
               <label htmlFor="pronouns">Pronouns: </label>
               <Field
                 id="pronouns"
@@ -259,7 +248,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                   </Button>
                 ))}
               </div>
-              <Error name="pronouns" />
+              <FormError name="pronouns" />
               <label htmlFor="gradYear">Graduation Year: </label>
               {values.gradYear &&
               !GRAD_YEARS.includes(Number(values.gradYear)) ? (
@@ -274,11 +263,11 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 </Field>
               )}
               <br />
-              <Error name="gradYear" />
+              <FormError name="gradYear" />
               <label htmlFor="birthday">Birthday: </label>
               <Field id="birthday" name="birthday" type="date" />
               <br />
-              <Error name="birthday" />
+              <FormError name="birthday" />
               <label className="flex justify-center items-center w-full">
                 <Field
                   id="sgoSticker"
@@ -298,7 +287,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 maxLength={180}
                 placeholder="Referrer will get 5 points!"
               />
-              <Error name="referredBy" />
+              <FormError name="referredBy" />
               <label className="flex justify-center items-center w-full">
                 <Field
                   id="eventAlerts"
@@ -331,7 +320,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 </span>
               </label>
 
-              <Error name="tos" />
+              <FormError name="tos" />
 
               <Button
                 type="submit"

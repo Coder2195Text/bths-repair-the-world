@@ -35,19 +35,12 @@ export const POST = async (req: NextRequest) => {
       .read()
       .then((r) => r.value && new TextDecoder().decode(r.value))
       .then(function (val): [boolean, any] {
-        let parsed;
         if (!val) return [false, "Missing body"];
         try {
-          parsed = JSON.parse(val);
+          return [true, JSON.parse(val)];
         } catch (e) {
           return [false, "Bad JSON"];
         }
-        try {
-          parsed = Prisma.validator<Prisma.UserWhereInput>()(parsed);
-        } catch (e) {
-          return [false, e];
-        }
-        return [true, parsed];
       });
 
   if (!(await result)[0])

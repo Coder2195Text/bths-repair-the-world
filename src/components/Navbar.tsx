@@ -32,6 +32,7 @@ import {
   BiCode,
   BiCube,
   BiPhotoAlbum,
+  BiSearch,
 } from "react-icons/bi";
 import { FaDiscord, FaInstagram, FaUserTie } from "react-icons/fa";
 import UserForm from "./UserForm";
@@ -40,6 +41,7 @@ import { LiaUserTieSolid } from "react-icons/lia";
 import ExecForm from "./ExecForm";
 import { useAccount } from "./AccountContext";
 import { AiOutlineMail } from "react-icons/ai";
+import EmailSearcher from "./EmailSearcher";
 
 // profile menu component
 
@@ -53,7 +55,8 @@ const profileMenuItems: {
           | MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
       ) => any)
     | "openProfile"
-    | "openExecProfile";
+    | "openExecProfile"
+    | "openEmailSearcher";
 }[] = [
   {
     label: "Edit Profile",
@@ -65,6 +68,12 @@ const profileMenuItems: {
     icon: LiaUserTieSolid,
     onClick: "openExecProfile",
   },
+  {
+    label: "Email Searcher",
+    icon: BiSearch,
+    onClick: "openEmailSearcher",
+  },
+
   {
     label: "Sign Out",
     icon: FiLogOut,
@@ -80,6 +89,7 @@ function ProfileMenu() {
   const { execData, data: accountData } = useAccount();
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editExecProfileOpen, setEditExecProfileOpen] = useState(false);
+  const [emailSearchOpen, setEmailSearchOpen] = useState(false);
 
   const { data, status } = useSession();
 
@@ -96,6 +106,9 @@ function ProfileMenu() {
         ) : (
           <ExecForm mode="post" setOpen={setEditExecProfileOpen} />
         ))}
+      {emailSearchOpen && accountData && accountData.position !== "MEMBER" && (
+        <EmailSearcher setOpen={setEmailSearchOpen} />
+      )}
       <MenuHandler>
         <Button
           ripple
@@ -142,6 +155,10 @@ function ProfileMenu() {
                 }
                 if (onClick === "openExecProfile") {
                   setEditExecProfileOpen(true);
+                  return;
+                }
+                if (onClick === "openEmailSearcher") {
+                  setEmailSearchOpen(true);
                   return;
                 }
 
