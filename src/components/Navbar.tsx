@@ -137,12 +137,14 @@ function ProfileMenu() {
       </MenuHandler>
       <MenuList className="z-40 p-2 bg-gray-700 border-none">
         {profileMenuItems.map(({ label, icon, onClick }, key) => {
-          if (
-            onClick === "openExecProfile" &&
-            accountData?.position !== "EXEC"
-          ) {
+          if (onClick === "openExecProfile" && accountData?.position !== "EXEC")
             return;
-          }
+
+          if (
+            onClick === "openEmailSearcher" &&
+            accountData?.position === "MEMBER"
+          )
+            return;
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem

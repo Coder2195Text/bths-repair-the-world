@@ -160,9 +160,10 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
                   <Field
                     name="customQuery"
                     id="customQuery"
+                    cols={50}
                     as="textarea"
                     placeholder="If you know what you're doing or recieve precise instructions from experienced people, you can write a custom query here."
-                    className="min-w-[500px] h-96 font-[monospace]  p-1 rounded-md"
+                    className="max-w-full h-96 font-[monospace]  p-1 rounded-md"
                   />
                   <br />
                   <FormError name="customQuery" />
