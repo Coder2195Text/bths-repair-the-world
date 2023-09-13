@@ -7,7 +7,7 @@ import {
   SetStateAction,
   useState,
 } from "react";
-import { GRAD_YEARS } from "@/utils/constants";
+import { GRAD_YEARS as UNFILTER_GRAD } from "@/utils/constants";
 import { Prisma } from "@prisma/client";
 import { Button } from "@material-tailwind/react";
 import FormError from "./FormError";
@@ -68,6 +68,8 @@ const BooleanSelect: FC<BooleanSelectProps> = ({
   );
 };
 
+const GRAD_YEARS = UNFILTER_GRAD.filter(Boolean).map(String);
+
 const EmailSearcher: FC<Props> = ({ setOpen }) => {
   const [data, setData] = useState<string[] | Object>([]);
   const [customQuery, setCustomQuery] = useState(false);
@@ -105,12 +107,15 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
         <Formik
           initialValues={{
             eventAlerts: true as boolean | undefined,
-            gradYears: GRAD_YEARS,
+            gradYears: GRAD_YEARS as string[] | number[],
             sgoSticker: undefined as boolean | undefined,
             customQuery: undefined as string | undefined,
           }}
           validate={(values) => {
             let errors: any = {};
+            if (!values.gradYears.length) {
+              errors.gradYears = "At least one grad year must be selected.";
+            }
             if (values.customQuery) {
               try {
                 JSON.parse(values.customQuery);
@@ -121,20 +126,18 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
             return errors;
           }}
           onSubmit={async (values) => {
-            console.log(values);
-            if (values.eventAlerts === undefined) delete values.eventAlerts;
-            if (values.sgoSticker === undefined) delete values.sgoSticker;
-
             const query: Prisma.UserWhereInput = values.customQuery
               ? JSON.parse(values.customQuery)
               : {
                   gradYear: {
-                    in: values.gradYears,
+                    in: values.gradYears.map((year) => Number(year)),
                   },
-                  ...(values.eventAlerts && {
+                  ...(values.eventAlerts !== undefined && {
                     eventAlerts: values.eventAlerts,
                   }),
-                  ...(values.sgoSticker && { sgoSticker: values.sgoSticker }),
+                  ...(values.sgoSticker !== undefined && {
+                    sgoSticker: values.sgoSticker,
+                  }),
                 };
 
             await fetch("/api/users", {
@@ -159,7 +162,7 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
                     id="customQuery"
                     as="textarea"
                     placeholder="If you know what you're doing or recieve precise instructions from experienced people, you can write a custom query here."
-                    className="min-w-full w-96 h-96 font-[monospace]  p-1 rounded-md"
+                    className="min-w-[500px] h-96 font-[monospace]  p-1 rounded-md"
                   />
                   <br />
                   <FormError name="customQuery" />
@@ -194,6 +197,36 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
                   </div>
                 </>
               )}
+              <label>Grad Years:</label>
+              <div className="w-full flex justify-center">
+                <div className="flex flex-col place-items-start text-left">
+                  <Field
+                    type="checkbox"
+                    checked={values.gradYears.length === GRAD_YEARS.length}
+                    className="mr-2"
+                    onChange={(e: FormEvent<HTMLInputElement>) => {
+                      if (e.currentTarget.checked) {
+                        setFieldValue("gradYears", GRAD_YEARS);
+                      } else {
+                        setFieldValue("gradYears", []);
+                      }
+                    }}
+                  />
+                  {GRAD_YEARS.map((year) => (
+                    <label className="flex items-center">
+                      <Field
+                        key={year}
+                        type="checkbox"
+                        name="gradYears"
+                        value={year}
+                        className="mr-2 "
+                      />
+                      {year}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <FormError name="gradYears" />
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -203,17 +236,21 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
               >
                 Query{isSubmitting && "ing"} Emails
               </Button>
+              <br />
+              <label>Results: </label>
+
+              <div className="flex flex-row justify-center">
+                {isSubmitting
+                  ? "Fetching..."
+                  : Array.isArray(data)
+                  ? data.length
+                    ? data.join(", ")
+                    : "No data."
+                  : JSON.stringify(data)}
+              </div>
             </Form>
           )}
         </Formik>
-        <label>Results: </label>
-        <div className="flex flex-row justify-center">
-          {Array.isArray(data)
-            ? data.length
-              ? data.join(", ")
-              : "No data yet."
-            : JSON.stringify(data)}
-        </div>
       </div>
     </div>
   );
