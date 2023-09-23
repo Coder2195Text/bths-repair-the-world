@@ -21,17 +21,6 @@ enum ExecPosition {
   TREASURER
 }
 
-model GalleryPicture {
-  id String @id @default(cuid())
-
-  date        String
-  title       String
-  description String @db.VarChar(5000)
-  imageURL    String
-
-  createdAt DateTime @default(now())
-}
-
 model ExecDetails {
   user  User   @relation(fields: [email], references: [email])
   email String @id
@@ -63,15 +52,16 @@ model User {
 }
 
 model Event {
-  id          String            @id @default(cuid())
-  name        String
-  description Bytes
-  maxPoints   Float
-  maxHours    Float
-  attendees   EventAttendance[]
-  eventTime   DateTime
-  limit       Int?
-  imageURL    String?
+  id             String            @id @default(cuid())
+  name           String
+  description    Bytes
+  descriptionNew String            @default("") @db.VarChar(4000)
+  maxPoints      Float
+  maxHours       Float
+  attendees      EventAttendance[]
+  eventTime      DateTime
+  limit          Int?
+  imageURL       String?
 
   address   String   @db.VarChar(1000)
   createdAt DateTime @default(now())
