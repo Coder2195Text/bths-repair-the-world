@@ -52,16 +52,15 @@ model User {
 }
 
 model Event {
-  id             String            @id @default(cuid())
-  name           String
-  description    String            @default("") @db.VarChar(4000)
-  descriptionNew String            @default("") @db.VarChar(4000)
-  maxPoints      Float
-  maxHours       Float
-  attendees      EventAttendance[]
-  eventTime      DateTime
-  limit          Int?
-  imageURL       String?
+  id          String            @id @default(cuid())
+  name        String
+  description String            @db.VarChar(4000)
+  maxPoints   Float
+  maxHours    Float
+  attendees   EventAttendance[]
+  eventTime   DateTime
+  limit       Int?
+  imageURL    String?
 
   address   String   @db.VarChar(1000)
   createdAt DateTime @default(now())
