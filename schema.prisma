@@ -54,7 +54,7 @@ model User {
 model Event {
   id             String            @id @default(cuid())
   name           String
-  description    Bytes
+  description    String            @default("") @db.VarChar(4000)
   descriptionNew String            @default("") @db.VarChar(4000)
   maxPoints      Float
   maxHours       Float
