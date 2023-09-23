@@ -33,6 +33,7 @@ import {
   BiCube,
   BiPhotoAlbum,
   BiSearch,
+  BiSpreadsheet,
 } from "react-icons/bi";
 import { FaDiscord, FaInstagram, FaUserTie } from "react-icons/fa";
 import UserForm from "./UserForm";
@@ -208,6 +209,11 @@ const navListLinks: {
     icon: LiaUserTieSolid,
     url: "/execs",
   },
+  {
+    label: "Spreadsheet",
+    icon: BiSpreadsheet,
+    url: "/spreadsheet",
+  },
 ];
 
 const socialLinks: {
@@ -233,7 +239,7 @@ const NavList: FC<{
 }> = ({ setNavOpen }) => {
   const router = useRouter();
   return (
-    <ul className="flex flex-col gap-4 items-center mt-1 mb-1 lg:flex-row lg:gap-10 lg:mt-0 lg:mb-0">
+    <ul className="flex flex-col gap-3 items-center mt-1 mb-1 lg:flex-row lg:gap-7 lg:mt-0 lg:mb-0">
       {navListLinks.map(({ label, icon, url }) => (
         <motion.span
           key={label}
@@ -247,12 +253,12 @@ const NavList: FC<{
             onClick={(e) => {
               setNavOpen(false);
             }}
-            className="flex justify-center items-center w-full"
+            className="flex justify-center items-center w-full font-figtree font-bold"
           >
             {createElement(icon, {
-              className: "w-8 h-8 inline mr-2",
+              className: "w-6 h-6 inline mr-1",
             })}
-            <h6>{label}</h6>
+            {label}
           </Link>
         </motion.span>
       ))}
@@ -274,7 +280,7 @@ const NavList: FC<{
               className="flex justify-center items-center w-full"
             >
               {createElement(icon, {
-                className: "w-8 h-8 inline mr-2",
+                className: "w-6 h-6 inline mr-2",
               })}
             </Link>
           </motion.span>

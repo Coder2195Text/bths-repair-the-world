@@ -11,7 +11,7 @@ export type Params = { params: { id: string } };
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
   name: Joi.string().optional().max(190),
-  description: Joi.string().optional(),
+  description: Joi.string().optional().max(4000),
   maxPoints: Joi.number().optional().min(0),
   eventTime: Joi.date().iso().optional(),
   imageURL: Joi.string().uri().optional().allow(null),
@@ -34,7 +34,6 @@ async function handler(
     return NextResponse.json(
       {
         ...event,
-        description: event.description.toString(),
         formCount: await prisma.eventAttendance.count({
           where: { eventId: id },
         }),
@@ -70,13 +69,7 @@ async function handler(
       const event = await prisma.event.delete({
         where: { id },
       });
-      return NextResponse.json(
-        {
-          ...event,
-          description: event.description.toString(),
-        },
-        { status: 200 }
-      );
+      return NextResponse.json(event, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Error).message },
@@ -105,30 +98,14 @@ async function handler(
     });
 
   if ((await result)[0]) {
-    const rawData: Partial<EventParsed> = (await result)[1];
+    const data: Partial<EventParsed> = (await result)[1];
 
-    const newData = {
-      ...rawData,
-      ...(rawData.description
-        ? {
-            description: Buffer.from(rawData.description),
-          }
-        : {}),
-    };
-
-    console.log(newData);
     try {
       const event = await prisma.event.update({
         where: { id },
-        data: newData as any,
+        data: data,
       });
-      return NextResponse.json(
-        {
-          ...event,
-          description: event.description.toString(),
-        },
-        { status: 200 }
-      );
+      return NextResponse.json(event, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Error).message },

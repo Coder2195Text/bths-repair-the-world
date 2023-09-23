@@ -40,7 +40,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
   const [uploading, setUploading] = useState(false);
   return (
     <div
-      className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50"
+      className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50 py-8"
       onClick={(e: MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
           setOpen(false);
@@ -175,12 +175,15 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               />
               <Error name="name" />
               <br />
-              <label htmlFor="description">Description: </label>
+              <label htmlFor="description">
+                Description: ({4000 - values.description.length} chars left){" "}
+              </label>
               <br />
               <Field
                 as="textarea"
                 name="description"
                 id="description"
+                maxLength={4000}
                 placeholder="Event description, you can use markdown."
                 className="w-full h-60 p-1 rounded-md"
               />

@@ -30,7 +30,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
   const [uploading, setUploading] = useState(false);
   return (
     <div
-      className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50"
+      className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50 py-8"
       onClick={(e: MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
           setOpen(false);

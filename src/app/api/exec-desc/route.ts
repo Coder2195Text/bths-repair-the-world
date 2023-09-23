@@ -1,17 +1,13 @@
 import { prisma } from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.nextUrl);
-  const refresh = searchParams.get("refresh");
+export const revalidate = 15;
 
+export async function GET(req: NextRequest) {
   const body = await prisma.user.findMany({
     where: {
       position: {
         in: ["EXEC"],
-      },
-      email: {
-        not: String(refresh),
       },
     },
     select: {

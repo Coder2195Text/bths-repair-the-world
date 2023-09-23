@@ -12,7 +12,7 @@ import { sendEmail } from "@/utils/mail";
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
   name: Joi.string().required().max(190),
-  description: Joi.string().required(),
+  description: Joi.string().required().max(4000),
   maxPoints: Joi.number().required().min(0),
   eventTime: Joi.date().iso().required(),
   imageURL: Joi.string().uri().optional(),
@@ -45,13 +45,8 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       if (searchParams.has("preview")) {
         delete (e as Optional<Event>).address;
         delete (e as Optional<Event>).description;
-        return e;
       }
-
-      return {
-        ...e,
-        description: Buffer.from(e.description).toString(),
-      };
+      return e;
     });
 
     return NextResponse.json(searchParams.get("preview") ? events : events, {
@@ -103,7 +98,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
 
     const newData: Omit<Event, "id" | "createdAt"> = {
       ...rawData,
-      description: Buffer.from(rawData.description!),
       eventTime: new Date(rawData.eventTime!),
     };
 
@@ -125,12 +119,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       const embed = new Embed();
       embed
         .setTitle("New Event: " + newData.name)
-        .setDescription(
-          `${
-            newData.description.toString().slice(0, 4090) +
-            (newData.description.toString().length > 4090 ? "..." : "")
-          }`
-        )
+        .setDescription(newData.description)
         .addField({
           name: "**Event Time:**",
           value: newData.eventTime.toLocaleString("en-US", {
@@ -177,7 +166,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         )} we will be having a new event called **${
           newData.name
         }**!\n#### Description:\n${newData.description
-          .toString()
           .split("\n")
           .map((e) => `> ${e}`)
           .join("\n")}\n\n#### Event Time: ${newData.eventTime.toLocaleString(
@@ -211,15 +199,9 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         }),
       ]);
 
-      return NextResponse.json(
-        {
-          ...body,
-          description: body.description.toString(),
-        },
-        {
-          status: 200,
-        }
-      );
+      return NextResponse.json(body, {
+        status: 200,
+      });
     } catch (e) {
       console.log(e);
       return NextResponse.json({ error: e }, { status: 500 });
