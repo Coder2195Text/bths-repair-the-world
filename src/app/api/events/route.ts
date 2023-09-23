@@ -37,6 +37,13 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
   if (method === "GET") {
     let events = (
       await prisma.event.findMany({
+        include: {
+          attendees: {
+            select: {
+              earnedHours: true,
+            },
+          },
+        },
         orderBy: { eventTime: "desc" },
         skip: skip * 10,
         take: 10,
@@ -45,6 +52,9 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       if (searchParams.has("preview")) {
         delete (e as Optional<Event>).address;
         delete (e as Optional<Event>).description;
+        const count = e.attendees.length;
+        delete (e as Optional<typeof e>).attendees;
+        return { ...e, formCount: count };
       }
       return e;
     });

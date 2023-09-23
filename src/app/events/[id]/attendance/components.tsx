@@ -3,8 +3,7 @@
 import { Params } from "@/app/api/events/[id]/route";
 import { useAccount } from "@/components/AccountContext";
 import Layout from "@/components/Layout";
-import { EventParsed } from "@/types/event";
-import { EventAttendance, User, UserPosition } from "@prisma/client";
+import { Event, EventAttendance, User, UserPosition } from "@prisma/client";
 import { FC, useEffect, useState, PropsWithChildren, useRef } from "react";
 import { BsClipboard2Check, BsClipboard2X } from "react-icons/bs";
 import { Button } from "@material-tailwind/react";
@@ -20,7 +19,7 @@ type Attendance = {
   };
 } & EventAttendance;
 
-const CheckInButton: FC<{ attendance: Attendance; event: EventParsed }> = ({
+const CheckInButton: FC<{ attendance: Attendance; event: Event }> = ({
   attendance,
   event,
 }) => {
@@ -53,7 +52,7 @@ const CheckInButton: FC<{ attendance: Attendance; event: EventParsed }> = ({
   );
 };
 
-const RemoveButton: FC<{ attendance: Attendance; event: EventParsed }> = ({
+const RemoveButton: FC<{ attendance: Attendance; event: Event }> = ({
   attendance,
   event,
 }) => {
@@ -91,7 +90,7 @@ const RemoveButton: FC<{ attendance: Attendance; event: EventParsed }> = ({
 
 const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
   const { data, status } = useAccount();
-  const [event, setEvent] = useState<EventParsed | null | "unset">("unset");
+  const [event, setEvent] = useState<Event | null | "unset">("unset");
   const [attendance, setAttendance] = useState<Attendance[] | null | "unset">(
     "unset"
   );

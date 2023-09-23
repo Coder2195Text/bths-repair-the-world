@@ -2,11 +2,10 @@
 import { useAccount } from "@/components/AccountContext";
 import EventForm from "@/components/EventForm";
 import Layout from "@/components/Layout";
-import { EventParsed } from "@/types/event";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
 import { Button } from "@material-tailwind/react";
 import { colors } from "@material-tailwind/react/types/generic";
-import { EventAttendance, UserPosition } from "@prisma/client";
+import { Event, EventAttendance, UserPosition } from "@prisma/client";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -39,10 +38,10 @@ import Link from "next/link";
 import { AiOutlineWarning } from "react-icons/ai";
 
 interface Props {
-  event: EventParsed;
+  event: Event;
 }
 interface AdminActionsProps extends Props {
-  setEvent: Dispatch<SetStateAction<EventParsed>>;
+  setEvent: Dispatch<SetStateAction<Event>>;
 }
 
 const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
@@ -355,7 +354,7 @@ const EventDescription: FC<Props> = ({ event }) => {
 };
 
 export const EventPage: FC<Props> = ({ event: defaultEvent }) => {
-  const [event, setEvent] = useState<EventParsed>(defaultEvent);
+  const [event, setEvent] = useState<Event>(defaultEvent);
 
   return (
     <Layout>

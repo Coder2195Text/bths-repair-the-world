@@ -1,18 +1,12 @@
-import { Button, Collapse } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import Joi from "joi";
-import { signOut } from "next-auth/react";
 import { Dispatch, FC, MouseEvent, SetStateAction, useState } from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
-import { useAccount } from "./AccountContext";
-import { UserFull } from "@/types/user";
-import Link from "next/link";
 import { Event } from "@prisma/client";
-import { EventParsed } from "@/types/event";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
 import reactGemoji from "remark-gemoji";
-import { BiX, BiXCircle } from "react-icons/bi";
+import { BiXCircle } from "react-icons/bi";
 import DateTimePicker from "react-datetime-picker";
 import { useRouter } from "next/navigation";
 
@@ -31,8 +25,8 @@ const Error: FC<{ name: string }> = (props) => {
 type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   mode: "post" | "edit";
-  eventData?: EventParsed;
-  setEventData?: Dispatch<SetStateAction<EventParsed>>;
+  eventData?: Event;
+  setEventData?: Dispatch<SetStateAction<Event>>;
 };
 
 const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
@@ -97,6 +91,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 router.push(`/events/${(await res.json()).id}`);
               }
             } else {
+              if (!values.limit) values.limit = null;
               const editted = Object.fromEntries(
                 Object.keys(values)
                   .filter(
@@ -122,7 +117,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
 
               if (res.status === 200) {
                 setOpen(false);
-                setEventData?.((await res.json()) as EventParsed);
+                setEventData?.((await res.json()) as Event);
               }
             }
           }}

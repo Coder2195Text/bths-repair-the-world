@@ -2,9 +2,8 @@ import { prisma } from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { UserPosition } from "@prisma/client";
+import { Event, UserPosition } from "@prisma/client";
 import Joi from "joi";
-import { EventParsed } from "@/types/event";
 
 export type Params = { params: { id: string } };
 
@@ -31,15 +30,7 @@ async function handler(
   if (!event)
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   if (method === "GET") {
-    return NextResponse.json(
-      {
-        ...event,
-        formCount: await prisma.eventAttendance.count({
-          where: { eventId: id },
-        }),
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(event, { status: 200 });
   }
 
   const allowed = await getServerSession({
@@ -98,7 +89,7 @@ async function handler(
     });
 
   if ((await result)[0]) {
-    const data: Partial<EventParsed> = (await result)[1];
+    const data: Partial<Event> = (await result)[1];
 
     try {
       const event = await prisma.event.update({

@@ -67,15 +67,18 @@ export async function generateStaticParams() {
 }
 
 async function fetchEvent(id: string) {
-  const res = await fetch(`${process.env.BASE_URL}/api/events/${id}`, {
-    next: {
-      revalidate: 10,
-    },
+  // const res = await fetch(`${process.env.BASE_URL}/api/events/${id}`, {
+  //   next: {
+  //     revalidate: 10,
+  //   },
+  // });
+  // if (res.status === 404) {
+  //   return null;
+  // }
+  // return res.json();
+  return await prisma.event.findUnique({
+    where: { id },
   });
-  if (res.status === 404) {
-    return null;
-  }
-  return res.json();
 }
 
 const Page: FC<Params> = async ({ params: { id } }) => {

@@ -37,8 +37,19 @@ export const TitleBar: FC = () => {
 };
 
 export const EventCard: FC<{
-  event: Event;
-}> = ({ event: { name, id, imageURL, eventTime, maxHours, maxPoints } }) => {
+  event: Event & { formCount: number };
+}> = ({
+  event: {
+    name,
+    id,
+    imageURL,
+    eventTime,
+    maxHours,
+    maxPoints,
+    formCount,
+    limit,
+  },
+}) => {
   return (
     <Link
       key={id}
@@ -58,7 +69,8 @@ export const EventCard: FC<{
             <br />
             <BsAward className="inline" /> Total Points : {maxPoints}
             <br />
-            {new Date(eventTime).getTime() < Date.now() ? (
+            {new Date(eventTime).getTime() < Date.now() ||
+            (limit && formCount >= limit) ? (
               <span className="text-red-300">
                 <FiXCircle className="inline" /> Event is no longer accepting
                 registration
@@ -103,12 +115,12 @@ enum LoadingState {
 }
 
 export const EventList: FC = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<(Event & { formCount: number })[]>([]);
   const [loading, setLoading] = useState<LoadingState>(LoadingState.Loading);
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
-    fetch("/api/events")
+    fetch("/api/events?preview")
       .then((res) => res.json())
       .then((data) => {
         setEvents(data);
@@ -127,9 +139,9 @@ export const EventList: FC = () => {
         <a
           onClick={async () => {
             setLoading(LoadingState.Loading);
-            const more: Event[] = await fetch(`/api/events?page=${page}`).then(
-              (res) => res.json()
-            );
+            const more: (Event & { formCount: number })[] = await fetch(
+              `/api/events?preview&page=${page}`
+            ).then((res) => res.json());
             setPage(page + 1);
             setEvents([...events, ...more]);
 
