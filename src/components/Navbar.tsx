@@ -115,7 +115,7 @@ function ProfileMenu() {
           ripple
           variant="text"
           color="blue-gray"
-          className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full"
+          className="flex gap-3 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto xl:gap-7 text-white rounded-full"
           disabled={status === "loading"}
         >
           <Avatar
