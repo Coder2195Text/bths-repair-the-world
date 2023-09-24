@@ -115,7 +115,7 @@ function ProfileMenu() {
           ripple
           variant="text"
           color="blue-gray"
-          className="flex gap-3 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto xl:gap-7 text-white rounded-full"
+          className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full"
           disabled={status === "loading"}
         >
           <Avatar
@@ -239,7 +239,7 @@ const NavList: FC<{
 }> = ({ setNavOpen }) => {
   const router = useRouter();
   return (
-    <ul className="flex flex-col gap-1 items-center mt-1 mb-1 lg:flex-row lg:gap-3 lg:mt-0 lg:mb-0">
+    <ul className="flex flex-col gap-3 items-center mt-1 mb-1 lg:flex-row xl:gap-6 lg:mt-0 lg:mb-0">
       {navListLinks.map(({ label, icon, url }) => (
         <motion.span
           key={label}
@@ -253,7 +253,7 @@ const NavList: FC<{
             onClick={(e) => {
               setNavOpen(false);
             }}
-            className="flex justify-center items-center w-full font-figtree lg:font-bold text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
+            className="flex justify-center items-center w-full font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
           >
             {createElement(icon, {
               className:

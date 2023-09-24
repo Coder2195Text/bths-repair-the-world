@@ -14,19 +14,17 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  const users = (
-    await prisma.user.findMany({
-      select: {
-        email: true,
-        events: {
-          select: {
-            earnedHours: true,
-            earnedPoints: true,
-          },
+  const users = await prisma.user.findMany({
+    select: {
+      email: true,
+      events: {
+        select: {
+          earnedHours: true,
+          earnedPoints: true,
         },
       },
-    })
-  ).map;
+    },
+  });
 
   return NextResponse.json(
     {
