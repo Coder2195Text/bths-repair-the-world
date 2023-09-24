@@ -8,7 +8,7 @@ async function fetchExecs() {
     `${process.env.BASE_URL}/api/exec-desc?refresh=${Date.now()}`,
     {
       next: {
-        revalidate: 15,
+        revalidate: false,
       },
     }
   );

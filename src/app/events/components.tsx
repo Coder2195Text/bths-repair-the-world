@@ -144,7 +144,6 @@ export const EventList: FC = () => {
             ).then((res) => res.json());
             setPage(page + 1);
             setEvents([...events, ...more]);
-
             if (more.length !== 10) {
               setLoading(LoadingState.NoMore);
             } else {
