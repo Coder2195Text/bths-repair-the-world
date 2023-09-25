@@ -4,14 +4,11 @@ import { ExecList, ExecsDetails } from "./server-components";
 import { ExecDetails, User } from "@prisma/client";
 
 async function fetchExecs() {
-  const res = await fetch(
-    `${process.env.BASE_URL}/api/exec-desc?refresh=${Date.now()}`,
-    {
-      next: {
-        revalidate: 5,
-      },
-    }
-  );
+  const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
+    next: {
+      revalidate: 5,
+    },
+  });
   return res.json();
 }
 
@@ -20,7 +17,7 @@ export const metadata = {
   description: "Meet the BTHS Repair the World executives.",
 };
 
-const ExecsPage: FC = async () => {
+const ExecsPage: FC = () => {
   const execs = fetchExecs();
   return (
     <Layout>
