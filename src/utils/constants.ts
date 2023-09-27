@@ -5,6 +5,7 @@ export const POSITION_MAP: {
 } = {
   PRESIDENT: "President",
   VICE_PRESIDENT: "Vice President",
+  SECRETARY: "Secretary",
   TREASURER: "Treasurer",
   EVENT_COORDINATOR: "Event Coordinator",
 } as const;

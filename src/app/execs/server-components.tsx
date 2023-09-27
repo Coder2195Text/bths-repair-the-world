@@ -19,9 +19,10 @@ const AsyncExecList: FC<Props> = async ({ execs: promise }) => {
     } = {
       PRESIDENT: 1,
       VICE_PRESIDENT: 2,
-      TREASURER: 3,
-      EVENT_COORDINATOR: 4,
-      undefined: 5,
+      SECRETARY: 3,
+      TREASURER: 4,
+      EVENT_COORDINATOR: 5,
+      undefined: 6,
     };
 
     // Compare positions first
