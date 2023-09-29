@@ -92,11 +92,14 @@ async function handler(
     const data: Partial<Event> = (await result)[1];
 
     try {
-      const event = await prisma.event.update({
+      if (data.description) {
+        data.description = data.description.replaceAll("{@link}", `https://bths-repair.tech/events/${id}`);
+      }
+      const eventUpdated = await prisma.event.update({
         where: { id },
         data: data,
       });
-      return NextResponse.json(event, { status: 200 });
+      return NextResponse.json(eventUpdated, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Error).message },

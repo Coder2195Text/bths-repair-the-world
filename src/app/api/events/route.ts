@@ -7,7 +7,6 @@ import { Event, UserPosition } from "@prisma/client";
 import { Embed, Webhook } from "@vermaysha/discord-webhook";
 import { Optional } from "@prisma/client/runtime/library";
 import { Converter } from "showdown";
-import { sendEmail } from "@/utils/mail";
 
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
@@ -100,7 +99,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         return [false, "Bad JSON"];
       }
       let errors = schema.validate(parsed).error;
-      return errors ? [false, errors] : [true, parsed];
+      return errors ? [false, errors] : [true, (parsed as EventPOSTBody)];
     });
 
   if ((await result)[0]) {
@@ -115,6 +114,13 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       const [body, name] = await Promise.all([
         prisma.event.create({
           data: newData,
+        }).then(async (e) => {
+          e.description = e.description.replaceAll("{@link}", `https://bths-repair.tech/events/${e.id}`);
+          await prisma.event.update({
+            where: { id: e.id },
+            data: { description: e.description },
+          });
+          return e;   
         }),
         prisma.user
           .findUnique({
@@ -123,6 +129,8 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           })
           .then((u) => u?.preferredName),
       ]);
+
+      newData.description = body.description;
 
       const hook = new Webhook(process.env.EVENT_WEBHOOK!);
 
@@ -196,17 +204,17 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
       );
 
-      Promise.all([
+      await Promise.all([
         hook
           .setContent(
             "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!"
           )
           .addEmbed(embed)
           .send(),
-        sendEmail({
-          subject: "New BTHS Repair the World Event: " + newData.name,
-          html: htmlBody,
-        }),
+        // sendEmail({
+        //   subject: "New BTHS Repair the World Event: " + newData.name,
+        //   html: htmlBody,
+        // }),
       ]);
 
       return NextResponse.json(body, {
