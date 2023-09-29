@@ -1,12 +1,10 @@
-"use client";
+"use client";;
 import { FC, Suspense } from "react";
 import type { Data } from "./page";
 import { Loading } from "@/components/Loading";
 import Link from "next/link";
 import { BiLinkAlt } from "react-icons/bi";
-import { LiaUserTieSolid } from "react-icons/lia";
 import { PersonRow } from "./components";
-import { useSession } from "next-auth/react";
 
 interface Props {
   data: Promise<Data>;

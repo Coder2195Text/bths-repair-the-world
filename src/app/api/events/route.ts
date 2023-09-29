@@ -204,7 +204,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           .addEmbed(embed)
           .send(),
         sendEmail({
-          subject: "New Event: " + newData.name,
+          subject: "New BTHS Repair the World Event: " + newData.name,
           html: htmlBody,
         }),
       ]);
