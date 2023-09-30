@@ -14,7 +14,7 @@
 
 @layer base {
   :root {
-    --toastify-font-family: "Raleway";
+    --toastify-font-family: "Raleway" !important;
   }
   
   html {
