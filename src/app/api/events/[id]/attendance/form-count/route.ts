@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Params } from "../../route";
 import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/utils/prisma";
-import { UserPosition } from "@prisma/client";
 import { getServerSession } from "next-auth";
 
 async function handler(
@@ -19,9 +18,21 @@ async function handler(
   if (!allowed)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  if (
+    (await prisma.event.findUnique({ where: { id }, select: { id: true } })) ===
+    null
+  ) {
+    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  }
+
   try {
     return NextResponse.json(
-      await prisma.eventAttendance.count({ where: { eventId: id } }),
+      {
+        count: await prisma.eventAttendance.count({ where: { eventId: id } }),
+        limit: await prisma.event
+          .findUnique({ where: { id }, select: { limit: true } })
+          .then((e) => e?.limit),
+      },
       { status: 200 }
     );
   } catch (e) {

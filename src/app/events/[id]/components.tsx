@@ -40,6 +40,7 @@ import { toast } from "react-toastify";
 
 interface Props {
   event: Event;
+  setEvent: Dispatch<SetStateAction<Event>>;
 }
 interface AdminActionsProps extends Props {
   setEvent: Dispatch<SetStateAction<Event>>;
@@ -131,7 +132,7 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
     );
 };
 
-const UserAttendance: FC<Props> = ({ event }) => {
+const UserAttendance: FC<Props> = ({ event, setEvent }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
   const [formCount, setFormCount] = useState<number | "unloaded">("unloaded");
   const { status } = useSession();
@@ -175,9 +176,18 @@ const UserAttendance: FC<Props> = ({ event }) => {
     };
     const fetchFormCount = async () => {
       const res = await fetch(`/api/events/${event.id}/attendance/form-count`);
-      const data = await res.json();
+      const data: {
+        count: number;
+        limit: number | null;
+      } = await res.json();
       console.log(data);
-      setFormCount(data);
+
+      setEvent({
+        ...event,
+        limit: data.limit,
+      })
+
+      setFormCount(data.count);
     };
 
     fetchAttendance();
@@ -254,17 +264,15 @@ const UserAttendance: FC<Props> = ({ event }) => {
               );
               if (res.status === 200) {
                 toast.success(
-                  `Successfully ${
-                    eventAttendance ? "left" : "joined"
-                  } event.`
+                  `Successfully ${eventAttendance ? "left" : "joined"} event.`
                 );
                 eventAttendance
                   ? setEventAttendance(null)
                   : setEventAttendance(await res.json());
-              }else
-                toast.error(`Error ${
-                  eventAttendance ? "leaving" : "joining"
-              } event.`)
+              } else
+                toast.error(
+                  `Error ${eventAttendance ? "leaving" : "joining"} event.`
+                );
               setButtonProgress(false);
             }}
           >
@@ -369,11 +377,11 @@ export const EventPage: FC<Props> = ({ event: defaultEvent }) => {
       <AdminActions event={event} setEvent={setEvent} />
       <div className="w-full flex flex-wrap mt-5">
         <div className="w-full md:w-1/2 p-2">
-          <EventDetails event={event} />
+          <EventDetails event={event} setEvent={setEvent} />
         </div>
         <div className="w-full md:w-1/2 p-2">
-          <EventDescription event={event} />
-          <UserAttendance event={event} />
+          <EventDescription event={event} setEvent={setEvent} />
+          <UserAttendance event={event} setEvent={setEvent} />
         </div>
       </div>
     </Layout>
