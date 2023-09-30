@@ -40,13 +40,14 @@ import { toast } from "react-toastify";
 
 interface Props {
   event: Event;
-  setEvent: Dispatch<SetStateAction<Event>>;
 }
-interface AdminActionsProps extends Props {
+
+interface PropsWrite extends Props {
   setEvent: Dispatch<SetStateAction<Event>>;
 }
 
-const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
+
+const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [deleteProgress, setDeleteProgress] = useState<boolean>(false);
   const router = useRouter();
@@ -132,7 +133,7 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
     );
 };
 
-const UserAttendance: FC<Props> = ({ event, setEvent }) => {
+const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
   const [formCount, setFormCount] = useState<number | "unloaded">("unloaded");
   const { status } = useSession();
@@ -377,10 +378,10 @@ export const EventPage: FC<Props> = ({ event: defaultEvent }) => {
       <AdminActions event={event} setEvent={setEvent} />
       <div className="w-full flex flex-wrap mt-5">
         <div className="w-full md:w-1/2 p-2">
-          <EventDetails event={event} setEvent={setEvent} />
+          <EventDetails event={event} />
         </div>
         <div className="w-full md:w-1/2 p-2">
-          <EventDescription event={event} setEvent={setEvent} />
+          <EventDescription event={event} />
           <UserAttendance event={event} setEvent={setEvent} />
         </div>
       </div>
