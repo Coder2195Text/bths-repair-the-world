@@ -1,11 +1,13 @@
 import { FC, ReactNode, Suspense } from "react";
 
-import "./global.css";
+
 import { AppProviders, LoadingBar } from "./providers";
 import "keen-slider/keen-slider.min.css";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
+import 'react-toastify/dist/ReactToastify.css';
+import "./global.css";
 import { Metadata } from "next";
 
 interface Props {

@@ -36,6 +36,7 @@ import reactGemoji from "remark-gemoji";
 import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineWarning } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 interface Props {
   event: Event;
@@ -83,6 +84,7 @@ const AdminActions: FC<AdminActionsProps> = ({ event, setEvent }) => {
           method: "DELETE",
         });
         if (res.status === 200) {
+          toast.success("Successfully deleted event.");
           router.push("/events");
         } else {
           alert("Error deleting event!");
@@ -250,14 +252,19 @@ const UserAttendance: FC<Props> = ({ event }) => {
                   method: eventAttendance ? "DELETE" : "POST",
                 }
               );
-              if (res.status === 200)
+              if (res.status === 200) {
+                toast.success(
+                  `Successfully ${
+                    eventAttendance ? "left" : "joined"
+                  } event.`
+                );
                 eventAttendance
                   ? setEventAttendance(null)
                   : setEventAttendance(await res.json());
-              else
-                alert(
-                  `Error ${eventAttendance ? "leaving" : "joining"} event!`
-                );
+              }else
+                toast.error(`Error ${
+                  eventAttendance ? "leaving" : "joining"
+              } event.`)
               setButtonProgress(false);
             }}
           >

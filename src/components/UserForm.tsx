@@ -1,14 +1,14 @@
 import { Button, Collapse } from "@material-tailwind/react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import Joi from "joi";
 import { signOut } from "next-auth/react";
 import { Dispatch, FC, MouseEvent, SetStateAction, useState } from "react";
-import { BsExclamationOctagon } from "react-icons/bs";
 import { useAccount } from "./AccountContext";
 import { UserFull } from "@/types/user";
 import Link from "next/link";
 import { GRAD_YEARS, PRONOUNS } from "@/utils/constants";
 import FormError from "./FormError";
+import { toast } from "react-toastify";
 
 type Props =
   | {
@@ -92,17 +92,28 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 }
               ).then(async (req) => [req.status, await req.json()]);
 
-              if (status === 200) {
+              if (status < 400) {
                 setData(res);
                 setStatus("registered");
+                toast.success(
+                  mode === "register"
+                    ? "Successfully registered your account!"
+                    : "Successfully updated your profile!"
+                );
                 if (mode === "edit") setOpen(false);
               } else {
-                alert(
-                  `Report the error to the developer. Error: ${status} ${res}`
+                toast.error(
+                  mode === "register"
+                    ? "Error registering your account."
+                    : "Error updating your profile."
                 );
               }
             } else {
-              if (mode === "edit") setOpen(false);
+
+              if (mode === "edit") {
+                toast.warning("No changes were made, so nothing was updated.");
+                setOpen(false)
+              };
             }
           }}
           validate={(values) => {

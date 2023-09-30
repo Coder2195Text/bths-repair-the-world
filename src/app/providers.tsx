@@ -12,6 +12,7 @@ import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { useScrollDirection } from "react-use-scroll-direction";
 import Navbar from "@/components/Navbar";
 import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
+import { ToastContainer } from "react-toastify";
 
 const PusherProvider = $PusherProvider as FC<
   PropsWithChildren<PusherProviderProps>
@@ -73,6 +74,19 @@ export const AppProviders = ({ children }: Props) => {
           </SessionProvider>
         </AccountProvider>
       </MDXProvider>
+      <ToastContainer
+        position="bottom-right"
+        className="z-50"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </PusherProvider>
   );
 };

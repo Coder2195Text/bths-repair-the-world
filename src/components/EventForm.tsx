@@ -9,6 +9,7 @@ import reactGemoji from "remark-gemoji";
 import { BiXCircle } from "react-icons/bi";
 import DateTimePicker from "react-datetime-picker";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Error: FC<{ name: string }> = (props) => {
   return (
@@ -86,9 +87,12 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                   eventTime: new Date(values.eventTime!).toISOString(),
                 }),
               });
-              if (res.status === 200) {
+              if (res.status < 400) {
+                toast.success("Event successfully posted!");
                 setOpen(false);
                 router.push(`/events/${(await res.json()).id}`);
+              } else {
+                toast.error("Error posting event.");
               }
             } else {
               if (!values.limit) values.limit = null;
@@ -103,6 +107,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               );
 
               if (Object.keys(editted).length === 0) {
+                toast.warning("No changes were made, so nothing was updated.")
                 setOpen(false);
                 return;
               }
@@ -115,9 +120,12 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 }),
               });
 
-              if (res.status === 200) {
-                setOpen(false);
+              if (res.status < 400) {
+                toast.success("Event successfully updated!");
                 setEventData?.((await res.json()) as Event);
+                setOpen(false);
+              } else {
+                toast.error("Error updating event.");
               }
             }
           }}

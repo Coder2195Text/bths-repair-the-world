@@ -13,6 +13,10 @@
 }
 
 @layer base {
+  :root {
+    --toastify-font-family: "Raleway";
+  }
+  
   html {
     @apply z-20 overflow-hidden text-[20px]  font-raleway;
   }

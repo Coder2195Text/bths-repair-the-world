@@ -9,6 +9,7 @@ import { BiXCircle } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { POSITION_LIST, POSITION_MAP } from "@/utils/constants";
 import FormError from "./FormError";
+import { toast } from "react-toastify";
 
 type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -59,8 +60,11 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                   ...values,
                 }),
               });
-              if (res.status === 200) {
+              if (res.status < 400) {
+                toast.success("Successfully posted executive profile.");
                 setOpen(false);
+              } else {
+                toast.error("Error posting executive profile.");
               }
             } else {
               const editted = Object.fromEntries(
@@ -74,6 +78,7 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
               );
 
               if (Object.keys(editted).length === 0) {
+                toast.warning("No changes were made, so nothing was updated.");
                 setOpen(false);
                 return;
               }
@@ -85,9 +90,12 @@ const ExecForm: FC<Props> = ({ mode, setOpen, execData, setExecData }) => {
                 }),
               });
 
-              if (res.status === 200) {
-                setOpen(false);
+              if (res.status < 400) {
                 setExecData?.((await res.json()) as ExecDetails);
+                toast.success("Successfully updated executive profile.");
+                setOpen(false);
+              } else {
+                toast.error("Error updating executive profile.");
               }
             }
           }}

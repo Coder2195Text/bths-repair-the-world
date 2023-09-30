@@ -4,11 +4,12 @@ import { Params } from "@/app/api/events/[id]/route";
 import { useAccount } from "@/components/AccountContext";
 import Layout from "@/components/Layout";
 import { Event, EventAttendance, User, UserPosition } from "@prisma/client";
-import { FC, useEffect, useState, PropsWithChildren, useRef } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import { BsClipboard2Check, BsClipboard2X } from "react-icons/bs";
 import { Button } from "@material-tailwind/react";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
 import { Loading } from "@/components/Loading";
+import { toast } from "react-toastify";
 
 type Attendance = {
   user: {
@@ -45,6 +46,18 @@ const CheckInButton: FC<{ attendance: Attendance; event: Event }> = ({
             }),
           }
         );
+
+        if (res.status < 400) {
+          toast.success(
+            `Successfully checked in ${attendance.user.preferredName} (${attendance.userEmail})`
+          );
+        } else {
+          toast.error(
+            `Error checking in ${attendance.user.preferredName} (${attendance.userEmail})`
+          );
+        }
+
+        setButtonProgress(false);
       }}
     >
       <BsClipboard2Check className="inline" /> Check{buttonProgress && "ing"} In
@@ -79,7 +92,19 @@ const RemoveButton: FC<{ attendance: Attendance; event: Event }> = ({
               earnedHours: 0,
             }),
           }
+
         );
+
+        if (res.status < 400) {
+          toast.success(
+            `Successfully removed the check in of ${attendance.user.preferredName} (${attendance.userEmail})`
+          );
+        } else {
+          toast.error(
+            `Error removing the check in of ${attendance.user.preferredName} (${attendance.userEmail})`
+          );
+        }
+        setButtonProgress(false);
       }}
     >
       <BsClipboard2X className="inline" /> Remov{buttonProgress ? "ing" : "e"}{" "}
