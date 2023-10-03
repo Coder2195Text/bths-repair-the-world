@@ -317,13 +317,9 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                   {mode === "register"
                     ? "submitting this form"
                     : "editing your information"}
-                  , you have read the{" "}
-                  <Link href="/tos" target="_blank">
-                    TOS
-                  </Link>
-                  ,{" "}
-                  <Link href="/privacy" target="_blank">
-                    Privacy Policy
+                  , you have read and agreed to the{" "}
+                  <Link href="/bylaws" target="_blank">
+                    Club Bylaws
                   </Link>{" "}
                   and agree this information is accurate. Failure to comply will
                   result in termination of your account, as well as seizure of

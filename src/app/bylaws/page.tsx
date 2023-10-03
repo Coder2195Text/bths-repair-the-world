@@ -3,8 +3,8 @@ import { Privacy } from "./components";
 import Layout from "@/components/Layout";
 
 export const metadata = {
-  title: "Privacy Policy - BTHS Repair the World",
-  description: "Privacy Policy for BTHS Repair the World",
+  title: "Bylaws - BTHS Repair the World",
+  description: "Club Constuition for BTHS Repair the World",
 };
 
 const Page: FC = () => {

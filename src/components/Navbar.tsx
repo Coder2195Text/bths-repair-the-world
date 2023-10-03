@@ -29,20 +29,20 @@ import { RiAccountCircleLine } from "react-icons/ri";
 import {
   BiCalendarCheck,
   BiChevronDown,
-  BiCode,
-  BiCube,
   BiPhotoAlbum,
   BiSearch,
   BiSpreadsheet,
 } from "react-icons/bi";
-import { FaDiscord, FaInstagram, FaUserTie } from "react-icons/fa";
+import { FaDiscord, FaInstagram } from "react-icons/fa";
 import UserForm from "./UserForm";
 import { useRouter } from "next/navigation";
 import { LiaUserTieSolid } from "react-icons/lia";
 import ExecForm from "./ExecForm";
 import { useAccount } from "./AccountContext";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineMail, AiOutlineQuestionCircle } from "react-icons/ai";
 import EmailSearcher from "./EmailSearcher";
+import { MdOutlineBalance } from "react-icons/md";
+import { BsFiles } from "react-icons/bs";
 
 // profile menu component
 
@@ -84,7 +84,7 @@ const profileMenuItems: {
   },
 ];
 
-function ProfileMenu() {
+const ProfileMenu: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
   const { execData, data: accountData } = useAccount();
@@ -185,7 +185,7 @@ function ProfileMenu() {
       </MenuList>
     </Menu>
   );
-}
+};
 
 // nav list menu
 // nav list component
@@ -209,10 +209,27 @@ const navListLinks: {
     icon: LiaUserTieSolid,
     url: "/execs",
   },
+];
+
+const resourceLinks: {
+  label: string;
+  icon: IconType;
+  url: string;
+}[] = [
+  {
+    label: "FAQ",
+    icon: AiOutlineQuestionCircle,
+    url: "/faq",
+  },
   {
     label: "Spreadsheet",
     icon: BiSpreadsheet,
     url: "/spreadsheet",
+  },
+  {
+    label: "Bylaws",
+    icon: MdOutlineBalance,
+    url: "/bylaws",
   },
 ];
 
@@ -233,6 +250,60 @@ const socialLinks: {
     url: "mailto:bthsrepairtheworld@gmail.com",
   },
 ];
+
+const ResourcesMenu: FC<{
+  setNavOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ setNavOpen }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const renderItems = resourceLinks.map(({ label, icon, url }, key) => {
+    return (
+      <motion.span
+        key={url}
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        className="w-full inline"
+      >
+        <Link
+          href={url}
+          onClick={() => {
+            setNavOpen(false);
+          }}
+          className="flex justify-center items-center w-full ring-0 border-none font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
+        >
+          {createElement(icon, {
+            className: "w-8 xl:w-8 lg:w-6 lg:h-6 h-8 xl:h-8 inline mr-2",
+          })}{" "}
+          {label}
+        </Link>
+      </motion.span>
+    );
+  });
+
+  return (
+    <>
+      <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
+        <MenuHandler>
+          <a>
+            <MenuItem className="items-center gap-2 flex lg:rounded-full justify-center   font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]">
+              <BsFiles className="w-8 h-8 lg:w-6 lg:h-6 xl:w-8 xl:h-8 inline lg:mr-1 mr-2 xl:mr-2 " />
+              Resources
+              <BiChevronDown
+                strokeWidth={2.5}
+                className={`h-4 w-4 transition-transform ${
+                  isMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </MenuItem>
+          </a>
+        </MenuHandler>
+        <MenuList className="flex flex-col gap-3 overflow-visible bg-gray-500 border-none">
+          {renderItems}
+        </MenuList>
+      </Menu>
+    </>
+  );
+};
 
 const NavList: FC<{
   setNavOpen: Dispatch<SetStateAction<boolean>>;
@@ -257,12 +328,13 @@ const NavList: FC<{
           >
             {createElement(icon, {
               className:
-                "w-8 w-8 lg:w-6 lg:h-6 xl:w-8 xl:h-8 inline lg:mr-1 mr-2 xl:mr-2",
+                "w-8 h-8 lg:w-6 lg:h-6 xl:w-8 xl:h-8 inline lg:mr-1 mr-2 xl:mr-2",
             })}
             {label}
           </Link>
         </motion.span>
       ))}
+      <ResourcesMenu setNavOpen={setNavOpen} />
       <span className="flex">
         {socialLinks.map(({ icon, url }) => (
           <motion.span

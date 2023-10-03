@@ -1,12 +1,11 @@
 "use client";
-
-import TOSContent from "@/mdx/tos.mdx";
+import Bylaws from "@/mdx/bylaws.mdx";
 import { FC } from "react";
 
-export const TOS: FC = () => {
+export const Privacy: FC = () => {
   return (
     <div className="w-full text-left">
-      <TOSContent />
+      <Bylaws />
     </div>
   );
 };

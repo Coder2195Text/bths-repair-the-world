@@ -7,6 +7,7 @@ import { Event, UserPosition } from "@prisma/client";
 import { Embed, Webhook } from "@vermaysha/discord-webhook";
 import { Optional } from "@prisma/client/runtime/library";
 import { Converter } from "showdown";
+import { sendEmail } from "@/utils/mail";
 
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
@@ -211,10 +212,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           )
           .addEmbed(embed)
           .send(),
-        // sendEmail({
-        //   subject: "New BTHS Repair the World Event: " + newData.name,
-        //   html: htmlBody,
-        // }),
+        sendEmail({
+          subject: "New BTHS Repair the World Event: " + newData.name,
+          html: htmlBody,
+        }),
       ]);
 
       return NextResponse.json(body, {

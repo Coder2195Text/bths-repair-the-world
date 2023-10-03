@@ -1,11 +1,12 @@
 "use client";
-import PrivacyContent from "@/mdx/privacy.mdx";
+
+import FAQContent from "@/mdx/faq.mdx";
 import { FC } from "react";
 
-export const Privacy: FC = () => {
+export const TOS: FC = () => {
   return (
     <div className="w-full text-left">
-      <PrivacyContent />
+      <FAQContent />
     </div>
   );
 };
