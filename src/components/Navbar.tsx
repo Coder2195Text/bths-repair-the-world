@@ -400,7 +400,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           }}
         >
           <Image
-            src="/favicon.ico"
+            src={new Date().getMonth() == 5 ? "/icon-pride.png" : "/icon.png"}
             width={48}
             height={48}
             alt="logo"
