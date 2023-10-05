@@ -25,6 +25,7 @@ type Props = {
 const components: MDXComponents | MergeComponents = {
   a: (props) => (
     <a
+      target={props?.href?.startsWith("/") ? "_self" : "_blank"}
       href={props?.href?.startsWith("#") ? undefined! : props.href!}
       onClick={(e) => {
         if (!props?.href?.startsWith("#")) return;
@@ -38,6 +39,7 @@ const components: MDXComponents | MergeComponents = {
       {props.children}
     </a>
   ),
+  hr: () => <hr className="border-white my-2" />,
 };
 
 export const AppProviders = ({ children }: Props) => {

@@ -106,6 +106,14 @@
   label {
     @apply font-bold;
   }
+
+  li > * {
+    @apply inline-block;
+  }
+
+  li {
+    @apply pl-8;
+  }
 }
 
 @layer components {
