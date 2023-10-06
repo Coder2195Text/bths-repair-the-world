@@ -1,12 +1,11 @@
 import { FC, ReactNode, Suspense } from "react";
 
-
 import { AppProviders, LoadingBar } from "./providers";
 import "keen-slider/keen-slider.min.css";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import "./global.css";
 import { Metadata } from "next";
 
@@ -48,6 +47,9 @@ export const metadata: Metadata = {
     siteName: "BTHS Repair the World",
   },
   metadataBase: new URL("https://bths-repair.tech"),
+  verification: {
+    google: "jbe33xMkQxfm6Vdj7cHzNaXj8qQcZPnIBAA5d-M-Tfw",
+  },
 };
 
 export default RootLayout;
