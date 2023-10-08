@@ -1,0 +1,34 @@
+{
+  "name": "BTHS Repair the World",
+  "short_name": "BTHS RTW App",
+  "theme_color": "#55555",
+  "background_color": "#555555",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons":[
+  {
+    "src": "manifest-icon-192.maskable.png",
+    "sizes": "192x192",
+    "type": "image/png",
+    "purpose": "any"
+  },
+  {
+    "src": "manifest-icon-192.maskable.png",
+    "sizes": "192x192",
+    "type": "image/png",
+    "purpose": "maskable"
+  },
+  {
+    "src": "manifest-icon-512.maskable.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any"
+  },
+  {
+    "src": "manifest-icon-512.maskable.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "maskable"
+  }
+]}

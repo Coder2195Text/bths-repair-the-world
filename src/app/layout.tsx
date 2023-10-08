@@ -32,10 +32,13 @@ export const metadata: Metadata = {
   title: "BTHS Repair the World",
   icons: {
     icon: "/icon.png",
-    apple: "/icon.png",
+    apple: "/apple-icon-180.png",
     shortcut: "/icon.png",
   },
+  manifest: "/manifest.json",
+
   description: "A BTHS club for repairing the world through acts of service.",
+  themeColor: "#555555",
   viewport: {
     width: "device-width",
     initialScale: 1,

@@ -1,6 +1,7 @@
 import createMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import withPWAInit from "@ducanh2912/next-pwa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -25,6 +26,10 @@ const nextConfig = {
   },
 };
 
+const withPWA = withPWAInit({
+  dest: "public",
+});
+
 const withMDX = createMDX({
   extension: /\.mdx?$/,
 
@@ -34,4 +39,6 @@ const withMDX = createMDX({
     providerImportSource: "@mdx-js/react",
   },
 });
-export default withMDX(nextConfig);
+
+
+export default withMDX(withPWA(nextConfig));
