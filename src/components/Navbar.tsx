@@ -436,7 +436,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center p-1 mr-2 ml-auto text-2xl bg-[#2356ff] rounded-full font-figtree group"
+            className="flex flex-col justify-center items-center p-1 mr-2 ml-auto text-2xl bg-[#2356ff] font-figtree group"
             onClick={() => {
               signIn("auth0");
             }}
