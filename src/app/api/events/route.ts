@@ -100,7 +100,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         return [false, "Bad JSON"];
       }
       let errors = schema.validate(parsed).error;
-      return errors ? [false, errors] : [true, (parsed as EventPOSTBody)];
+      return errors ? [false, errors] : [true, parsed as EventPOSTBody];
     });
 
   if ((await result)[0]) {
@@ -113,16 +113,21 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
 
     try {
       const [body, name] = await Promise.all([
-        prisma.event.create({
-          data: newData,
-        }).then(async (e) => {
-          e.description = e.description.replaceAll("{@link}", `https://bths-repair.tech/events/${e.id}`);
-          await prisma.event.update({
-            where: { id: e.id },
-            data: { description: e.description },
-          });
-          return e;   
-        }),
+        prisma.event
+          .create({
+            data: newData,
+          })
+          .then(async (e) => {
+            e.description = e.description.replaceAll(
+              "{@link}",
+              `https://bths-repair.org/events/${e.id}`
+            );
+            await prisma.event.update({
+              where: { id: e.id },
+              data: { description: e.description },
+            });
+            return e;
+          }),
         prisma.user
           .findUnique({
             where: { email },
@@ -168,13 +173,13 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           )})`,
         })
         .setImage({
-          url: body.imageURL || "https://bths-repair.tech/icon.png",
+          url: body.imageURL || "https://bths-repair.org/icon.png",
         })
         .setAuthor({
           name: name!,
         })
         .setTimestamp()
-        .setUrl(`https://bths-repair.tech/events/${body.id}`);
+        .setUrl(`https://bths-repair.org/events/${body.id}`);
 
       const htmlBody = new Converter({}).makeHtml(
         `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
@@ -200,7 +205,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           newData.maxHours
         }\n#### Location: [${newData.address}](${encodeURI(
           `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-        )})\nView the whole event [here](https://bths-repair.tech/events/${
+        )})\nView the whole event [here](https://bths-repair.org/events/${
           body.id
         }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
       );

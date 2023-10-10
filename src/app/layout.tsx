@@ -207,7 +207,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  metadataBase: new URL("https://bths-repair.tech"),
+  metadataBase: new URL("https://bths-repair.org"),
   verification: {
     google: "jbe33xMkQxfm6Vdj7cHzNaXj8qQcZPnIBAA5d-M-Tfw",
   },

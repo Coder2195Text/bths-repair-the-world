@@ -93,7 +93,10 @@ async function handler(
 
     try {
       if (data.description) {
-        data.description = data.description.replaceAll("{@link}", `https://bths-repair.tech/events/${id}`);
+        data.description = data.description.replaceAll(
+          "{@link}",
+          `https://bths-repair.org/events/${id}`
+        );
       }
       const eventUpdated = await prisma.event.update({
         where: { id },
