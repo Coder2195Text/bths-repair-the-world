@@ -196,38 +196,38 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
                       }
                     />
                   </div>
+                  <label>Grad Years:</label>
+                  <div className="w-full flex justify-center">
+                    <div className="flex flex-col place-items-start text-left">
+                      <Field
+                        type="checkbox"
+                        checked={values.gradYears.length === GRAD_YEARS.length}
+                        className="mr-2"
+                        onChange={(e: FormEvent<HTMLInputElement>) => {
+                          if (e.currentTarget.checked) {
+                            setFieldValue("gradYears", GRAD_YEARS);
+                          } else {
+                            setFieldValue("gradYears", []);
+                          }
+                        }}
+                      />
+                      {GRAD_YEARS.map((year) => (
+                        <label className="flex items-center">
+                          <Field
+                            key={year}
+                            type="checkbox"
+                            name="gradYears"
+                            value={year}
+                            className="mr-2 "
+                          />
+                          {year}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <FormError name="gradYears" />
                 </>
               )}
-              <label>Grad Years:</label>
-              <div className="w-full flex justify-center">
-                <div className="flex flex-col place-items-start text-left">
-                  <Field
-                    type="checkbox"
-                    checked={values.gradYears.length === GRAD_YEARS.length}
-                    className="mr-2"
-                    onChange={(e: FormEvent<HTMLInputElement>) => {
-                      if (e.currentTarget.checked) {
-                        setFieldValue("gradYears", GRAD_YEARS);
-                      } else {
-                        setFieldValue("gradYears", []);
-                      }
-                    }}
-                  />
-                  {GRAD_YEARS.map((year) => (
-                    <label className="flex items-center">
-                      <Field
-                        key={year}
-                        type="checkbox"
-                        name="gradYears"
-                        value={year}
-                        className="mr-2 "
-                      />
-                      {year}
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <FormError name="gradYears" />
               <Button
                 type="submit"
                 disabled={isSubmitting}
