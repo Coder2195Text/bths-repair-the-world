@@ -436,11 +436,9 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center p-2 mr-2 ml-auto text-xl bg-lime-400 rounded-full font-raleway group"
-            onClick={() => {
-              signIn("auth0");
-            }}
-            color="yellow"
+            color="blue"
+            className="bg-[#2356ff] font-figtree p-1 text-2xl"
+            onClick={() => signIn("auth0")}
           >
             Login
           </Button>
