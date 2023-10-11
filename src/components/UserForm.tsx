@@ -22,9 +22,10 @@ type Props =
     };
 
 const UserForm: FC<Props> = ({ mode, setOpen }) => {
-  const router = usePathname();
+  const path = usePathname();
   const [prefectDetails, setPrefectDetails] = useState(false);
   const { data, setData, setStatus } = useAccount();
+  if (mode === "register" && path.includes("bylaws")) return;
   if (mode === "edit" && !data) return;
   return (
     <div
@@ -111,11 +112,10 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 );
               }
             } else {
-
               if (mode === "edit") {
                 toast.warning("No changes were made, so nothing was updated.");
-                setOpen(false)
-              };
+                setOpen(false);
+              }
             }
           }}
           validate={(values) => {

@@ -269,7 +269,7 @@ const ResourcesMenu: FC<{
           onClick={() => {
             setNavOpen(false);
           }}
-          className="hover:text-bold flex justify-center items-center w-full ring-0 border-none font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
+          className="hover:text-blue-500 flex justify-center items-center w-full ring-0 border-none font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
         >
           {createElement(icon, {
             className: "w-8 xl:w-8 lg:w-6 lg:h-6 h-8 xl:h-8 inline mr-2",
@@ -297,7 +297,7 @@ const ResourcesMenu: FC<{
             </MenuItem>
           </a>
         </MenuHandler>
-        <MenuList className="flex flex-col gap-3 overflow-visible bg-gray-500 border-none">
+        <MenuList className="flex flex-col gap-3 px-5 overflow-visible bg-gray-700 border-none">
           {renderItems}
         </MenuList>
       </Menu>
@@ -310,7 +310,7 @@ const NavList: FC<{
 }> = ({ setNavOpen }) => {
   const router = useRouter();
   return (
-    <ul className="flex flex-col gap-3 items-center mt-1 mb-1 lg:flex-row xl:gap-6 lg:mt-0 lg:mb-0">
+    <ul className="flex flex-col gap-3 items-center mt-1 mb-1 lg:flex-row xl:gap-5 lg:mt-0 lg:mb-0">
       {navListLinks.map(({ label, icon, url }) => (
         <motion.span
           key={label}
@@ -324,7 +324,7 @@ const NavList: FC<{
             onClick={(e) => {
               setNavOpen(false);
             }}
-            className="flex justify-center items-center w-full font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
+            className="hover:text-blue-500 flex justify-center items-center w-full font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
           >
             {createElement(icon, {
               className:
@@ -350,7 +350,7 @@ const NavList: FC<{
                 setNavOpen(false);
               }}
               target="_blank"
-              className="flex justify-center items-center w-full"
+              className="hover:text-blue-500 flex justify-center items-center w-full"
             >
               {createElement(icon, {
                 className: "w-8 xl:w-8 lg:w-6 lg:h-6 h-8 xl:h-8 inline mr-2",

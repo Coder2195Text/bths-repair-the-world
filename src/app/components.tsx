@@ -199,12 +199,10 @@ export const JoinButton: FC = () => {
       <Button
         ripple
         onClick={() => signIn("auth0")}
-        className="bg-blue-500 p-1 text-2xl"
+        className="bg-blue-500 p-1 text-2xl font-figtree"
       >
-        <h5>
-          <BsPencilSquare className="inline-block mr-2" />
-          Join us now!
-        </h5>
+        <BsPencilSquare className="inline-block mr-2" />
+        Join us now!
       </Button>
     );
 };

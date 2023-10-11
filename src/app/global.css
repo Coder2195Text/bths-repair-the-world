@@ -83,7 +83,7 @@
   }
 
   a {
-    @apply text-blue-500 hover:cursor-pointer hover:text-blue-900 transition-all;
+    @apply text-blue-500 hover:cursor-pointer hover:text-blue-700 transition-all;
   }
   hr {
     @apply mt-3 w-full border-2 border-black;
