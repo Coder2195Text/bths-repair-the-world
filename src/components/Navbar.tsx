@@ -269,7 +269,7 @@ const ResourcesMenu: FC<{
           onClick={() => {
             setNavOpen(false);
           }}
-          className="flex justify-center items-center w-full ring-0 border-none font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
+          className="hover:text-bold flex justify-center items-center w-full ring-0 border-none font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]"
         >
           {createElement(icon, {
             className: "w-8 xl:w-8 lg:w-6 lg:h-6 h-8 xl:h-8 inline mr-2",
@@ -436,7 +436,7 @@ const Navbar: FC<Props> = ({ isNavActive }) => {
           <ProfileMenu />
         ) : (
           <Button
-            className="flex flex-col justify-center items-center p-1 mr-2 ml-auto text-2xl bg-[#2356ff] font-figtree group"
+            className="flex flex-col justify-center items-center p-1 mr-2 ml-auto text-2xl bg-blue-500 font-figtree group"
             onClick={() => {
               signIn("auth0");
             }}

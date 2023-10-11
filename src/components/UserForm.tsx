@@ -9,6 +9,7 @@ import Link from "next/link";
 import { GRAD_YEARS, PRONOUNS } from "@/utils/constants";
 import FormError from "./FormError";
 import { toast } from "react-toastify";
+import { usePathname } from "next/navigation";
 
 type Props =
   | {
@@ -21,6 +22,7 @@ type Props =
     };
 
 const UserForm: FC<Props> = ({ mode, setOpen }) => {
+  const router = usePathname();
   const [prefectDetails, setPrefectDetails] = useState(false);
   const { data, setData, setStatus } = useAccount();
   if (mode === "edit" && !data) return;

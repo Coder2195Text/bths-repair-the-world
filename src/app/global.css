@@ -61,7 +61,7 @@
   [type="button"],
   [type="reset"],
   [type="submit"] {
-    @apply bg-blue-800 p-3 rounded-full;
+    @apply bg-blue-500 p-3 rounded-full;
   }
 
   input:not([type="checkbox"]):not([class*="react-"]),

@@ -201,7 +201,7 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
         <h3>You must be logged in to view attendance.</h3>
         <Button
           color="blue"
-          className="bg-[#2356ff] font-figtree p-1 text-2xl"
+          className="bg-blue-500 font-figtree p-1 text-2xl"
           onClick={() => signIn("auth0")}
         >
           Login
