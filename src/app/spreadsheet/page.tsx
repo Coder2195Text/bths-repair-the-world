@@ -6,7 +6,7 @@ import { Spreadsheet } from "./server-components";
 import { LiaUserTieSolid } from "react-icons/lia";
 
 export const metadata: Metadata = {
-  title: "Spreadsheet - BTHS Repair the World",
+  title: "Spreadsheet",
   description:
     "Need to see your points and hours at any given time? This is where you get it!!!",
 };

@@ -1,7 +1,7 @@
 import EventAttendance from "./components";
 
 export const metadata = {
-  title: "Event Attendance - BTHS Repair the World",
+  title: "Event Attendance",
   description: "Event Attendance (EXEC ONLY)",
 };
 

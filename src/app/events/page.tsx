@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { EventList, TitleBar } from "./components";
 
 export const metadata = {
-  title: "Events - BTHS Repair the World",
+  title: "Events",
   description: "Check out some of our events!",
 };
 

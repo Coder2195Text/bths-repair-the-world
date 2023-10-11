@@ -1,7 +1,6 @@
 import { FC } from "react";
 import Layout from "@/components/Layout";
-import { ExecList, ExecsDetails } from "./server-components";
-import { ExecDetails, User } from "@prisma/client";
+import { ExecList } from "./server-components";
 
 async function fetchExecs() {
   const res = await fetch(`${process.env.BASE_URL}/api/exec-desc`, {
@@ -13,7 +12,7 @@ async function fetchExecs() {
 }
 
 export const metadata = {
-  title: "Executives - BTHS Repair the World",
+  title: "Executives",
   description: "Meet the BTHS Repair the World executives.",
 };
 

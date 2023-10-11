@@ -24,7 +24,7 @@ export async function generateMetadata({
 
   if (!event) {
     return {
-      title: "Nonexistent Event - BTHS Repair the World",
+      title: "Nonexistent Event",
       description: "You may have attached a bad link.",
     };
   }
@@ -34,7 +34,7 @@ export async function generateMetadata({
   if (event.imageURL) imageSize = await probe(event.imageURL);
 
   const metadata: Metadata = {
-    title: `${event.name} - BTHS Repair the World`,
+    title: event.name,
     description:
       description.length > 500
         ? description.substring(0, 500) + "..."

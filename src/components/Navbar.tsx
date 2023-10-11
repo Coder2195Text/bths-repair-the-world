@@ -116,7 +116,7 @@ const ProfileMenu: FC = () => {
           variant="text"
           color="blue-gray"
           className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full"
-          disabled={status === "loading"}
+          disabled={status === "loading" || !accountData}
         >
           <Avatar
             variant="circular"

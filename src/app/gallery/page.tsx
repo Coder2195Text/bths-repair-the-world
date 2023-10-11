@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { FC } from "react";
 
 export const metadata = {
-  title: "Gallery - BTHS Repair the World",
+  title: "Gallery",
   description: "Gallery page for BTHS Repair the World.",
 };
 

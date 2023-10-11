@@ -1,10 +1,9 @@
-import { FC, Suspense } from "react";
+import { FC } from "react";
 import { Banner, JoinButton, REPAIRTabs } from "./components";
 import Layout from "@/components/Layout";
-import { Loading } from "@/components/Loading";
 
 export const metadata = {
-  title: "Home - BTHS Repair the World",
+  title: "Home",
   description: "Inspring BTHS youth to make change in a unjust society.",
 };
 
