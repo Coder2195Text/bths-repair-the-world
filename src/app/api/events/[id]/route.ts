@@ -16,6 +16,7 @@ const schema = Joi.object({
   imageURL: Joi.string().uri().optional().allow(null),
   maxHours: Joi.number().optional().min(0),
   address: Joi.string().optional().max(1000),
+  finishTime: Joi.date().iso().optional().allow(null),
 });
 
 async function handler(

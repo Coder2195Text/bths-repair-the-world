@@ -39,6 +39,13 @@ async function handler(
     where: { id },
     select: {
       eventTime: true,
+      finishTime: true,
+      limit: true,
+      attendees: {
+        select: {
+          userEmail: true,
+        },
+      },
     },
   });
 
@@ -83,11 +90,25 @@ async function handler(
     return NextResponse.json(event, { status: 200 });
   }
 
-  if (rank !== "admin" && new Date(event?.eventTime) < new Date()) {
-    return NextResponse.json(
-      { error: "Event has already passed" },
-      { status: 403 }
-    );
+  if (rank == "user") {
+    if (!event?.finishTime && new Date(event?.eventTime) < new Date())
+      return NextResponse.json(
+        { error: "Event has already passed" },
+        { status: 403 }
+      );
+    else if (event?.finishTime && new Date(event?.eventTime) > new Date())
+      return NextResponse.json(
+        { error: "Event hasn't started" },
+        { status: 403 }
+      );
+    else if (event?.finishTime && new Date(event?.finishTime) < new Date())
+      return NextResponse.json(
+        { error: "Event has already passed" },
+        { status: 403 }
+      );
+
+    if (event?.limit && event.attendees.length >= event.limit)
+      return NextResponse.json({ error: "Event is full" }, { status: 403 });
   }
 
   if (method === "POST") {

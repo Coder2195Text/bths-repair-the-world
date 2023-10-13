@@ -18,6 +18,7 @@ const schema = Joi.object({
   imageURL: Joi.string().uri().optional(),
   maxHours: Joi.number().required().min(0),
   address: Joi.string().required().max(1000),
+  finishTime: Joi.date().iso().optional().allow(null),
 });
 
 type EventPOSTBody = Omit<
