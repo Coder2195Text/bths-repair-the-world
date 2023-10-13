@@ -60,6 +60,7 @@ model Event {
   maxHours    Float
   attendees   EventAttendance[]
   eventTime   DateTime
+  finishTime  DateTime?
   limit       Int?
   imageURL    String?
 
