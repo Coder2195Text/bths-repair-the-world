@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import { FC, Suspense } from "react";
 import type { Data } from "./page";
 import { Loading } from "@/components/Loading";
@@ -15,7 +15,7 @@ const AsyncSpreadsheet: FC<Props> = async ({ data }) => {
   return (
     <div className="overflow-auto p-2 ">
       <table className="table-auto members-spreadsheet bg-blue-gray-600">
-        <tr className=" bg-blue-800">
+        <tr className=" bg-blue-500">
           <th className="px-2">Email</th>
           <th className="px-20">Summary</th>
           <th className="px-16">Referrals (Max 20)</th>

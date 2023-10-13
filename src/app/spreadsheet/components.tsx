@@ -3,7 +3,8 @@
 import { FC } from "react";
 import { Data } from "./page";
 import { LiaUserTieSolid } from "react-icons/lia";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { Button } from "@material-tailwind/react";
 
 interface Props {
   data: Data;
@@ -65,3 +66,13 @@ export const PersonRow: FC<Props> = ({ data: { events, users }, user }) => {
     </tr>
   );
 };
+
+export const LoginButton: FC = () => (
+  <Button
+    color="blue"
+    className="bg-blue-500 font-figtree p-1 text-2xl"
+    onClick={() => signIn("auth0")}
+  >
+    Login
+  </Button>
+);

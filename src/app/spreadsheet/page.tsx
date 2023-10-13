@@ -4,6 +4,9 @@ import { Metadata } from "next";
 import { FC } from "react";
 import { Spreadsheet } from "./server-components";
 import { LiaUserTieSolid } from "react-icons/lia";
+import { getServerSession } from "next-auth";
+import { AUTH_OPTIONS } from "../api/auth/[...nextauth]/route";
+import { LoginButton } from "./components";
 
 export const metadata: Metadata = {
   title: "Spreadsheet",
@@ -27,8 +30,10 @@ async function fetchData() {
   return res.json() as Promise<Data>;
 }
 
-const Page: FC = () => {
+const Page: FC = async () => {
   const data = fetchData();
+  const session = await getServerSession(AUTH_OPTIONS);
+  const spreadsheet = <Spreadsheet data={data} />;
   return (
     <Layout>
       <h1>Spreadsheet</h1>
@@ -36,7 +41,14 @@ const Page: FC = () => {
         Please note that all executives automatically get full credits, denoted
         as <LiaUserTieSolid className="inline-block" />
       </h6>
-      <Spreadsheet data={data} />
+      {session ? (
+        spreadsheet
+      ) : (
+        <>
+          You must be logged in to view spreadsheet <br />
+          <LoginButton />
+        </>
+      )}
     </Layout>
   );
 };
