@@ -7,7 +7,7 @@ import { Event, UserPosition } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { BiCalendarPlus } from "react-icons/bi";
+import { BiAlarm, BiCalendarPlus } from "react-icons/bi";
 import { BsClock, BsAward } from "react-icons/bs";
 import { FiXCircle, FiCheckCircle } from "react-icons/fi";
 
@@ -25,7 +25,7 @@ export const TitleBar: FC = () => {
         ) && (
           <Button
             color="blue"
-            className="bg-[#2356ff] font-figtree p-1 text-2xl"
+            className="bg-blue-500 font-figtree p-1 text-2xl"
             onClick={() => setFormOpen(true)}
           >
             <BiCalendarPlus className="inline" /> Add Event
@@ -48,8 +48,12 @@ export const EventCard: FC<{
     maxPoints,
     formCount,
     limit,
+    finishTime,
   },
 }) => {
+  eventTime = new Date(eventTime);
+  finishTime = finishTime && new Date(finishTime);
+
   return (
     <Link
       key={id}
@@ -60,24 +64,46 @@ export const EventCard: FC<{
         <div className="flex flex-col items-stretch w-full md:flex-row">
           <div className={`w-full ${imageURL ? "md:w-1/2" : ""}`}>
             <h3>{name}</h3>
-            {new Date(eventTime).getTime() < Date.now()
+            {(finishTime || eventTime).getTime() < Date.now()
               ? "Occured"
               : "Starts"}{" "}
-            on {new Date(eventTime).toLocaleString()}
+            {finishTime ? "from" : "on"}{" "}
+            {eventTime.toLocaleString([], {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+            })}
+            {finishTime &&
+              " to " +
+                finishTime.toLocaleString([], {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
             <br />
             <BsClock className="inline" /> Total Hours : {maxHours}
             <br />
             <BsAward className="inline" /> Total Points : {maxPoints}
             <br />
-            {new Date(eventTime).getTime() < Date.now() ||
+            {(finishTime || eventTime).getTime() < Date.now() ||
             (limit && formCount >= limit) ? (
               <span className="text-red-300">
                 <FiXCircle className="inline" /> Event is no longer accepting
                 registration
               </span>
+            ) : finishTime && eventTime.getTime() > Date.now() ? (
+              <span className="text-yellow-300">
+                <BiAlarm className="inline" /> Event is not yet available for
+                registration.
+              </span>
             ) : (
               <span className="text-green-300">
-                <FiCheckCircle className="inline" /> Event is available
+                <FiCheckCircle className="inline" /> Event is available for
+                registration
               </span>
             )}
           </div>

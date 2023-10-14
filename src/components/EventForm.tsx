@@ -1,6 +1,13 @@
 import { Button } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { Dispatch, FC, MouseEvent, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  MouseEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import { BsExclamationOctagon } from "react-icons/bs";
 import { Event } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
@@ -33,6 +40,10 @@ type Props = {
 const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
+
+  const [isRangeEvent, setIsRangeEvent] = useState(
+    Boolean(eventData?.finishTime)
+  );
   return (
     <div
       className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50 py-8"
@@ -74,11 +85,13 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 : (null as null | string | undefined),
 
             limit: mode == "edit" ? eventData!.limit : undefined,
+            finishTime: mode == "edit" ? eventData!.finishTime : undefined,
           }}
           onSubmit={async (values) => {
             if (mode === "post") {
               if (!values.imageURL) delete values.imageURL;
               if (!values.limit) delete values.limit;
+              if (!values.finishTime) delete values.finishTime;
               const res = await fetch("/api/events", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -96,6 +109,8 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               }
             } else {
               if (!values.limit) values.limit = null;
+              if (!values.finishTime || !isRangeEvent) values.finishTime = null;
+
               const editted = Object.fromEntries(
                 Object.keys(values)
                   .filter(
@@ -107,7 +122,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               );
 
               if (Object.keys(editted).length === 0) {
-                toast.warning("No changes were made, so nothing was updated.")
+                toast.warning("No changes were made, so nothing was updated.");
                 setOpen(false);
                 return;
               }
@@ -161,6 +176,18 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
             }
             if (!values.address) {
               errors.address = "Address is required.";
+            }
+            if (isRangeEvent && !values.finishTime) {
+              errors.finishTime = "Finish time is required.";
+            }
+            if (
+              isRangeEvent &&
+              values.eventTime &&
+              values.finishTime &&
+              new Date(values.finishTime).getTime() <
+                new Date(values.eventTime).getTime()
+            ) {
+              errors.finishTime = "Finish time must be after event time.";
             }
 
             return errors;
@@ -254,8 +281,33 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
                 }}
                 value={values.eventTime}
               />
-              <br />
               <Error name="eventTime" />
+              <label className="flex justify-center items-center w-full">
+                <input
+                  type="checkbox"
+                  checked={isRangeEvent}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setIsRangeEvent(e.currentTarget.checked);
+                  }}
+                  className="mr-2"
+                />
+                Enable Range Event
+              </label>
+              {isRangeEvent && (
+                <>
+                  <label htmlFor="finishTime">Finish Time : </label>
+                  <DateTimePicker
+                    onChange={(value) => {
+                      setFieldValue("finishTime", value);
+                      console.log(value);
+                    }}
+                    value={values.finishTime}
+                  />
+                  <br />
+                  <Error name="finishTime" />
+                </>
+              )}
+
               <label htmlFor="address">Address: </label>
               <Field
                 type="text"

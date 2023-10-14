@@ -110,6 +110,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     const newData: Omit<Event, "id" | "createdAt"> = {
       ...rawData,
       eventTime: new Date(rawData.eventTime!),
+      finishTime: rawData.finishTime ? new Date(rawData.finishTime) : null,
     };
 
     try {
@@ -146,11 +147,31 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         .setTitle("New Event: " + newData.name)
         .setDescription(newData.description)
         .addField({
-          name: "**Event Time:**",
+          name: `**Event ${newData.finishTime ? "Start " : ""}Time:**`,
           value: newData.eventTime.toLocaleString("en-US", {
             timeZone: "America/New_York",
+
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
           }),
         });
+
+      if (newData.finishTime) {
+        embed.addField({
+          name: "**Event Finish Time:**",
+          value: newData.finishTime.toLocaleString("en-US", {
+            timeZone: "America/New_York",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+          }),
+        });
+      }
 
       if (newData.limit)
         embed.addField({
@@ -183,22 +204,45 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         .setUrl(`https://bths-repair.org/events/${body.id}`);
 
       const htmlBody = new Converter({}).makeHtml(
-        `Hey RTW members!!!\n\nTime to get out and touch some grass and do some volunteer work!!! On ${newData.eventTime.toLocaleString(
+        `Hey RTW members!!!\n\nTime to get moving and get some credits and/or hours done!!! On ${newData.eventTime.toLocaleString(
           "en-US",
           {
             timeZone: "America/New_York",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
           }
         )} we will be having a new event called **${
           newData.name
         }**!\n#### Description:\n${newData.description
           .split("\n")
           .map((e) => `> ${e}`)
-          .join("\n")}\n\n#### Event Time: ${newData.eventTime.toLocaleString(
-          "en-US",
-          {
-            timeZone: "America/New_York",
-          }
-        )}\n${
+          .join("\n")}\n\n#### Event ${
+          newData.finishTime ? "Start " : ""
+        }Time: ${newData.eventTime.toLocaleString("en-US", {
+          timeZone: "America/New_York",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        })}${
+          newData.finishTime
+            ? `\n#### Event Finish Time: ${newData.finishTime.toLocaleString(
+                "en-US",
+                {
+                  timeZone: "America/New_York",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                }
+              )}`
+            : ""
+        }\n${
           newData.limit
             ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
             : ""

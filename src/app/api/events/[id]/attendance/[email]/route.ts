@@ -96,7 +96,11 @@ async function handler(
         { error: "Event has already passed" },
         { status: 403 }
       );
-    else if (event?.finishTime && new Date(event?.eventTime) > new Date())
+    else if (
+      event?.finishTime &&
+      new Date(event?.eventTime) > new Date() &&
+      method == "POST"
+    )
       return NextResponse.json(
         { error: "Event hasn't started" },
         { status: 403 }

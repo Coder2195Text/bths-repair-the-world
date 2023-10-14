@@ -123,6 +123,9 @@ async function handler(
   if ((await result)[0]) {
     const data = (await result)[1] as UserWriteBody;
 
+    if (data.referredBy) data.referredBy = data.referredBy.toLowerCase();
+    email = email.toLowerCase();
+
     try {
       const [body, referrals] = await Promise.all([
         method === "POST"

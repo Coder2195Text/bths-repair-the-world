@@ -223,7 +223,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 className="mx-1"
                 onClick={() => setPrefectDetails(!prefectDetails)}
               >
-                {prefectDetails ? "Close help" : "Need help?"}
+                {prefectDetails ? "Close help" : "Click here for help"}
               </a>
               <Collapse open={prefectDetails}>
                 <div className="text-lg">
@@ -243,7 +243,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
               />
               <br />
               <div>
-                <span className="text-lg">Quick Suggestions:</span>
+                <span>Quick Suggestions:</span>
                 {PRONOUNS.map((suggestion) => (
                   <Button
                     type="button"
@@ -300,6 +300,9 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 maxLength={180}
                 placeholder="Referrer will get 5 points!"
               />
+              <br />
+              If you were introduced to this club by someone, please ask for
+              their email and put it here.
               <FormError name="referredBy" />
               <label className="flex justify-center items-center w-full">
                 <Field
@@ -310,7 +313,6 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                 />
                 Recieve event alerts
               </label>
-
               <hr />
               <label className="flex justify-center items-center">
                 <Field id="tos" name="tos" type="checkbox" className="mr-2" />
@@ -328,9 +330,7 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
                   credits.
                 </span>
               </label>
-
               <FormError name="tos" />
-
               <Button
                 type="submit"
                 disabled={isSubmitting}

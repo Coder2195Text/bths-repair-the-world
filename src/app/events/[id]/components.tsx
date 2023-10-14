@@ -46,7 +46,6 @@ interface PropsWrite extends Props {
   setEvent: Dispatch<SetStateAction<Event>>;
 }
 
-
 const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [deleteProgress, setDeleteProgress] = useState<boolean>(false);
@@ -55,28 +54,28 @@ const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
 
   const ADMIN_BUTTONS: {
     color: string;
-    hexColor: string;
+    colorStyle: string;
     icon: IconType;
     onClick: () => any;
     children: ReactNode;
   }[] = [
     {
       color: "blue",
-      hexColor: "#2356ff",
+      colorStyle: "bg-blue-500",
       icon: BiCalendarEdit,
       onClick: () => setFormOpen(true),
       children: "Edit Event",
     },
     {
       color: "blue",
-      hexColor: "#2356ff",
+      colorStyle: "bg-blue-500",
       icon: BsFillPersonCheckFill,
       onClick: () => router.push(`/events/${event.id}/attendance`),
       children: "Attendance",
     },
     {
       color: "red",
-      hexColor: "red",
+      colorStyle: "bg-red-500",
       icon: BiTrash,
       onClick: async () => {
         if (!confirm("Are you sure you want to delete this event?")) return;
@@ -115,13 +114,11 @@ const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
           />
         )}
         {ADMIN_BUTTONS.map(
-          ({ hexColor, icon, onClick, children, color }, index) => (
+          ({ colorStyle, icon, onClick, children, color }, index) => (
             <Button
               key={index}
               color={color as colors}
-              className={`${
-                hexColor === "red" ? `bg-red-500` : `bg-[${hexColor}]`
-              } font-figtree p-1 text-2xl flex items-center`}
+              className={`${colorStyle} font-figtree p-1 text-2xl flex items-center`}
               onClick={onClick}
             >
               {createElement(icon, { className: "mr-2" })}
@@ -136,15 +133,13 @@ const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
 const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
   const [buttonProgress, setButtonProgress] = useState<boolean>(false);
   const [formCount, setFormCount] = useState<number | "unloaded">("unloaded");
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   const [eventAttendance, setEventAttendance] = useState<
     EventAttendance | null | "unloaded"
   >("unloaded");
 
-  const blockedJoin = event.limit
-    ? (formCount as number) >= event.limit
-    : false;
+  const joinFull = event.limit ? (formCount as number) >= event.limit : false;
 
   const channel = useChannel(event.id);
   useEvent(channel, "update", (data) => {
@@ -160,12 +155,22 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
       });
   });
 
-  useEvent(channel, "delete", () => {
+  useEvent(channel, "delete", (data) => {
     if (formCount !== "unloaded") setFormCount(formCount - 1);
+    if (
+      session?.user?.email &&
+      (data as { email: string }).email === session.user.email
+    )
+      setEventAttendance(null);
   });
 
-  useEvent(channel, "create", () => {
+  useEvent(channel, "create", (data) => {
     if (formCount !== "unloaded") setFormCount(formCount + 1);
+    if (
+      session?.user?.email &&
+      (data as EventAttendance).userEmail === session.user.email
+    )
+      setEventAttendance(data as EventAttendance);
   });
 
   useEffect(() => {
@@ -186,7 +191,7 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
       setEvent({
         ...event,
         limit: data.limit,
-      })
+      });
 
       setFormCount(data.count);
     };
@@ -215,6 +220,44 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
   )
     return <h3>Loading Attendance...</h3>;
 
+  const eventButton = (
+    <Button
+      disabled={buttonProgress || (joinFull && !eventAttendance)}
+      color="blue"
+      className="bg-blue-500 font-figtree p-1 text-2xl"
+      onClick={async () => {
+        setButtonProgress(true);
+        const res = await fetch(`/api/events/${event.id}/attendance/@me`, {
+          method: eventAttendance ? "DELETE" : "POST",
+        });
+        if (res.status === 200) {
+          toast.success(
+            `Successfully ${eventAttendance ? "left" : "joined"} event.`
+          );
+          eventAttendance
+            ? setEventAttendance(null)
+            : setEventAttendance(await res.json());
+        } else
+          toast.error(
+            `Error ${eventAttendance ? "leaving" : "joining"} event.`
+          );
+        setButtonProgress(false);
+      }}
+    >
+      {createElement(eventAttendance ? BiLogOut : BsCalendar2Check, {
+        className: "inline",
+      })}{" "}
+      {buttonProgress
+        ? eventAttendance
+          ? "Leaving"
+          : "Joining"
+        : eventAttendance
+        ? "Leave"
+        : "Join"}{" "}
+      Event
+    </Button>
+  );
+
   return (
     <>
       <h3>Event Attendance:</h3>
@@ -227,9 +270,11 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
           You have {!eventAttendance.attendedAt && "not"} attended the event and
           earned {eventAttendance.earnedHours} hours and{" "}
           {eventAttendance.earnedPoints} points.
+          <br />
+          {eventButton}
         </div>
       )}
-      {new Date(event?.eventTime) < new Date() ? (
+      {new Date(event.finishTime || event.eventTime) < new Date() ? (
         <h5>
           You cannot {eventAttendance ? "leave" : "join"} an event that has
           already happened.
@@ -237,58 +282,28 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
       ) : (
         <>
           {!eventAttendance &&
-            (blockedJoin ? (
+            (joinFull ? (
               <h5>You cannot join this event because it is full.</h5>
+            ) : event.finishTime &&
+              new Date(event.eventTime).getTime() > Date.now() ? (
+              <h5>
+                You cannot join this event because it has not started yet.
+                Depending on the instructions, you may be able to do other
+                things.
+              </h5>
             ) : (
               <h5>
                 Reading the description is critical, as you may do something
                 wrong and not get credit for the event.
                 <br />
                 {event.limit && (
-                  <>
+                  <div>
                     Event seats: {formCount}/{event.limit}
-                  </>
+                  </div>
                 )}
+                {eventButton}
               </h5>
             ))}
-          <Button
-            disabled={buttonProgress || (blockedJoin && !eventAttendance)}
-            color="blue"
-            className="bg-[#2356ff] font-figtree p-1 text-2xl"
-            onClick={async () => {
-              setButtonProgress(true);
-              const res = await fetch(
-                `/api/events/${event.id}/attendance/@me`,
-                {
-                  method: eventAttendance ? "DELETE" : "POST",
-                }
-              );
-              if (res.status === 200) {
-                toast.success(
-                  `Successfully ${eventAttendance ? "left" : "joined"} event.`
-                );
-                eventAttendance
-                  ? setEventAttendance(null)
-                  : setEventAttendance(await res.json());
-              } else
-                toast.error(
-                  `Error ${eventAttendance ? "leaving" : "joining"} event.`
-                );
-              setButtonProgress(false);
-            }}
-          >
-            {createElement(eventAttendance ? BiLogOut : BsCalendar2Check, {
-              className: "inline",
-            })}{" "}
-            {buttonProgress
-              ? eventAttendance
-                ? "Leaving"
-                : "Joining"
-              : eventAttendance
-              ? "Leave"
-              : "Join"}{" "}
-            Event
-          </Button>
         </>
       )}
     </>
