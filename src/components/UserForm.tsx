@@ -64,7 +64,10 @@ const UserForm: FC<Props> = ({ mode, setOpen }) => {
             gradYear: data?.gradYear || ("" as number | string),
             birthday: data?.birthday as string | undefined,
             sgoSticker: data?.sgoSticker || false,
-            referredBy: data?.referredBy || ("" as string | undefined),
+            referredBy:
+              data?.referredBy ||
+              (mode == "register" && localStorage.getItem("ref")) ||
+              ("" as string | undefined),
             tos: false as boolean | undefined,
             eventAlerts: data?.eventAlerts || true,
           }}
