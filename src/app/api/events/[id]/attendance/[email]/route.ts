@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
 import Joi from "joi";
 import { EventAttendance, UserPosition } from "@prisma/client";
-import { Exception } from "@prisma/client/runtime/library";
 import Pusher from "pusher";
 
 type Params = { params: { id: string; email: string } };
@@ -139,7 +138,7 @@ async function handler(
       return NextResponse.json(eventAttendance, { status: 200 });
     } catch (e) {
       return NextResponse.json(
-        { error: (e as Exception).toString() },
+        { error: (e as Error).toString() },
         { status: 500 }
       );
     }
@@ -163,7 +162,7 @@ async function handler(
       return NextResponse.json(eventAttendance, { status: 200 });
     } catch (e) {
       return NextResponse.json(
-        { error: (e as Exception).toString() },
+        { error: (e as Error).toString() },
         { status: 500 }
       );
     }
