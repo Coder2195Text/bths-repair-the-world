@@ -23,7 +23,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiShare } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { RiAccountCircleLine } from "react-icons/ri";
 import {
@@ -43,6 +43,7 @@ import { AiOutlineMail, AiOutlineQuestionCircle } from "react-icons/ai";
 import EmailSearcher from "./EmailSearcher";
 import { MdOutlineBalance } from "react-icons/md";
 import { BsFiles } from "react-icons/bs";
+import ShareGenerator from "./ShareGenerator";
 
 // profile menu component
 
@@ -57,7 +58,8 @@ const profileMenuItems: {
       ) => any)
     | "openProfile"
     | "openExecProfile"
-    | "openEmailSearcher";
+    | "openEmailSearcher"
+    | "openShare";
 }[] = [
   {
     label: "Edit Profile",
@@ -73,6 +75,11 @@ const profileMenuItems: {
     label: "Email Searcher",
     icon: BiSearch,
     onClick: "openEmailSearcher",
+  },
+  {
+    label: "Share",
+    icon: FiShare,
+    onClick: "openShare",
   },
 
   {
@@ -91,6 +98,7 @@ const ProfileMenu: FC = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [editExecProfileOpen, setEditExecProfileOpen] = useState(false);
   const [emailSearchOpen, setEmailSearchOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const { data, status } = useSession();
 
@@ -110,6 +118,7 @@ const ProfileMenu: FC = () => {
       {emailSearchOpen && accountData && accountData.position !== "MEMBER" && (
         <EmailSearcher setOpen={setEmailSearchOpen} />
       )}
+      {shareOpen && accountData && <ShareGenerator setOpen={setShareOpen} />}
       <MenuHandler>
         <Button
           ripple
@@ -162,6 +171,10 @@ const ProfileMenu: FC = () => {
                 }
                 if (onClick === "openEmailSearcher") {
                   setEmailSearchOpen(true);
+                  return;
+                }
+                if (onClick === "openShare") {
+                  setShareOpen(true);
                   return;
                 }
 

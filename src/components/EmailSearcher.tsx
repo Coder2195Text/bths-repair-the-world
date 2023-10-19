@@ -12,6 +12,7 @@ import { Prisma } from "@prisma/client";
 import { Button } from "@material-tailwind/react";
 import FormError from "./FormError";
 import { BiCheck, BiX } from "react-icons/bi";
+import CopyTextarea from "./CopyTextarea";
 
 interface Props {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -73,6 +74,7 @@ const GRAD_YEARS = UNFILTER_GRAD.filter(Boolean).map(String);
 const EmailSearcher: FC<Props> = ({ setOpen }) => {
   const [data, setData] = useState<string[] | Object>([]);
   const [customQuery, setCustomQuery] = useState(false);
+
   return (
     <div
       className="flex fixed inset-0 z-40 flex-row justify-center items-center w-screen h-screen text-black bg-black bg-opacity-50 py-8"
@@ -241,13 +243,17 @@ const EmailSearcher: FC<Props> = ({ setOpen }) => {
               <label>Results: </label>
 
               <div className="flex flex-row justify-center">
-                {isSubmitting
-                  ? "Fetching..."
-                  : Array.isArray(data)
-                  ? data.length
-                    ? data.join(", ")
-                    : "No data."
-                  : JSON.stringify(data)}
+                {isSubmitting ? (
+                  "Fetching..."
+                ) : Array.isArray(data) ? (
+                  data.length ? (
+                    <CopyTextarea>{data.join(", ")}</CopyTextarea>
+                  ) : (
+                    "No data."
+                  )
+                ) : (
+                  <CopyTextarea>JSON.stringify(data)</CopyTextarea>
+                )}
               </div>
             </Form>
           )}

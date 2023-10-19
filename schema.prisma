@@ -36,7 +36,7 @@ model ExecDetails {
 model User {
   email         String            @id
   name          String
-  preferredName String?
+  preferredName String
   prefect       String
   pronouns      String
   gradYear      Int
