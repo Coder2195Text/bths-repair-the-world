@@ -10,6 +10,7 @@ import { Button } from "@material-tailwind/react";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
 import { Loading } from "@/components/Loading";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 type Attendance = {
   user: {
@@ -172,11 +173,11 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
           setAttendance(
             res.status < 400
               ? ((await res.json()) as Attendance[]).map((a) => ({
-                  ...a,
-                  ...(a.attendedAt
-                    ? { attendedAt: new Date(a.attendedAt) }
-                    : {}),
-                }))
+                ...a,
+                ...(a.attendedAt
+                  ? { attendedAt: new Date(a.attendedAt) }
+                  : {}),
+              }))
               : null
           )
         ),
@@ -225,8 +226,8 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
                           Points:
                           <input
                             ref={(element) =>
-                              (pointsRef.current[userAttendance.userEmail] =
-                                element!)
+                            (pointsRef.current[userAttendance.userEmail] =
+                              element!)
                             }
                             type="number"
                             min="0"
@@ -265,8 +266,8 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
                             max={event?.maxHours}
                             defaultValue={userAttendance?.earnedHours}
                             ref={(element) =>
-                              (hoursRef.current[userAttendance.userEmail] =
-                                element!)
+                            (hoursRef.current[userAttendance.userEmail] =
+                              element!)
                             }
                             onBlur={async (e) => {
                               const res = await fetch(
@@ -297,8 +298,12 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
               ))}
             </div>
           </>
-        ) : (
+        ) : (<>
           <h1>Not authorized to do attendance</h1>
+          <Link href="/events/[id]">
+            Go back to event
+          </Link>
+        </>
         ))}
     </Layout>
   );

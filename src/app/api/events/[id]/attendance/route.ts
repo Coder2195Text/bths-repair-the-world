@@ -26,6 +26,12 @@ async function handler(
       );
   });
 
+  if (!admin)
+    return NextResponse.json({
+      error: "Not authorized"
+    }, { status: 401 })
+
+
   try {
     const attendance = await prisma.eventAttendance.findMany({
       where: { eventId: id },
