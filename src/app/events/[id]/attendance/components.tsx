@@ -300,7 +300,7 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
           </>
         ) : (<>
           <h1>Not authorized to do attendance</h1>
-          <Link href="/events/[id]">
+          <Link href={`/events/${id}`}>
             Go back to event
           </Link>
         </>
