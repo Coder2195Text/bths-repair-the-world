@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
 import { prisma } from "@/utils/prisma";
 import { Event, UserPosition } from "@prisma/client";
-import { Embed, Webhook } from "@vermaysha/discord-webhook";
 import { Optional } from "@prisma/client/runtime/library";
 import { Converter } from "showdown";
 import { sendEmail } from "@/utils/mail";
+import { generateEmbed, sendMessage } from "@/utils/webhook";
 
 const schema = Joi.object({
   limit: Joi.number().optional().allow(null),
@@ -92,7 +92,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function (val): [boolean, any] {
+    .then(function(val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -107,17 +107,19 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
   if ((await result)[0]) {
     const rawData: EventPOSTBody = (await result)[1];
 
-    const newData: Omit<Event, "id" | "createdAt"> = {
+    const postData: Omit<Event, "createdAt" | "id"> = {
       ...rawData,
       eventTime: new Date(rawData.eventTime!),
       finishTime: rawData.finishTime ? new Date(rawData.finishTime) : null,
     };
 
+
+
     try {
-      const [body, name] = await Promise.all([
+      const [newData, exec] = await Promise.all([
         prisma.event
           .create({
-            data: newData,
+            data: postData,
           })
           .then(async (e) => {
             e.description = e.description.replaceAll(
@@ -127,81 +129,19 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             await prisma.event.update({
               where: { id: e.id },
               data: { description: e.description },
+              select: { description: true, id: true },
             });
             return e;
           }),
         prisma.user
           .findUnique({
             where: { email },
-            select: { preferredName: true },
+            select: { preferredName: true, execDetails: true },
           })
-          .then((u) => u?.preferredName),
       ]);
 
-      newData.description = body.description;
 
-      const hook = new Webhook(process.env.EVENT_WEBHOOK!);
-
-      const embed = new Embed();
-      embed
-        .setTitle("New Event: " + newData.name)
-        .setDescription(newData.description)
-        .addField({
-          name: `**Event ${newData.finishTime ? "Start " : ""}Time:**`,
-          value: newData.eventTime.toLocaleString("en-US", {
-            timeZone: "America/New_York",
-
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-          }),
-        });
-
-      if (newData.finishTime) {
-        embed.addField({
-          name: "**Event Finish Time:**",
-          value: newData.finishTime.toLocaleString("en-US", {
-            timeZone: "America/New_York",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-          }),
-        });
-      }
-
-      if (newData.limit)
-        embed.addField({
-          name: "**Max Members:**",
-          value: newData.limit.toString(),
-        });
-
-      embed
-        .addField({
-          name: "**Points:**",
-          value: newData.maxPoints.toString(),
-        })
-        .addField({
-          name: "**Hours:**",
-          value: newData.maxHours.toString(),
-        })
-        .addField({
-          name: "**Location:**",
-          value: `[${newData.address}](${encodeURI(
-            `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-          )})`,
-        })
-        .setImage({
-          url: body.imageURL || "https://bths-repair.org/icon.png",
-        })
-        .setAuthor({
-          name: name!,
-        })
-        .setTimestamp()
-        .setUrl(`https://bths-repair.org/events/${body.id}`);
+      const embed = generateEmbed(newData);
 
       const htmlBody = new Converter({}).makeHtml(
         `Hey RTW members!!!\n\nTime to get moving and get some credits and/or hours done!!! On ${newData.eventTime.toLocaleString(
@@ -214,13 +154,11 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             hour: "numeric",
             minute: "2-digit",
           }
-        )} we will be having a new event called **${
-          newData.name
+        )} we will be having a new event called **${newData.name
         }**!\n#### Description:\n${newData.description
           .split("\n")
           .map((e) => `> ${e}`)
-          .join("\n")}\n\n#### Event ${
-          newData.finishTime ? "Start " : ""
+          .join("\n")}\n\n#### Event ${newData.finishTime ? "Start " : ""
         }Time: ${newData.eventTime.toLocaleString("en-US", {
           timeZone: "America/New_York",
           month: "long",
@@ -228,47 +166,52 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           year: "numeric",
           hour: "numeric",
           minute: "2-digit",
-        })}${
-          newData.finishTime
-            ? `\n#### Event Finish Time: ${newData.finishTime.toLocaleString(
-                "en-US",
-                {
-                  timeZone: "America/New_York",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                }
-              )}`
-            : ""
-        }\n${
-          newData.limit
-            ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
-            : ""
-        }\n#### Points: ${newData.maxPoints} | Hours: ${
-          newData.maxHours
+        })}${newData.finishTime
+          ? `\n#### Event Finish Time: ${newData.finishTime.toLocaleString(
+            "en-US",
+            {
+              timeZone: "America/New_York",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+            }
+          )}`
+          : ""
+        }\n${newData.limit
+          ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
+          : ""
+        }\n#### Points: ${newData.maxPoints} | Hours: ${newData.maxHours
         }\n#### Location: [${newData.address}](${encodeURI(
           `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-        )})\nView the whole event [here](https://bths-repair.org/events/${
-          body.id
+        )})\nView the whole event [here](https://bths-repair.org/events/${newData.id
         }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
       );
 
-      await Promise.all([
-        hook
-          .setContent(
-            "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!"
-          )
-          .addEmbed(embed)
-          .send(),
-        sendEmail({
-          subject: "New BTHS Repair the World Event: " + newData.name,
-          html: htmlBody,
+      const [hookReturn] = await Promise.all([
+        sendMessage({
+          content: "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!",
+          username: exec?.preferredName,
+          avatarURL: exec?.execDetails?.selfieURL,
+          embeds: [embed]
         }),
+        // sendEmail({
+        //   subject: "New BTHS Repair the World Event: " + newData.name,
+        //   html: htmlBody,
+        // }),
       ]);
 
-      return NextResponse.json(body, {
+      console.log(hookReturn);
+
+      await prisma.event.update({
+        where: { id: newData.id },
+        data: { messageID: hookReturn.id },
+      });
+
+
+
+      return NextResponse.json(newData, {
         status: 200,
       });
     } catch (e) {

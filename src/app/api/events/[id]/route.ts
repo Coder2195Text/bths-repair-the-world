@@ -4,6 +4,7 @@ import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { Event, UserPosition } from "@prisma/client";
 import Joi from "joi";
+import { deleteMessage, editMessage, generateEmbed } from "@/utils/webhook";
 
 export type Params = { params: { id: string } };
 
@@ -55,13 +56,13 @@ async function handler(
 
   if (method === "DELETE") {
     try {
-      await prisma.eventAttendance.deleteMany({
+      await Promise.all([prisma.eventAttendance.deleteMany({
         where: { eventId: id },
-      });
-      const event = await prisma.event.delete({
+      }), deleteMessage(event.messageID || "")]);
+      const deletedEvent = await prisma.event.delete({
         where: { id },
       });
-      return NextResponse.json(event, { status: 200 });
+      return NextResponse.json(deletedEvent, { status: 200 });
     } catch (e) {
       return NextResponse.json(
         { error: (e as Error).message },
@@ -77,7 +78,7 @@ async function handler(
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function (val): [boolean, any] {
+    .then(function(val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -103,6 +104,11 @@ async function handler(
         where: { id },
         data: data,
       });
+      await editMessage(eventUpdated.messageID || "", {
+        embeds: [
+          generateEmbed(eventUpdated),
+        ],
+      })
       return NextResponse.json(eventUpdated, { status: 200 });
     } catch (e) {
       return NextResponse.json(
