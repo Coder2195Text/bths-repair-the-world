@@ -2,6 +2,7 @@ import { UserFull } from "@/types/user";
 import { ExecDetails } from "@prisma/client";
 import {
   FC,
+  PropsWithChildren,
   ReactNode,
   createContext,
   useContext,
@@ -21,13 +22,13 @@ interface ContextType {
 const AccountContext = createContext<ContextType>({
   status: "pending",
   data: null,
-  setData: () => {},
-  setStatus: () => {},
+  setData: () => { },
+  setStatus: () => { },
   execData: null,
-  setExecData: () => {},
+  setExecData: () => { },
 });
 
-export const AccountProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const AccountProvider: FC<PropsWithChildren> = ({ children }) => {
   const [status, setStatus] = useState<ContextType["status"]>("pending");
   const [data, setData] = useState<ContextType["data"]>(null);
   const [execData, setExecData] = useState<ContextType["execData"]>(null);

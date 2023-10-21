@@ -69,7 +69,9 @@ export const AppProviders = ({ children }: Props) => {
       cluster={process.env.NEXT_PUBLIC_PUSHER_CLUSTER!}
     >
       <MDXProvider components={components}>
-        <AccountProvider>
+        {/* 
+        // @ts-ignore */}
+        <AccountProvider children>
           <SessionProvider>
             <Navbar isNavActive={isNavActive[0]} />
             {children}
