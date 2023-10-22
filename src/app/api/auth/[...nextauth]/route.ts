@@ -3,7 +3,7 @@ import Auth0Provider, { Auth0Profile } from "next-auth/providers/auth0";
 
 const AUTH_OPTIONS: AuthOptions = {
   callbacks: {
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user }) {
       if (user) {
         const castUser = user as unknown as User & {
           id: string;
@@ -13,10 +13,15 @@ const AUTH_OPTIONS: AuthOptions = {
       return token;
     },
 
-    async session({ session, token, newSession }) {
+    async session({ session, token }) {
       session.user.id = token.id;
       return session;
     },
+
+    async signIn({ user }) {
+      if (user.email?.endsWith("@nycstudents.net") || user.email?.endsWith("@schools.nyc.gov")) return true;
+      return "/auth/invalid-email";
+    }
   },
   providers: [
     Auth0Provider({
