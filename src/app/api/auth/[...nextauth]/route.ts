@@ -19,7 +19,7 @@ const AUTH_OPTIONS: AuthOptions = {
     },
 
     async signIn({ user }) {
-      console.log(user.email?.endsWith("@nycstudents.net"), user.email?.endsWith("@schools.nyc.gov");
+      console.log(user.email?.endsWith("@nycstudents.net"), user.email?.endsWith("@schools.nyc.gov"));
       if (user.email?.endsWith("@nycstudents.net") || user.email?.endsWith("@schools.nyc.gov")) return true;
       return "/auth/invalid-email";
     }
