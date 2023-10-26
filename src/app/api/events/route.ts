@@ -196,10 +196,10 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           avatarURL: exec?.execDetails?.selfieURL,
           embeds: [embed]
         }),
-        // sendEmail({
-        //   subject: "New BTHS Repair the World Event: " + newData.name,
-        //   html: htmlBody,
-        // }),
+        sendEmail({
+          subject: "New BTHS Repair the World Event: " + newData.name,
+          html: htmlBody,
+        }),
       ]);
 
       console.log(hookReturn);

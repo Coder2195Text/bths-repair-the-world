@@ -25,16 +25,8 @@ export const Invite: FC = () => {
 
       {!data ? (
         <>
-          Due to DOE restrictions, please watch this video for new method of
-          logging in. Once done, scroll down to click the join button.
           <div className="w-full h-0 relative pb-[60%]">
-            <iframe
-              src="https://streamable.com/e/wwhe23?loop=0"
-              width="100%"
-              height="100%"
-              allowFullScreen
-              className="w-full h-full absolute top-0 left-0 overflow-hidden border-none rounded-xl"
-            ></iframe>
+            Join our Discord if you have any issues!
           </div>
           <Button
             ripple
