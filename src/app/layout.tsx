@@ -7,7 +7,7 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./global.css";
-import { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 interface Props {
   children: ReactNode;
@@ -28,6 +28,17 @@ const RootLayout: FC<Props> = ({ children }) => {
   );
 };
 
+
+// nextjs type issue awaiting patch
+// @ts-ignore
+export const viewport: Viewport = {
+  themeColor: "#555555",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata: Metadata = {
   title: "BTHS Repair the World",
   icons: {
@@ -37,15 +48,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
 
-  description: "A BTHS club for repairing the world through acts of service.",
-  themeColor: "#555555",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  openGraph: {
+  description: "A BTHS club for repairing the world through acts of service.", openGraph: {
     images: "/icon.png",
     siteName: "BTHS Repair the World",
   },

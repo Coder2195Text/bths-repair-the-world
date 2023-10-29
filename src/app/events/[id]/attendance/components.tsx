@@ -4,7 +4,7 @@ import { Params } from "@/app/api/events/[id]/route";
 import { useAccount } from "@/components/AccountContext";
 import Layout from "@/components/Layout";
 import { Event, EventAttendance, User, UserPosition } from "@prisma/client";
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useEffect, useState, useRef, Dispatch, SetStateAction } from "react";
 import { BsClipboard2Check, BsClipboard2X } from "react-icons/bs";
 import { Button } from "@material-tailwind/react";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
@@ -29,7 +29,7 @@ const CheckInButton: FC<{ attendance: Attendance; event: Event }> = ({
   return (
     <Button
       color="light-green"
-      className="p-1 text-xl"
+      className="p-1 text-xl font-figtree"
       onClick={async () => {
         if (
           !confirm(
@@ -74,7 +74,7 @@ const RemoveButton: FC<{ attendance: Attendance; event: Event }> = ({
   return (
     <Button
       color="red"
-      className="p-1 text-xl mx-2"
+      className="p-1 text-xl mx-2 font-figtree"
       onClick={async () => {
         if (
           !confirm(
@@ -114,6 +114,80 @@ const RemoveButton: FC<{ attendance: Attendance; event: Event }> = ({
   );
 };
 
+const ForceAddButton: FC<{ attendance: Attendance[]; event: Event, setAttendance: Dispatch<SetStateAction<Attendance[] | null | "unset">> }> = ({
+  attendance,
+  event,
+  setAttendance
+}) => {
+  const [buttonProgress, setButtonProgress] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  return (
+    <div className="m-1 p-1 bg-white bg-opacity-10 rounded-lg">
+      <h3>Force Add Email</h3>
+      <input
+        ref={inputRef}
+        type="email"
+        placeholder="Email"
+        className="font-figtree"
+      />
+
+      <Button
+        color="red"
+        className="p-1 text-xl mx-2 font-figtree"
+        onClick={
+          async () => {
+
+            if (!inputRef.current?.value || !inputRef.current?.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+              toast.error("Please enter an valid email.");
+              return;
+            }
+
+            if (
+              !confirm(
+                `Are you sure you want to force add ${inputRef.current?.value} to ${event.name}?`
+              )
+            )
+              return;
+
+
+            setButtonProgress(true);
+            const res = await fetch(
+              `/api/events/${event.id}/attendance/${inputRef.current?.value}`,
+              {
+                method: "POST",
+              }
+            );
+            setButtonProgress(false);
+
+            if (res.status < 400) {
+              toast.success(
+                `Successfully force added ${inputRef.current?.value} to ${event.name}`
+              );
+              if (attendance.every((a) => a.userEmail !== inputRef.current?.value)) setAttendance(
+                [...attendance,
+                (await res.json()) as Attendance
+                ]
+              );
+
+              inputRef.current!.value = "";
+
+            } else {
+              toast.error(
+                `Error force adding ${inputRef.current?.value} to ${event.name}`
+              );
+            }
+          }
+        }
+
+
+      ><BsClipboard2Check className="inline" />  Force Add{buttonProgress && "ing"}</Button>
+
+
+    </div>
+  )
+}
+
+
 const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
   const { data, status } = useAccount();
   const [event, setEvent] = useState<Event | null | "unset">("unset");
@@ -130,7 +204,7 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
     if (data.attendedAt) {
       data.attendedAt = new Date(data.attendedAt);
     }
-    if (attendance && attendance !== "unset")
+    if (attendance && attendance !== "unset" && attendance.every((a) => a.userEmail !== data.userEmail))
       setAttendance([...attendance, data as Attendance]);
   });
 
@@ -139,7 +213,7 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
     if (data.attendedAt) {
       data.attendedAt = new Date(data.attendedAt);
     }
-    if (attendance && attendance !== "unset")
+    if (attendance && attendance !== "unset" && attendance.some((a) => a.userEmail === data.userEmail))
       setAttendance(
         attendance.filter((a) => a.userEmail !== (data as Partial<User>).email)
       );
@@ -199,6 +273,8 @@ const EventAttendancePage: FC<Params> = ({ params: { id } }) => {
         (event && attendance ? (
           <>
             <h1>{event.name} - Attendance</h1>
+
+            <ForceAddButton attendance={attendance} event={event} setAttendance={setAttendance} />
             <div className="w-full">
               {attendance.map((userAttendance) => (
                 <div
