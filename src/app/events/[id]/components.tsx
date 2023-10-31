@@ -59,44 +59,43 @@ const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
     onClick: () => any;
     children: ReactNode;
   }[] = [
-    {
-      color: "blue",
-      colorStyle: "bg-blue-500",
-      icon: BiCalendarEdit,
-      onClick: () => setFormOpen(true),
-      children: "Edit Event",
-    },
-    {
-      color: "blue",
-      colorStyle: "bg-blue-500",
-      icon: BsFillPersonCheckFill,
-      onClick: () => router.push(`/events/${event.id}/attendance`),
-      children: "Attendance",
-    },
-    {
-      color: "red",
-      colorStyle: "bg-red-500",
-      icon: BiTrash,
-      onClick: async () => {
-        if (!confirm("Are you sure you want to delete this event?")) return;
-
-        setDeleteProgress(true);
-        const res = await fetch(`/api/events/${event.id}`, {
-          method: "DELETE",
-        });
-        if (res.status === 200) {
-          toast.success("Successfully deleted event.");
-          router.push("/events");
-        } else {
-          alert("Error deleting event!");
-          setDeleteProgress(false);
-        }
+      {
+        color: "blue",
+        colorStyle: "bg-blue-500",
+        icon: BiCalendarEdit,
+        onClick: () => setFormOpen(true),
+        children: "Edit Event",
       },
-      children: `${deleteProgress ? "Deleting" : "Delete"} Event${
-        deleteProgress ? "..." : ""
-      }`,
-    },
-  ];
+      {
+        color: "blue",
+        colorStyle: "bg-blue-500",
+        icon: BsFillPersonCheckFill,
+        onClick: () => router.push(`/events/${event.id}/attendance`),
+        children: "Attendance",
+      },
+      {
+        color: "red",
+        colorStyle: "bg-red-500",
+        icon: BiTrash,
+        onClick: async () => {
+          if (!confirm("Are you sure you want to delete this event?")) return;
+
+          setDeleteProgress(true);
+          const res = await fetch(`/api/events/${event.id}`, {
+            method: "DELETE",
+          });
+          if (res.status === 200) {
+            toast.success("Successfully deleted event.");
+            router.push("/events");
+          } else {
+            alert("Error deleting event!");
+            setDeleteProgress(false);
+          }
+        },
+        children: `${deleteProgress ? "Deleting" : "Delete"} Event${deleteProgress ? "..." : ""
+          }`,
+      },
+    ];
 
   if (
     ([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
@@ -252,29 +251,31 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
           ? "Leaving"
           : "Joining"
         : eventAttendance
-        ? "Leave"
-        : "Join"}{" "}
+          ? "Leave"
+          : "Join"}{" "}
       Event
     </Button>
   );
+
+  const isFuture = event.finishTime ? new Date(event.eventTime) > new Date() : false;
+  const isPassed = new Date(event.finishTime || event.eventTime) < new Date();
 
   return (
     <>
       <h3>Event Attendance:</h3>
       {eventAttendance && (
         <div>
-          <h5>
+          {!isPassed && <h5>
             <AiOutlineWarning className="inline" /> You must check in and check
             out with an exec to get credit for the event.
-          </h5>
+          </h5>}
           You have {!eventAttendance.attendedAt && "not"} attended the event and
           earned {eventAttendance.earnedHours} hours and{" "}
           {eventAttendance.earnedPoints} points.
           <br />
-          {eventButton}
         </div>
       )}
-      {new Date(event.finishTime || event.eventTime) < new Date() ? (
+      {isPassed ? (
         <h5>
           You cannot {eventAttendance ? "leave" : "join"} an event that has
           already happened.
@@ -285,7 +286,7 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
             (joinFull ? (
               <h5>You cannot join this event because it is full.</h5>
             ) : event.finishTime &&
-              new Date(event.eventTime).getTime() > Date.now() ? (
+              isFuture ? (
               <h5>
                 You cannot join this event because it has not started yet.
                 Depending on the instructions, you may be able to do other
@@ -301,11 +302,13 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
                     Event seats: {formCount}/{event.limit}
                   </div>
                 )}
-                {eventButton}
               </h5>
+
             ))}
+
         </>
       )}
+      {!isPassed && !isFuture && eventButton}
     </>
   );
 };
