@@ -1,0 +1,11 @@
+@media print {
+  body {
+    @apply text-black py-0;
+  }
+
+  nav, .birthday {
+    @apply hidden;
+  }
+
+  
+}

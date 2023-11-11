@@ -9,7 +9,6 @@ import {
   type PusherProviderProps,
 } from "@harelpls/use-pusher";
 import { FC, PropsWithChildren } from "react";
-import Navbar from "@/components/Navbar";
 import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
 import { ToastContainer } from "react-toastify";
 
@@ -51,10 +50,7 @@ export const AppProviders = ({ children }: Props) => {
         {/* 
         // @ts-ignore */}
         <AccountProvider children>
-          <SessionProvider>
-            <Navbar isNavActive />
-            {children}
-          </SessionProvider>
+          <SessionProvider>{children}</SessionProvider>
         </AccountProvider>
       </MDXProvider>
       <ToastContainer

@@ -7,7 +7,9 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./global.css";
+import "./print.css";
 import type { Metadata, Viewport } from "next";
+import Navbar from "@/components/Navbar";
 
 interface Props {
   children: ReactNode;
@@ -21,13 +23,15 @@ const RootLayout: FC<Props> = ({ children }) => {
           <Suspense>
             <LoadingBar />
           </Suspense>
+          <Navbar isNavActive />
           {children}
+
+          <div className="w-screen fixed top-0 left-0 h-screen overflow-auto bg-gradient-to-b from-black to-gray-700  bg-cover bg-no-repeat bg-fixed -z-50"></div>
         </AppProviders>
       </body>
     </html>
   );
 };
-
 
 // nextjs type issue awaiting patch
 // @ts-ignore
@@ -37,7 +41,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-}
+};
 
 export const metadata: Metadata = {
   title: "BTHS Repair the World",
@@ -48,7 +52,8 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
 
-  description: "A BTHS club for repairing the world through acts of service.", openGraph: {
+  description: "A BTHS club for repairing the world through acts of service.",
+  openGraph: {
     images: "/icon.png",
     siteName: "BTHS Repair the World",
   },

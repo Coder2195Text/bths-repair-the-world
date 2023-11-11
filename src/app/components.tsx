@@ -132,8 +132,8 @@ const REPAIR_TABS: {
 
 export const Banner: FC = () => {
   return (
-    <div className="relative w-full min-h-[570px] h-[90vh] rounded-xl mb-3">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
+    <div className="relative w-full min-h-[570px] h-[90vh] rounded-xl mb-3 -mt-20 mb-20">
+      <div className="absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center ">
         <h1 className="title">BTHS Repair the World</h1>
         <h4>
           <Typewriter

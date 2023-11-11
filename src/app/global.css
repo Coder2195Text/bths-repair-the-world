@@ -18,10 +18,11 @@
   }
   
   html {
-    @apply z-20 overflow-hidden text-[20px]  font-raleway;
+    @apply z-20 text-[20px]  font-raleway;
   }
+
   body {
-    @apply h-screen overflow-auto bg-gradient-to-b from-black to-gray-700 text-white bg-cover bg-no-repeat bg-fixed;
+    @apply text-white py-20
   }
 
   h1,
