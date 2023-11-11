@@ -95,7 +95,8 @@
   }
 
   ul {
-    @apply list-disc;
+    @apply pl-8;
+    list-style-type: "- ";
   }
 
   ol {
@@ -108,11 +109,7 @@
   }
 
   li > * {
-    @apply inline-block;
-  }
-
-  li {
-    @apply pl-8;
+    @apply inline;
   }
 }
 

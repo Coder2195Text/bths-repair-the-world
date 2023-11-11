@@ -8,8 +8,7 @@ import {
   PusherProvider as $PusherProvider,
   type PusherProviderProps,
 } from "@harelpls/use-pusher";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { useScrollDirection } from "react-use-scroll-direction";
+import { FC, PropsWithChildren } from "react";
 import Navbar from "@/components/Navbar";
 import { AppProgressBar as NextNProgress } from "next-nprogress-bar";
 import { ToastContainer } from "react-toastify";
@@ -43,26 +42,6 @@ const components: MDXComponents | MergeComponents = {
 };
 
 export const AppProviders = ({ children }: Props) => {
-  const [isNavActive, setIsNavActive] = useState<[boolean, number]>([
-    true,
-    Date.now(),
-  ]);
-
-  const [element, setElement] = useState<HTMLElement | null>(null);
-
-  const { scrollDirection } = useScrollDirection(element!);
-
-  useEffect(() => {
-    setElement(document.getElementsByTagName("body")[0]);
-  }, []);
-
-  if (Date.now() - isNavActive[1] > 50 && scrollDirection !== null) {
-    setIsNavActive([
-      element?.scrollTop === 0 || scrollDirection === "UP",
-      Date.now(),
-    ]);
-  }
-
   return (
     <PusherProvider
       clientKey={process.env.NEXT_PUBLIC_PUSHER_KEY!}
@@ -73,7 +52,7 @@ export const AppProviders = ({ children }: Props) => {
         // @ts-ignore */}
         <AccountProvider children>
           <SessionProvider>
-            <Navbar isNavActive={isNavActive[0]} />
+            <Navbar isNavActive />
             {children}
           </SessionProvider>
         </AccountProvider>

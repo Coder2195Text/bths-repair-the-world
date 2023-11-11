@@ -4,7 +4,7 @@
 		{
 			"label": "main task",
 			"type": "shell",
-			"command": "tmux new-session 'yarn && yarn dev' ';' split-window -p 70",
+			"command": "yarn && yarn dev",
 			"presentation": {
 				"reveal": "always",
 				"panel": "new"
