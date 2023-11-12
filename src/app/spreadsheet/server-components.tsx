@@ -38,7 +38,7 @@ const AsyncSpreadsheet: FC<Props> = async ({ data }) => {
         </tr>
 
         {users.map((user) => (
-          <PersonRow data={{ events, users }} user={user} />
+          <PersonRow data={{ events, users }} user={user} key={user.email} />
         ))}
       </table>
     </div>

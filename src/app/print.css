@@ -3,9 +3,11 @@
     @apply text-black py-0;
   }
 
-  nav, .birthday {
-    @apply hidden;
+  .banner {
+    @apply text-white;
   }
 
-  
+  nav, .birthday {
+    @apply hidden;
+  }  
 }

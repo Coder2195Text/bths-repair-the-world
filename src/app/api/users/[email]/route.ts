@@ -6,7 +6,7 @@ import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { UserPosition } from "@prisma/client";
 
-type Params = { params: { email: string } };
+export type Params = { params: { email: string } };
 
 const POSTSchema = Joi.object({
   name: Joi.string().required().max(190),

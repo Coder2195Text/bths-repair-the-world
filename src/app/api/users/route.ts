@@ -1,7 +1,6 @@
 import { prisma } from "@/utils/prisma";
 import { Prisma, UserPosition } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import email from "next-auth/providers/email";
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_OPTIONS } from "../auth/[...nextauth]/route";
 

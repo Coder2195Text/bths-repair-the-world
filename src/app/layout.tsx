@@ -7,9 +7,9 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./global.css";
-import "./print.css";
 import type { Metadata, Viewport } from "next";
 import Navbar from "@/components/Navbar";
+import "./print.css";
 
 interface Props {
   children: ReactNode;
