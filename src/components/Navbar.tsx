@@ -41,8 +41,8 @@ import ExecForm from "./ExecForm";
 import { useAccount } from "./AccountContext";
 import { AiOutlineMail, AiOutlineQuestionCircle } from "react-icons/ai";
 import EmailSearcher from "./EmailSearcher";
-import { MdOutlineBalance } from "react-icons/md";
-import { BsFiles } from "react-icons/bs";
+import { MdOutlineBalance, MdWarning } from "react-icons/md";
+import { BsCheckCircleFill, BsFiles, BsLockFill } from "react-icons/bs";
 import ShareGenerator from "./ShareGenerator";
 
 // profile menu component
@@ -81,7 +81,15 @@ const profileMenuItems: {
     icon: FiShare,
     onClick: "openShare",
   },
-
+  {
+    label: "Complete OSIS form",
+    icon: BsLockFill,
+    onClick: (e) => {
+      window.open(
+        "https://docs.google.com/forms/d/e/1FAIpQLSd7yl28S0IVjgkKO2q-OUEwMxu963KK79HJd0Tqnoc-gl_xeQ/viewform?usp=sf_link"
+      );
+    },
+  },
   {
     label: "Sign Out",
     icon: FiLogOut,
@@ -120,33 +128,43 @@ const ProfileMenu: FC = () => {
       )}
       {shareOpen && accountData && <ShareGenerator setOpen={setShareOpen} />}
       <MenuHandler>
-        <Button
-          ripple
-          variant="text"
-          color="blue-gray"
-          className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full"
-          disabled={status === "loading" || !accountData}
-        >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="candice wu"
-            className="w-8 h-8 rounded-full"
-            src={
-              data?.user?.image ||
-              "https://static.wixstatic.com/media/369c26_b396f2977e5a40839e2fc77a6f9aac2b~mv2.gif"
-            }
-          />
-          <BiChevronDown
-            strokeWidth={2.5}
-            className={`h-4 w-4 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
-          />
-        </Button>
+        <span className="relative ml-auto">
+          {accountData?.didOsis == false && (
+            <MdWarning
+              className="absolute left-0 bottom-0 z-50"
+              color="yellow"
+            />
+          )}
+          <Button
+            ripple
+            variant="text"
+            color="blue-gray"
+            className="flex gap-1 items-center py-0.5 pr-2 pl-0.5 mr-1 ml-auto text-white rounded-full relative overflow-visible"
+            disabled={status === "loading" || !accountData}
+          >
+            <Avatar
+              variant="circular"
+              size="sm"
+              alt="candice wu"
+              className="w-8 h-8 rounded-full"
+              src={
+                data?.user?.image ||
+                "https://static.wixstatic.com/media/369c26_b396f2977e5a40839e2fc77a6f9aac2b~mv2.gif"
+              }
+            />
+
+            <BiChevronDown
+              strokeWidth={2.5}
+              className={`h-4 w-4 transition-transform ${
+                isMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </Button>
+        </span>
       </MenuHandler>
       <MenuList className="z-40 p-2 bg-gray-700 border-none">
         {profileMenuItems.map(({ label, icon, onClick }, key) => {
+          const isOsis = label == "Complete OSIS form";
           if (onClick === "openExecProfile" && accountData?.position !== "EXEC")
             return;
 
@@ -159,6 +177,7 @@ const ProfileMenu: FC = () => {
           return (
             <MenuItem
               key={key}
+              disabled={isOsis && accountData?.didOsis}
               onClick={(event) => {
                 closeMenu();
                 if (onClick === "openProfile") {
@@ -180,7 +199,7 @@ const ProfileMenu: FC = () => {
 
                 onClick?.(event);
               }}
-              className={`font-figtree flex transition-all text-white items-end gap-2 ${
+              className={`font-figtree flex relative transition-all text-white items-end gap-2 ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10 bg-red-200"
                   : "mb-2 hover:text-black bg-blue-300"
@@ -192,6 +211,19 @@ const ProfileMenu: FC = () => {
               <span className={` ${isLastItem ? "text-red-500" : ""}`}>
                 {label}
               </span>
+              {isOsis &&
+                (accountData?.didOsis == false ? (
+                  <MdWarning
+                    className="absolute left-0 bottom-0 z-50"
+                    color="yellow"
+                  />
+                ) : (
+                  <BsCheckCircleFill
+                    className="absolute left-0 bottom-0 z-50 opacity-100"
+                    color="green"
+                    size={25}
+                  />
+                ))}
             </MenuItem>
           );
         })}
