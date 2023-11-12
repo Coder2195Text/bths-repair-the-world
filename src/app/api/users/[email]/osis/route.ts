@@ -5,7 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
 import { Params } from "../route";
 
-export const POST = async (req: NextRequest, { params: { email } }: Params) => {
+async function handler(
+  method: "POST" | "DELETE",
+  req: NextRequest,
+  { params: { email } }: Params
+) {
   console.log(await req.headers.get("Authorization"));
   const allowed =
     (await req.headers.get("Authorization")) === process.env.OSIS_API_KEY ||
@@ -27,10 +31,6 @@ export const POST = async (req: NextRequest, { params: { email } }: Params) => {
   if (!allowed)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  let body;
-  if (typeof (body = await req.json()) !== "boolean")
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
-
   if (
     !(await prisma.user.findUnique({
       where: { email },
@@ -43,11 +43,14 @@ export const POST = async (req: NextRequest, { params: { email } }: Params) => {
     return NextResponse.json(
       await prisma.user.update({
         where: { email },
-        data: { didOsis: body },
+        data: { didOsis: method == "POST" },
       }),
       { status: 200 }
     );
   } catch (e) {
     return NextResponse.json({ error: e }, { status: 500 });
   }
-};
+}
+
+export const POST = handler.bind(null, "POST");
+export const DELETE = handler.bind(null, "DELETE");
