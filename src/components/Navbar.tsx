@@ -330,7 +330,7 @@ const ResourcesMenu: FC<{
       <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
         <MenuHandler>
           <a>
-            <MenuItem className="items-center gap-2 flex lg:rounded-full justify-center   font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]">
+            <MenuItem className="items-center gap-2 flex lg:rounded-full justify-center font-figtree lg:font-[450] text-[25px] xl:text-[25px] lg:text-[20px] font-[500] xl:font-[500]">
               <BsFiles className="w-8 h-8 lg:w-6 lg:h-6 xl:w-8 xl:h-8 inline lg:mr-1 mr-2 xl:mr-2 " />
               Resources
               <BiChevronDown
@@ -355,7 +355,7 @@ const NavList: FC<{
 }> = ({ setNavOpen }) => {
   const router = useRouter();
   return (
-    <ul className="flex flex-col gap-3 items-center mt-1 mb-1 lg:flex-row xl:gap-5 lg:mt-0 lg:mb-0">
+    <ul className="flex flex-col gap-3 pl-0 items-center mt-1 mb-1 lg:flex-row xl:gap-5 lg:mt-0 lg:mb-0">
       {navListLinks.map(({ label, icon, url }) => (
         <motion.span
           key={label}
