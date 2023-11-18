@@ -2,7 +2,7 @@ import { prisma } from "@/utils/prisma";
 import { UserPosition } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/options";
 import { Params } from "../route";
 
 async function handler(

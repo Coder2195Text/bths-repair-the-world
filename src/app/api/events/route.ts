@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { AUTH_OPTIONS } from "../auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "../auth/[...nextauth]/options";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
 import { prisma } from "@/utils/prisma";
@@ -92,7 +92,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
     .getReader()
     .read()
     .then((r) => r.value && new TextDecoder().decode(r.value))
-    .then(function(val): [boolean, any] {
+    .then(function (val): [boolean, any] {
       let parsed;
       if (!val) return [false, "Missing body"];
       try {
@@ -113,8 +113,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       finishTime: rawData.finishTime ? new Date(rawData.finishTime) : null,
     };
 
-
-
     try {
       const [newData, exec] = await Promise.all([
         prisma.event
@@ -133,13 +131,11 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             });
             return e;
           }),
-        prisma.user
-          .findUnique({
-            where: { email },
-            select: { preferredName: true, execDetails: true },
-          })
+        prisma.user.findUnique({
+          where: { email },
+          select: { preferredName: true, execDetails: true },
+        }),
       ]);
-
 
       const embed = generateEmbed(newData);
 
@@ -154,11 +150,13 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
             hour: "numeric",
             minute: "2-digit",
           }
-        )} we will be having a new event called **${newData.name
+        )} we will be having a new event called **${
+          newData.name
         }**!\n#### Description:\n${newData.description
           .split("\n")
           .map((e) => `> ${e}`)
-          .join("\n")}\n\n#### Event ${newData.finishTime ? "Start " : ""
+          .join("\n")}\n\n#### Event ${
+          newData.finishTime ? "Start " : ""
         }Time: ${newData.eventTime.toLocaleString("en-US", {
           timeZone: "America/New_York",
           month: "long",
@@ -166,35 +164,40 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           year: "numeric",
           hour: "numeric",
           minute: "2-digit",
-        })}${newData.finishTime
-          ? `\n#### Event Finish Time: ${newData.finishTime.toLocaleString(
-            "en-US",
-            {
-              timeZone: "America/New_York",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-            }
-          )}`
-          : ""
-        }\n${newData.limit
-          ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
-          : ""
-        }\n#### Points: ${newData.maxPoints} | Hours: ${newData.maxHours
+        })}${
+          newData.finishTime
+            ? `\n#### Event Finish Time: ${newData.finishTime.toLocaleString(
+                "en-US",
+                {
+                  timeZone: "America/New_York",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                }
+              )}`
+            : ""
+        }\n${
+          newData.limit
+            ? `\n#### Max Members (Register Quick!!!): ${newData.limit}`
+            : ""
+        }\n#### Points: ${newData.maxPoints} | Hours: ${
+          newData.maxHours
         }\n#### Location: [${newData.address}](${encodeURI(
           `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-        )})\nView the whole event [here](https://bths-repair.org/events/${newData.id
+        )})\nView the whole event [here](https://bths-repair.org/events/${
+          newData.id
         }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
       );
 
       const [hookReturn] = await Promise.all([
         sendMessage({
-          content: "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!",
+          content:
+            "Tired of events? Go to <#1134529490740064307> to remove <@&1136780952274735266>.\n# New event posted!",
           username: exec?.preferredName,
           avatarURL: exec?.execDetails?.selfieURL,
-          embeds: [embed]
+          embeds: [embed],
         }),
         sendEmail({
           subject: "New BTHS Repair the World Event: " + newData.name,
@@ -208,8 +211,6 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
         where: { id: newData.id },
         data: { messageID: hookReturn.id },
       });
-
-
 
       return NextResponse.json(newData, {
         status: 200,

@@ -5,7 +5,7 @@ import { FC } from "react";
 import { Spreadsheet } from "./server-components";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { getServerSession } from "next-auth";
-import { AUTH_OPTIONS } from "../api/auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "../api/auth/[...nextauth]/options";
 import { LoginButton } from "./components";
 
 export const metadata: Metadata = {

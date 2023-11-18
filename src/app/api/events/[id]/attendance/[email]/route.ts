@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
 import { getServerSession } from "next-auth";
-import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/options";
 import Joi from "joi";
 import { EventAttendance, UserPosition } from "@prisma/client";
 import Pusher from "pusher";

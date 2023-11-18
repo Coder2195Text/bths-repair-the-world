@@ -1,12 +1,10 @@
 import { getServerSession } from "next-auth";
-import { AUTH_OPTIONS } from "../../auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "../../auth/[...nextauth]/options";
 import { NextRequest, NextResponse } from "next/server";
 import Joi from "joi";
-import type { UserWriteBody } from "@/types/user";
 import { prisma } from "@/utils/prisma";
 import { ExecDetails, UserPosition } from "@prisma/client";
 import { POSITION_LIST } from "@/utils/constants";
-import { revalidatePath } from "next/cache";
 
 type Params = { params: { email: string } };
 

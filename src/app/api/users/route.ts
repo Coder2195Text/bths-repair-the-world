@@ -2,7 +2,7 @@ import { prisma } from "@/utils/prisma";
 import { Prisma, UserPosition } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { AUTH_OPTIONS } from "../auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "../auth/[...nextauth]/options";
 
 export const POST = async (req: NextRequest) => {
   const allowed = await getServerSession({ ...AUTH_OPTIONS }).then(

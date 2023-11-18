@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Params } from "../route";
-import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/route";
+import { AUTH_OPTIONS } from "@/app/api/auth/[...nextauth]/options";
 import { prisma } from "@/utils/prisma";
 import { UserPosition } from "@prisma/client";
 import { getServerSession } from "next-auth";
@@ -27,10 +27,12 @@ async function handler(
   });
 
   if (!admin)
-    return NextResponse.json({
-      error: "Not authorized"
-    }, { status: 401 })
-
+    return NextResponse.json(
+      {
+        error: "Not authorized",
+      },
+      { status: 401 }
+    );
 
   try {
     const attendance = await prisma.eventAttendance.findMany({
