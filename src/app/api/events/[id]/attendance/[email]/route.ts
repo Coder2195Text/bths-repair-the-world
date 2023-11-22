@@ -110,7 +110,11 @@ async function handler(
         { status: 403 }
       );
 
-    if (event?.limit && event.attendees.length >= event.limit)
+    if (
+      event?.limit &&
+      event.attendees.length >= event.limit &&
+      method === "POST"
+    )
       return NextResponse.json({ error: "Event is full" }, { status: 403 });
   }
 
