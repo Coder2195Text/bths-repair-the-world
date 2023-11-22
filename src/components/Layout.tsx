@@ -20,7 +20,7 @@ const Layout: FC<Props> = ({ children }) => {
   }
 
   return (
-    <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] max-w-screen 2xl:px-[79px]">
+    <main className="block w-full max-w-7xl text-center break-words rounded-xl px-[6vw] max-w-screen 2xl:px-[79px] mx-auto">
       {accountStatus === "unregistered" && status === "authenticated" && (
         <UserForm mode="register" />
       )}
