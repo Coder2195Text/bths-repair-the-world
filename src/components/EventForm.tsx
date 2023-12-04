@@ -72,12 +72,14 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
 
           limit: mode == "edit" ? eventData!.limit : undefined,
           finishTime: mode == "edit" ? eventData!.finishTime : undefined,
+          serviceLetters: "edit" ? eventData!.serviceLetters : undefined,
         }}
         onSubmit={async (values) => {
           if (mode === "post") {
             if (!values.imageURL) delete values.imageURL;
             if (!values.limit) delete values.limit;
             if (!values.finishTime) delete values.finishTime;
+            if (!values.serviceLetters) delete values.serviceLetters;
             const res = await fetch("/api/events", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -96,6 +98,7 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
           } else {
             if (!values.limit) values.limit = null;
             if (!values.finishTime || !isRangeEvent) values.finishTime = null;
+            if (!values.serviceLetters) values.serviceLetters = null;
 
             const editted = Object.fromEntries(
               Object.keys(values)
@@ -174,6 +177,14 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
               new Date(values.eventTime).getTime()
           ) {
             errors.finishTime = "Finish time must be after event time.";
+          }
+          // regex to check google drive url any thing afteer /view is valid
+          if (
+            values.serviceLetters &&
+            !/^https:\/\/drive\.google\.com\/[^\s]*/.test(values.serviceLetters)
+          ) {
+            errors.serviceLetters =
+              "Service letters must be a google drive folder url.";
           }
 
           return errors;
@@ -318,6 +329,15 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
             <Field type="number" name="limit" id="limit" placeholder="Limit" />
             <br />
             <Error name="limit" />
+            <label htmlFor="serviceLetters">Service Letters: </label>
+            <Field
+              type="text"
+              name="serviceLetters"
+              id="serviceLetters"
+              placeholder="Service Letters Google Drive URL"
+            />
+            <br />
+            <Error name="serviceLetters" />
 
             <label htmlFor="imageURL">Image: </label>
             <input

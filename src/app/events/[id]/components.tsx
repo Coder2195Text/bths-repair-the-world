@@ -37,6 +37,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineWarning } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { FaRegEnvelope } from "react-icons/fa";
 
 interface Props {
   event: Event;
@@ -59,43 +60,44 @@ const AdminActions: FC<PropsWrite> = ({ event, setEvent }) => {
     onClick: () => any;
     children: ReactNode;
   }[] = [
-      {
-        color: "blue",
-        colorStyle: "bg-blue-500",
-        icon: BiCalendarEdit,
-        onClick: () => setFormOpen(true),
-        children: "Edit Event",
-      },
-      {
-        color: "blue",
-        colorStyle: "bg-blue-500",
-        icon: BsFillPersonCheckFill,
-        onClick: () => router.push(`/events/${event.id}/attendance`),
-        children: "Attendance",
-      },
-      {
-        color: "red",
-        colorStyle: "bg-red-500",
-        icon: BiTrash,
-        onClick: async () => {
-          if (!confirm("Are you sure you want to delete this event?")) return;
+    {
+      color: "blue",
+      colorStyle: "bg-blue-500",
+      icon: BiCalendarEdit,
+      onClick: () => setFormOpen(true),
+      children: "Edit Event",
+    },
+    {
+      color: "blue",
+      colorStyle: "bg-blue-500",
+      icon: BsFillPersonCheckFill,
+      onClick: () => router.push(`/events/${event.id}/attendance`),
+      children: "Attendance",
+    },
+    {
+      color: "red",
+      colorStyle: "bg-red-500",
+      icon: BiTrash,
+      onClick: async () => {
+        if (!confirm("Are you sure you want to delete this event?")) return;
 
-          setDeleteProgress(true);
-          const res = await fetch(`/api/events/${event.id}`, {
-            method: "DELETE",
-          });
-          if (res.status === 200) {
-            toast.success("Successfully deleted event.");
-            router.push("/events");
-          } else {
-            alert("Error deleting event!");
-            setDeleteProgress(false);
-          }
-        },
-        children: `${deleteProgress ? "Deleting" : "Delete"} Event${deleteProgress ? "..." : ""
-          }`,
+        setDeleteProgress(true);
+        const res = await fetch(`/api/events/${event.id}`, {
+          method: "DELETE",
+        });
+        if (res.status === 200) {
+          toast.success("Successfully deleted event.");
+          router.push("/events");
+        } else {
+          alert("Error deleting event!");
+          setDeleteProgress(false);
+        }
       },
-    ];
+      children: `${deleteProgress ? "Deleting" : "Delete"} Event${
+        deleteProgress ? "..." : ""
+      }`,
+    },
+  ];
 
   if (
     ([UserPosition.ADMIN, UserPosition.EXEC] as UserPosition[]).includes(
@@ -251,13 +253,15 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
           ? "Leaving"
           : "Joining"
         : eventAttendance
-          ? "Leave"
-          : "Join"}{" "}
+        ? "Leave"
+        : "Join"}{" "}
       Event
     </Button>
   );
 
-  const isFuture = event.finishTime ? new Date(event.eventTime) > new Date() : false;
+  const isFuture = event.finishTime
+    ? new Date(event.eventTime) > new Date()
+    : false;
   const isPassed = new Date(event.finishTime || event.eventTime) < new Date();
 
   return (
@@ -265,10 +269,12 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
       <h3>Event Attendance:</h3>
       {eventAttendance && (
         <div>
-          {!isPassed && <h5>
-            <AiOutlineWarning className="inline" /> You must check in and check
-            out with an exec to get credit for the event.
-          </h5>}
+          {!isPassed && (
+            <h5>
+              <AiOutlineWarning className="inline" /> You must check in and
+              check out with an exec to get credit for the event.
+            </h5>
+          )}
           You have {!eventAttendance.attendedAt && "not"} attended the event and
           earned {eventAttendance.earnedHours} hours and{" "}
           {eventAttendance.earnedPoints} points.
@@ -285,8 +291,7 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
           {!eventAttendance &&
             (joinFull ? (
               <h5>You cannot join this event because it is full.</h5>
-            ) : event.finishTime &&
-              isFuture ? (
+            ) : event.finishTime && isFuture ? (
               <h5>
                 You cannot join this event because it has not started yet.
                 Depending on the instructions, you may be able to do other
@@ -303,9 +308,7 @@ const UserAttendance: FC<PropsWrite> = ({ event, setEvent }) => {
                   </div>
                 )}
               </h5>
-
             ))}
-
         </>
       )}
       {!isPassed && !isFuture && eventButton}
@@ -324,6 +327,14 @@ const EventDetails: FC<Props> = ({ event }) => {
           height={1000}
           className="w-full rounded-lg mb-5"
         />
+      )}
+      <h3>Service Letters</h3>
+      {event.serviceLetters ? (
+        <Link href={event.serviceLetters} target="_blank">
+          <FaRegEnvelope className="inline" /> Service Letters
+        </Link>
+      ) : (
+        "Service letters are not available for this event."
       )}
       <h3>Rewards: </h3>
       <BsClock className="inline" /> Total Hours : {event.maxHours}

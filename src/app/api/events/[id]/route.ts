@@ -18,6 +18,11 @@ const schema = Joi.object({
   maxHours: Joi.number().optional().min(0),
   address: Joi.string().optional().max(1000),
   finishTime: Joi.date().iso().optional().allow(null),
+  serviceLetters: Joi.string()
+    .optional()
+    .uri()
+    .allow(null)
+    .regex(/^https:\/\/drive\.google\.com\/[^\s]*/),
 });
 
 async function handler(

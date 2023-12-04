@@ -19,6 +19,11 @@ const schema = Joi.object({
   maxHours: Joi.number().required().min(0),
   address: Joi.string().required().max(1000),
   finishTime: Joi.date().iso().optional().allow(null),
+  serviceLetters: Joi.string()
+    .optional()
+    .uri()
+    .allow(null)
+    .regex(/^https:\/\/drive\.google\.com\/[^\s]*/),
 });
 
 type EventPOSTBody = Omit<
