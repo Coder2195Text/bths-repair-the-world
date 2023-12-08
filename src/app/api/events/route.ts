@@ -127,7 +127,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           .then(async (e) => {
             e.description = e.description.replaceAll(
               "{@link}",
-              `https://bths-repair.org/events/${e.id}`
+              `https://bthsaction.org/events/${e.id}`
             );
             await prisma.event.update({
               where: { id: e.id },
@@ -145,7 +145,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
       const embed = generateEmbed(newData);
 
       const htmlBody = new Converter({}).makeHtml(
-        `Hey RTW members!!!\n\nTime to get moving and get some credits and/or hours done!!! On ${newData.eventTime.toLocaleString(
+        `Hey Action members!!!\n\nTime to get moving and get some credits and/or hours done!!! On ${newData.eventTime.toLocaleString(
           "en-US",
           {
             timeZone: "America/New_York",
@@ -191,7 +191,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           newData.maxHours
         }\n#### Location: [${newData.address}](${encodeURI(
           `https://www.google.com/maps/dir/?api=1&destination=${newData.address}&travelmode=transit`
-        )})\nView the whole event [here](https://bths-repair.org/events/${
+        )})\nView the whole event [here](https://bthsaction.org/events/${
           newData.id
         }).\n\nTo unsubscribe, go edit your profile on the website and uncheck the box that says "Receive Event Alerts".`
       );
@@ -205,7 +205,7 @@ async function handler(method: "GET" | "POST", req: NextRequest) {
           embeds: [embed],
         }),
         sendEmail({
-          subject: "New BTHS Repair the World Event: " + newData.name,
+          subject: "New BTHS Action Event: " + newData.name,
           html: htmlBody,
         }),
       ]);

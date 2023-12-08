@@ -39,7 +39,7 @@ const ShareGenerator: FC<Props> = ({ setOpen }) => {
       {allowed && (
         <>
           <CopyTextarea lines={1}>
-            https://bths-repair.org/invite?ref={data?.user.email}
+            https://bthsaction.org/invite?ref={data?.user.email}
           </CopyTextarea>
         </>
       )}

@@ -105,7 +105,7 @@ async function handler(
       if (data.description) {
         data.description = data.description.replaceAll(
           "{@link}",
-          `https://bths-repair.org/events/${id}`
+          `https://bthsaction.org/events/${id}`
         );
       }
       const eventUpdated = await prisma.event.update({

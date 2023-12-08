@@ -12,7 +12,7 @@ export async function sendEmail(
   return sg
     .send({
       ...data,
-      from: "BTHS Repair the World <bthsrepairtheworld@gmail.com>",
+      from: "BTHS Action <bthsaction@gmail.com>",
 
       to: [
         process.env.ADVISOR_EMAIL!,

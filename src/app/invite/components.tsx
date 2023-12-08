@@ -21,7 +21,7 @@ export const Invite: FC = () => {
 
   return (
     <Layout>
-      <h1>You have been invited to join BTHS Repair the World!!!</h1>
+      <h1>You have been invited to join BTHS Action!!!</h1>
 
       {!data ? (
         <>

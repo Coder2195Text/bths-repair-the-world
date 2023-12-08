@@ -26,14 +26,14 @@ export async function generateMetadata({
   }
   if (!name) {
     return {
-      title: "BTHS RTW Invitation",
+      title: "BTHS Action Invitation",
       description:
         "We want YOU to join us!!! Come volunteer with us and make some change!",
     };
   }
 
   return {
-    title: `BTHS RTW Invitation from ${name}`,
+    title: `BTHS Action Invitation from ${name}`,
     description: `${name} wants YOU to join us!!! Come volunteer with us and make some change!`,
   };
 }

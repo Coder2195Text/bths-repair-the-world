@@ -13,7 +13,7 @@ async function fetchExecs() {
 
 export const metadata = {
   title: "Executives",
-  description: "Meet the BTHS Repair the World executives.",
+  description: "Meet the BTHS Action executives.",
 };
 
 const ExecsPage: FC = () => {

@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 
 export const metadata = {
   title: "Bylaws",
-  description: "Club Constuition for BTHS Repair the World",
+  description: "Club Bylaws for BTHS Action",
 };
 
 const Page: FC = () => {

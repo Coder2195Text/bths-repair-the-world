@@ -44,7 +44,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "BTHS Repair the World",
+  title: "BTHS Action",
   icons: {
     icon: "/icon.png",
     apple: "/apple-icon-180.png",
@@ -52,16 +52,16 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
 
-  description: "A BTHS club for repairing the world through acts of service.",
+  description: "A BTHS club for taking action and making a difference.",
   openGraph: {
     images: "/icon.png",
-    siteName: "BTHS Repair the World",
+    siteName: "BTHS Action",
   },
 
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "BTHS RTW App",
+    title: "BTHS Action",
     startupImage: [
       {
         url: "apple-splash-2048-2732.jpg",
@@ -215,12 +215,12 @@ export const metadata: Metadata = {
       },
     ],
   },
-  metadataBase: new URL("https://bths-repair.org"),
+  metadataBase: new URL("https://bthsaction.org"),
   verification: {
     google: "jbe33xMkQxfm6Vdj7cHzNaXj8qQcZPnIBAA5d-M-Tfw",
   },
-  creator: "BTHS Repair the World",
-  generator: "BTHS Repair the World",
+  creator: "BTHS Action",
+  generator: "BTHS Action",
 };
 
 export default RootLayout;

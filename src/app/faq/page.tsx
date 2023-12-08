@@ -5,7 +5,7 @@ import { TOS } from "./components";
 
 export const metadata = {
   title: "FAQ",
-  description: "FAQ for Repair the World",
+  description: "FAQ for BTHS Action",
 };
 
 const Page: FC = () => {

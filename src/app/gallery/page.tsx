@@ -3,7 +3,7 @@ import { FC } from "react";
 
 export const metadata = {
   title: "Gallery",
-  description: "Gallery page for BTHS Repair the World.",
+  description: "Gallery page for BTHS Action.",
 };
 
 const Page: FC = () => {

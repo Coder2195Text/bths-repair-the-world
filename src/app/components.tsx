@@ -134,7 +134,7 @@ export const Banner: FC = () => {
   return (
     <div className="relative w-full min-h-[570px] h-[90vh] rounded-xl -mt-20 mb-20">
       <div className="absolute  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center banner">
-        <h1 className="title">BTHS Repair the World</h1>
+        <h1 className="title">BTHS Action</h1>
         <h4>
           <Typewriter
             options={{
@@ -143,7 +143,7 @@ export const Banner: FC = () => {
                 "Empowering everyone to make a difference.",
                 "Mobilizing productivity for a better tomorrow.",
                 "Setting the stage for change.",
-                "Repairing the world, one step at a time.",
+                "Taking action to make a difference.",
               ],
               autoStart: true,
               loop: true,

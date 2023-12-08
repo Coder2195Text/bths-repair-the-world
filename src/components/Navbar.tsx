@@ -288,11 +288,11 @@ const socialLinks: {
   },
   {
     icon: FaInstagram,
-    url: "https://www.instagram.com/bths.repair/",
+    url: "https://www.instagram.com/bths.action/",
   },
   {
     icon: AiOutlineMail,
-    url: "mailto:bthsrepairtheworld@gmail.com",
+    url: "mailto:bthsaction@gmail.com",
   },
 ];
 
