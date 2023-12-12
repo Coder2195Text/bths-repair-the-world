@@ -72,7 +72,8 @@ const EventForm: FC<Props> = ({ mode, setOpen, eventData, setEventData }) => {
 
           limit: mode == "edit" ? eventData!.limit : undefined,
           finishTime: mode == "edit" ? eventData!.finishTime : undefined,
-          serviceLetters: "edit" ? eventData!.serviceLetters : undefined,
+          serviceLetters:
+            mode == "edit" ? eventData!.serviceLetters : undefined,
         }}
         onSubmit={async (values) => {
           if (mode === "post") {
